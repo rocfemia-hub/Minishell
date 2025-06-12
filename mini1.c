@@ -6,18 +6,18 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:56:08 by roo               #+#    #+#             */
-/*   Updated: 2025/06/12 13:56:20 by roo              ###   ########.fr       */
+/*   Updated: 2025/06/12 14:30:29 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-# include "./Helicopter/libft.h"
 
 int main(int argc, char **argv)
 {
+	t_vars	*vars;
 	char	*line;
-	char	**args;
 	
+	vars = ft_calloc(1, sizeof(t_vars));
 	if (!argc && argv)
 		return 1;
 	while(1)
@@ -25,10 +25,19 @@ int main(int argc, char **argv)
 		line = readline("minishell>");
 		if(!line)
 			break;
-		args = ft_split(line, ' ');
-		if(args[0] && ft_strncmp(args[0], "exit", 5) == 0)
+		vars->params = ft_split(line, ' ');
+		if(vars->params[0] && ft_strncmp(vars->params[0], "exit", 5) == 0)
 			break;
-		ft_free_free(args);
+		commands_control(vars);
+		ft_free_free(vars->params);
 		free(line);
+	}
+}
+
+void commands_control(t_vars *vars)
+{
+	if(vars->params[0] && ft_strncmp(vars->params[0], "echo", 5) == 0)
+	{
+		printf("patata");
 	}
 }

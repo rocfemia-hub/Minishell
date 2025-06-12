@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/06/12 11:11:09 by roo              ###   ########.fr       */
+/*   Updated: 2025/06/12 14:30:54 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,12 @@
 # include "./Helicopter/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+
+typedef struct vars
+{
+	char **params;	
+} t_vars;
+
+void	commands_control(t_vars *vars);
 
 #endif
