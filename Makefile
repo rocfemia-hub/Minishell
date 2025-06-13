@@ -10,7 +10,7 @@ CCFLAGS = -Wall -Wextra -Werror -g3
 
 SRC_DIR = src
 
-SRC = mini1.c\
+SRC = mini1.c built_ins.c\
 
 OBJ = $(SRC:.c=.o)
 
