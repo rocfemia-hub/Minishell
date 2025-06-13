@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/06/12 14:30:54 by roo              ###   ########.fr       */
+/*   Updated: 2025/06/13 17:05:59 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,19 @@
 
 typedef struct vars
 {
-	char **params;	
+	char **params;
+	int     output_fd;
+    int     input_fd;
+	int     exit_status;
 } t_vars;
 
+//MAIN
+
 void	commands_control(t_vars *vars);
+
+//BUILT-INS
+
+void	echo_funtion(t_vars *vars);
+//void	pwd_funtion(t_vars *vars);
 
 #endif
