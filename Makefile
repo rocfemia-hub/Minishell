@@ -1,43 +1,38 @@
-LIB = ar rcs
-RM = rm -f
-
-CC = cc
-
-BLUE   = \033[34m
-RESET  = \033[0m
-
-CCFLAGS = -Wall -Wextra -Werror -g3
-
-SRC_DIR = src
-
-SRC = mini1.c built_ins.c\
-
-OBJ = $(SRC:.c=.o)
-
-INCLUDE = minishell.h
-
 NAME = minishell
+CC = cc
+CCFLAGS = #-Wall -Wextra -Werror -g3
+
+BLUE = \033[34m
+RESET = \033[0m
+
+SRC = mix/main.c exec/built_ins.c parser/parser.c
+OBJ = mix/main.o exec/built_ins.o
+
+INCLUDES = -I. -IHelicopter
 
 LIBFTA = Helicopter/libft.a
 
 all: $(NAME)
 
-%.o: %.c
-	@$(CC) $(CCFLAGS) -I/Helicopter/libft.h -I/usr/include -lreadline -lhistory -O3 -c $< -o $@
-
 $(NAME): $(OBJ)
-	@cd Helicopter && make
-	@$(CC) $(CCFLAGS) $(OBJ) -Ilibft_ext -lreadline -lhistory $(LIBFTA) -o $(NAME)
-	@echo "$(BLUE)        ||>>    $(BLUE)minishell compiled!!    <<||$(RESET)"
+	@$(MAKE) -C Helicopter
+	@$(CC) $(CCFLAGS) $(OBJ) $(LIBFTA) -lreadline -lhistory -o $(NAME)
+	@echo "$(BLUE)||>> minishell compiled!! <<||$(RESET)"
+
+mix/%.o: mix/%.c
+	@$(CC) $(CCFLAGS) $(INCLUDES) -c $< -o $@
+
+exec/%.o: exec/%.c
+	@$(CC) $(CCFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
 	@$(RM) $(OBJ)
-	@cd Helicopter && make clean
+	@$(MAKE) -C Helicopter clean
 
-fclean:
-	@$(RM) $(NAME) $(OBJ)
-	@cd Helicopter && make fclean
+fclean: clean
+	@$(RM) $(NAME)
+	@$(MAKE) -C Helicopter fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re	
+.PHONY: all clean fclean re

@@ -10,28 +10,28 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
 	t_vars	*vars;
 	char	*line;
 	
 	vars = ft_calloc(1, sizeof(t_vars));
 	vars->output_fd = 1;
-    vars->input_fd = 0;
-    vars->exit_status = 0;
+    vars->input_fd = 0; // no hace falta, el calloc ya le da el 0 
+    vars->exit_status = 0; // no hace falta, el calloc ya le da el 0 
 	if (!argc && argv)
 		return 1;
 	while(1)
 	{
-		line = readline("minishell> ");
+		line = readline("minishell-> ");
 		if(!line)
-			break;
+		break;
 		vars->params = ft_split(line, ' ');
 		if(vars->params[0] && ft_strncmp(vars->params[0], "exit", 5) == 0)
 			break;
-		commands_control(vars);
+		commands_control(vars); //llama a la funcion del de bultins
 		ft_free_free(vars->params);
 		free(line);
 	}
@@ -40,7 +40,9 @@ int main(int argc, char **argv)
 void commands_control(t_vars *vars)
 {
 	if(vars->params[0] && ft_strncmp(vars->params[0], "echo", 5) == 0)
-    	echo_funtion(vars);
-	/*if(vars->params[0] && ft_strncmp(vars->params[0], "pwd", 4) == 0)
-		pwd_funtion(vars);*/
+    	echo_function(vars);
+	if(vars->params[0] && ft_strncmp(vars->params[0], "pwd", 4) == 0)
+		pwd_function(vars);
+	// if(vars->params[0] && ft_strncmp(vars->params[0], "ls", 2) == 0)
+	// 	ls_function(vars);
 }

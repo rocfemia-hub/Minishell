@@ -16,6 +16,10 @@
 # include "./Helicopter/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
 
 typedef struct vars
 {
@@ -31,7 +35,8 @@ void	commands_control(t_vars *vars);
 
 //BUILT-INS
 
-void	echo_funtion(t_vars *vars);
-//void	pwd_funtion(t_vars *vars);
+void	echo_function(t_vars *vars);
+void	pwd_function(t_vars *vars);
+void	ls_function(t_vars *vars);
 
 #endif
