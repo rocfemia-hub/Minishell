@@ -1,12 +1,12 @@
 NAME = minishell
 CC = cc
-CCFLAGS = #-Wall -Wextra -Werror -g3
+CCFLAGS = -fsanitize=address -g3 #-Wall -Wextra -Werror -g3
 
 BLUE = \033[34m
 RESET = \033[0m
 
-SRC = mix/main.c exec/built_ins.c parser/parser.c
-OBJ = mix/main.o exec/built_ins.o
+SRC = mix/listas.c mix/main.c mix/error.c mix/split_new.c exec/built_ins.c parser/parser.c
+OBJ = mix/listas.o mix/main.o mix/error.o mix/split_new.o exec/built_ins.o parser/parser.o
 
 INCLUDES = -I. -IHelicopter
 

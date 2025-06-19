@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
-# define MINISHELL_H
+#define MINISHELL_H
 
-# include "./Helicopter/libft.h"
-# include <readline/readline.h>
-# include <readline/history.h>
+#include "./Helicopter/libft.h"
+#include <readline/readline.h>
+#include <readline/history.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,19 +24,43 @@
 typedef struct vars
 {
 	char **params;
-	int     output_fd;
-    int     input_fd;
-	int     exit_status;
+	int output_fd;
+	int input_fd;
+	int exit_status;
 } t_vars;
 
-//MAIN
+typedef struct s_com
+{
+	struct s_com *previous;
+	char **command;
+	char *path_command;
+	int fd_in; 
+	int fd_out; 
+	int index;
+	int flag_built; // 1 para built 0 execve
+	struct s_com *next;
+}	t_com;
 
-void	commands_control(t_vars *vars);
+// MAIN
 
-//BUILT-INS
+void commands_control(t_vars *vars);
 
-void	echo_function(t_vars *vars);
-void	pwd_function(t_vars *vars);
-void	ls_function(t_vars *vars);
+// BUILT-INS
+
+void echo_function(t_vars *vars);
+void pwd_function(t_vars *vars);
+
+// PARSER
+int parser(char *line);
+
+//SPLIT
+char	**ft_split_new(char const *s);
+
+//LISTAS
+void	lstadd_back(t_com **lst, t_com *new);
+t_com *lstnew(void *content);
+
+//ERROR
+void printf_matrix(char **split);
 
 #endif
