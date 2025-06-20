@@ -41,26 +41,52 @@ typedef struct s_com
 	struct s_com *next;
 }	t_com;
 
+
+
+/*MIX*/ 
+
 // MAIN
 
 void commands_control(t_vars *vars);
+
+//LISTAS
+
+t_com *lstnew(void *content);
+void	lstadd_back(t_com **lst, t_com *new);
+
+//ERROR
+void printf_matrix(char **split);
+
+
+
+/*EXEC*/ 
 
 // BUILT-INS
 
 void echo_function(t_vars *vars);
 void pwd_function(t_vars *vars);
 
-// PARSER
-int parser(char *line);
 
-//SPLIT
-char	**ft_split_new(char const *s);
 
-//LISTAS
-void	lstadd_back(t_com **lst, t_com *new);
-t_com *lstnew(void *content);
+/*PARSER*/ 
 
-//ERROR
-void printf_matrix(char **split);
+// PARSER.C
+int token(char *line);
+
+// SPLIT_MINI.C
+char	**ft_split_normal(char const *s, char c);
+
+// COMMANDS1
+void echo_com(t_com *temp, char *line);
+void pwd_com(t_com *temp, char *line);
+void cd_com(t_com *temp, char *line);
+void export_com(t_com *temp, char *line);
+void unset_com(t_com *temp, char *line);
+
+// COMMANDS2
+void env_com(t_com *temp, char *line);
+void exit_com(t_com *temp, char *line);
+
+
 
 #endif

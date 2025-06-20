@@ -14,7 +14,7 @@ int main(int argc, char **argv, char **env)
 		line = readline("minishell-> ");
 		if (!line)
 			return (0);
-		if (!parser(line)) // llama a la funcion de parser
+		if (!token(line)) // llama a la funcion de parser
 			break;
 		// if (vars->params[0] && ft_strncmp(vars->params[0], "exit", 5) == 0)
 		// 	break;

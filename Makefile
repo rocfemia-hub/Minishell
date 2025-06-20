@@ -5,8 +5,8 @@ CCFLAGS = -fsanitize=address -g3 #-Wall -Wextra -Werror -g3
 BLUE = \033[34m
 RESET = \033[0m
 
-SRC = mix/listas.c mix/main.c mix/error.c mix/split_new.c exec/built_ins.c parser/parser.c
-OBJ = mix/listas.o mix/main.o mix/error.o mix/split_new.o exec/built_ins.o parser/parser.o
+SRC = mix/listas.c mix/main.c mix/error.c exec/built_ins.c parser/token.c parser/split_mini.c parser/commands1.c parser/commands2.c 
+OBJ = mix/listas.o mix/main.o mix/error.o exec/built_ins.o parser/token.o parser/split_mini.o parser/commands1.o parser/commands2.o 
 
 INCLUDES = -I. -IHelicopter
 
