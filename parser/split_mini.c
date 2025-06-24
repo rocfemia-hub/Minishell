@@ -66,7 +66,7 @@ char	**get_str(char **p, const char *s, char c, int words)
 	return (p);
 }
 
-char	**ft_split_normal(char const *s, char c)
+char	**ft_split_mini(char const *s, char c)
 {
 	char	**p;
 	int		words;

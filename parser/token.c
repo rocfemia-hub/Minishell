@@ -20,61 +20,56 @@ t_com *init_struct(char **commands) // me crea la lista donde voy a meter los in
     return (head);
 }
 
-void *not_command(t_com *temp)
-{
-
-}
-
 void *how_is(char *line, t_com *temp) // me mira que es cada cosa para gestionarlas y meter cada cosa en la estructura
 {
     int i = 0;
-    char **split = ft_split_normal(line, ' ');
+    char **split = ft_split_mini(line, ' '); //hago un split por espacios
 
-    while (split[i])
+    if (split[i])
     {
-        if (ft_strncmp(split[i], "echo", 4))
-            echo_com(&temp, line);
-        if (ft_strncmp(split[i], "pwd", 3))
-            pwd_com(&temp, line);
-        if (ft_strncmp(split[i], "cd", 2))
-            cd_com(&temp, line);
-        if (ft_strncmp(split[i], "export", 6))
-            export_com(&temp, line);
-        if (ft_strncmp(split[i], "unset", 5))
-            unset_com(&temp, line);
-        if (ft_strncmp(split[i], "env", 3))
-            env_com(&temp, line);
-        if (ft_strncmp(split[i], "exit", 4))
-            exit_com(&temp, line);
+        if (ft_strnstr(split[i], "echo", 4))
+            echo_com(temp, line);
+        if (ft_strnstr(split[i], "pwd", 3))
+            pwd_com(temp, line);
+        if (ft_strnstr(split[i], "cd", 2))
+            cd_com(temp, line);
+        if (ft_strnstr(split[i], "export", 6))
+            export_com(temp, line);
+        if (ft_strnstr(split[i], "unset", 5))
+            unset_com(temp, line);
+        if (ft_strnstr(split[i], "env", 3))
+            env_com(temp, line);
+        if (ft_strnstr(split[i], "exit", 4))
+            exit_com(temp, line);
         else   
-            not_command(&temp);
-        i++;
+            not_built(temp, line);
     }
+    // printf("Index: %d, command: %s, arg: %s, flag_built: %d, command_arg: %s\n", temp->index, temp->command, temp->arg,temp->flag_built, temp->command_arg);
 }
 
-t_com *init_commands(char **commands, t_com *temp) 
+void *init_commands(char **commands, t_com *temp) 
 {
     int i = 0;
-    char *line;
 
-    while (i < temp->index)
+    while (temp && commands[i])
     {
-        how_is(commands[i], &temp);
+        how_is(commands[i], temp);
+        i++;
+        temp = temp->next;
     }
 }
 
-int token(char *line) // me separa la array de comandos, arg y flags en una estructura
+t_com *token(char *line) // me separa la array de comandos, arg y flags en una estructura
 {
     char **split;
     t_com *temp;
-    t_com *commands;
-    int len_matrix;
 
-    split = ft_split_normal(line, '|');
+    split = ft_split_mini(line, '|');
     if (!split)
         return (0);
     // printf_matrix(split); // debugueo contenido de la matriz, FALTA TODAVIA COSAS
-    commands = init_struct(split);             // inicializo la estructura con el indice
-    init_commands(split, &commands); // meto en la estructura que es cada cosa
-    return (1);
+    temp = init_struct(split); // inicializo la estructura con el indice
+    init_commands(split, temp); // meto en la estructura que es cada cosa
+    // printf("Index: %d, command: %s, arg: %s, flag_built: %d, command_arg: %s\n", commands->index, commands->command, commands->arg,commands->flag_built, commands->command_arg);
+    return (temp);
 }

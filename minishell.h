@@ -21,18 +21,12 @@
 #include <stdlib.h>
 #include <dirent.h>
 
-typedef struct vars
-{
-	char **params;
-	int output_fd;
-	int input_fd;
-	int exit_status;
-} t_vars;
-
 typedef struct s_com
 {
 	struct s_com *previous;
-	char **command;
+	char *command;
+	char *command_arg;
+	char *arg;
 	char *path_command;
 	int fd_in; 
 	int fd_out; 
@@ -47,12 +41,13 @@ typedef struct s_com
 
 // MAIN
 
-void commands_control(t_vars *vars);
+void commands_control(t_com *vars);
 
 //LISTAS
 
-t_com *lstnew(void *content);
+t_com *lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
+void print_stack(t_com *stack);
 
 //ERROR
 void printf_matrix(char **split);
@@ -63,18 +58,21 @@ void printf_matrix(char **split);
 
 // BUILT-INS
 
-void echo_function(t_vars *vars);
-void pwd_function(t_vars *vars);
+void echo_function(t_com *vars);
+void pwd_function(t_com *vars);
 
 
 
 /*PARSER*/ 
 
 // PARSER.C
-int token(char *line);
+t_com *token(char *line);
+void *init_commands(char **commands, t_com *temp);
+void *how_is(char *line, t_com *temp);
+t_com *init_struct(char **commands);
 
 // SPLIT_MINI.C
-char	**ft_split_normal(char const *s, char c);
+char	**ft_split_mini(char const *s, char c);
 
 // COMMANDS1
 void echo_com(t_com *temp, char *line);
@@ -86,6 +84,7 @@ void unset_com(t_com *temp, char *line);
 // COMMANDS2
 void env_com(t_com *temp, char *line);
 void exit_com(t_com *temp, char *line);
+void *not_built(t_com *temp, char *line);
 
 
 
