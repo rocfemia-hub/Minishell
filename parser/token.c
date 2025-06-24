@@ -25,7 +25,7 @@ void *how_is(char *line, t_com *temp) // me mira que es cada cosa para gestionar
     int i = 0;
     char **split = ft_split_mini(line, ' '); //hago un split por espacios
 
-    if (split[i])
+    if (split[i] && ft_strlen(split[0]) > 0)
     {
         if (ft_strnstr(split[i], "echo", 4))
             echo_com(temp, line);
