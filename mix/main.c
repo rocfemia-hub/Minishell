@@ -41,5 +41,6 @@ int main(int argc, char **argv, char **env)
 		commands = token(line);		// llama a la funcion tokeniza
 		commands_control(commands); // llama a la funcion del de bultins
 		free(line);
+		free_list(commands);
 	}
 }

@@ -44,10 +44,11 @@ void *how_is(char *line, t_com *temp) // me mira que es cada cosa y llama a las 
         else
             not_built(temp, line);
     }
+    ft_free_free(split);
     // printf("Index: %d, command: %s, arg: %s, flag_built: %d, command_arg: %s\n", temp->index, temp->command, temp->arg,temp->flag_built, temp->command_arg); //debugueo estructura
 }
 
-void *init_commands(char **commands, t_com *temp) // me va llamando a la funcion que mira lo que es cada comando, pasando cada array de la matriz que hemos separado en pipes
+void *init_commands(char **commands /*split por pipes*/, t_com *temp) // me va llamando a la funcion que mira lo que es cada comando, pasando cada array de la matriz que hemos separado en pipes
 {
     int i = 0;
 
@@ -70,6 +71,7 @@ t_com *token(char *line) // me separa la array de comandos, arg y flags en una e
     // printf_matrix(split); // debugueo contenido de la matriz
     temp = init_struct(split); 
     init_commands(split, temp); 
+    ft_free_free(split);
     // printf("Index: %d, command: %s, arg: %s, flag_built: %d, command_arg: %s\n", temp->index, temp->command, temp->arg,temp->flag_built, temp->command_arg);
     return (temp);
 }

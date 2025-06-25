@@ -32,11 +32,23 @@ void lstadd_back(t_com **lst, t_com *new)
 	new->previous = node;
 }
 
-void print_stack(t_com *stack)
+void	free_list(t_com *list)
 {
-	while (stack)
+	t_com	*temp;
+
+	while (list)
 	{
-		printf("Index: %d, command: %s\n, command_arg: %s\n", stack->index, stack->command, stack->command_arg);
-		stack = stack->next;
+		temp = list;
+		list = list->next;
+		free(temp);
+	}
+}
+
+void print_list(t_com *list) //funcion para debuguear
+{
+	while (list)
+	{
+		printf("Index: %d, command: %s\n, command_arg: %s\n", list->index, list->command, list->command_arg);
+		list = list->next;
 	}
 }

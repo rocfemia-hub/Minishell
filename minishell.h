@@ -48,7 +48,8 @@ int line_break(char *line);
 
 t_com *lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
-void print_stack(t_com *stack);
+void print_list(t_com *list);
+void	free_list(t_com *list);
 
 //ERROR
 void printf_matrix(char **split);
