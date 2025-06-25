@@ -1,17 +1,17 @@
 #include "minishell.h"
 
-int salto_linea(char *line)
+int valid_n_option(char *str)
 {
     int i;
-
-    i = 0;
-    if(!ft_strnstr(line, "-n", 2))
-        return(0);
-    while(line[i])
+    
+    if (!str || str[0] != '-' || !str[1])
+        return (0);
+    i = 1;
+    while (str[i])
     {
-        if(line[i] == '-' && line[i + 1] == 'n' && line[i + 2] == ' ')
-            return(1);
+        if (str[i] != 'n')
+            return (0);
         i++;
     }
-    return(0);
+    return (1);
 }

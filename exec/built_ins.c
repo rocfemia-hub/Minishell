@@ -11,7 +11,7 @@ void echo_function(t_com *vars)
 	args = ft_split(vars->arg, ' ');
 	i = 0;
 	newline = 1;
-	if (args[i] && ft_strncmp(args[i], "-n", 3) == 0)
+	while (args[i] && valid_n_option(args[i]))
 	{
 		newline = 0;
 		i++;

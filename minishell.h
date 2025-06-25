@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/06/13 17:05:59 by roo              ###   ########.fr       */
+/*   Updated: 2025/06/25 16:35:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ void echo_function(t_com *vars);
 void pwd_function(t_com *vars);
 
 // BUILT-INS
-int salto_linea(char *line);
-
+int valid_n_option(char *str);
 
 
 /*PARSER*/ 
