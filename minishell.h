@@ -42,6 +42,7 @@ typedef struct s_com
 // MAIN
 
 void commands_control(t_com *vars);
+int line_break(char *line);
 
 //LISTAS
 
