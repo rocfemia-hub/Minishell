@@ -4,9 +4,9 @@ void commands_control(t_com *vars)
 {
 	if (!vars || !vars->command)
 		return;
-	if (vars->command && ft_strnstr(vars->command, "echo", 4) == 0)
+	if (vars->command && ft_strnstr(vars->command, "echo", 4))
 		echo_function(vars);
-	if (vars->command && ft_strnstr(vars->command, "pwd", 3) == 0)
+	if (vars->command && ft_strnstr(vars->command, "pwd", 3))
 		pwd_function(vars);
 }
 

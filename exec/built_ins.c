@@ -1,36 +1,39 @@
 #include "minishell.h"
 
-void	echo_function(t_com *vars)
+void echo_function(t_com *vars)
 {
-	int		i;
-	int		newline;
-	ssize_t	bytes_written;
+	int i;
+	int newline;
+	char **args;
 
-	i = 1;
+	if (!vars->arg || !*vars->arg)
+		return (void)write(vars->fd_out, "\n", 1);
+	args = ft_split(vars->arg, ' ');
+	i = 0;
 	newline = 1;
-	bytes_written = 0;
-	if (vars->arg[i] && ft_strnstr(vars->arg, "-n", 2) == 0)
+	if (args[i] && ft_strncmp(args[i], "-n", 3) == 0)
 	{
 		newline = 0;
 		i++;
 	}
-	while (vars->arg[i] && bytes_written != -42)
+	while (args[i])
 	{
-		bytes_written = write(vars->fd_out, vars->arg, ft_strlen(vars->arg));
-		if (vars->arg[i + 1])
-			bytes_written = write(vars->fd_out, " ", 1);
+		write(vars->fd_out, args[i], ft_strlen(args[i]));
+		if (args[i + 1])
+			write(vars->fd_out, " ", 1);
 		i++;
 	}
 	if (newline)
 		write(vars->fd_out, "\n", 1);
+	ft_free_free(args);
 }
 
-void	pwd_function(t_com *vars)
+void pwd_function(t_com *vars)
 {
-	char	cwd[1024];
-	ssize_t	bytes_written;
+	char cwd[1024];
+	ssize_t bytes_written;
 
-	if (getcwd(cwd, sizeof(cwd)) == NULL) //getcwd me dice el directorio que estoy actualemte, es gestion de errores
+	if (getcwd(cwd, sizeof(cwd)) == NULL) // getcwd me dice el directorio que estoy actualemte, es gestion de errores
 		return (perror("pwd"));
 	bytes_written = write(vars->fd_out, cwd, ft_strlen(cwd));
 	if (bytes_written != -1)

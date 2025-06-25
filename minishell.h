@@ -62,6 +62,9 @@ void printf_matrix(char **split);
 void echo_function(t_com *vars);
 void pwd_function(t_com *vars);
 
+// BUILT-INS
+int salto_linea(char *line);
+
 
 
 /*PARSER*/ 

@@ -2,7 +2,7 @@
 
 void env_com(t_com *temp, char *line) // gestiona el env para meter cada cosa en la estructura
 {
-    printf("ha entrado a env\n");
+    // printf("ha entrado a env\n");
     int i = 0;
 
     while (line[i] == 32)
@@ -18,7 +18,7 @@ void env_com(t_com *temp, char *line) // gestiona el env para meter cada cosa en
 
 void exit_com(t_com *temp, char *line) // gestiona el exit para meter cada cosa en la estructura
 {
-    printf("ha entrado a exit\n");
+    // printf("ha entrado a exit\n");
     int i = 0;
 
     while (line[i] == 32)
@@ -34,7 +34,7 @@ void exit_com(t_com *temp, char *line) // gestiona el exit para meter cada cosa 
 
 void *not_built(t_com *temp, char *line)
 {
-    printf("ha entrado a not_built\n");
+    // printf("ha entrado a not_built\n");
     int i = 0;
 
     while (line[i] == 32)

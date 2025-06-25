@@ -2,7 +2,7 @@
 
 void echo_com(t_com *temp, char *line) // gestiona el echo para meter cada cosa en la estructura
 {
-    printf("ha entrado a echo\n");
+    // printf("ha entrado a echo\n");
     int i = 0;
 
     while (line[i] == 32)
@@ -14,11 +14,20 @@ void echo_com(t_com *temp, char *line) // gestiona el echo para meter cada cosa 
         temp->command_arg = ft_strdup(line + i);
         temp->arg = ft_strdup(line + i + 5);
     }
+    if (line[i] && line[i] == 'e' && line[i + 1] == 'c' && line[i + 2] == 'h' && line[i + 3] == 'o' && !line[i + 4])
+    {
+        temp->command = ft_strdup("echo");
+        temp->flag_built = 1;
+        temp->command_arg = ft_strdup("echo");
+        temp->arg = NULL;
+    }
+    else
+        temp->flag_built = 0;
 }
 
 void pwd_com(t_com *temp, char *line) // gestiona el pwd para meter cada cosa en la estructura
 {
-    printf("ha entrado a pwd\n");
+    // printf("ha entrado a pwd\n");
     int i = 0;
 
     while (line[i] == 32)
@@ -34,7 +43,7 @@ void pwd_com(t_com *temp, char *line) // gestiona el pwd para meter cada cosa en
 
 void cd_com(t_com *temp, char *line) // gestiona el cd para meter cada cosa en la estructura
 {
-    printf("ha entrado a cd\n");
+    // printf("ha entrado a cd\n");
     int i = 0;
 
     while (line[i] == 32)
@@ -50,7 +59,7 @@ void cd_com(t_com *temp, char *line) // gestiona el cd para meter cada cosa en l
 
 void export_com(t_com *temp, char *line) // gestiona el export para meter cada cosa en la estructura
 {
-    printf("ha entrado a export\n");
+    // printf("ha entrado a export\n");
     int i = 0;
 
     while (line[i] == 32)
@@ -66,7 +75,7 @@ void export_com(t_com *temp, char *line) // gestiona el export para meter cada c
 
 void unset_com(t_com *temp, char *line) // gestiona el unset para meter cada cosa en la estructura
 {
-    printf("ha entrado a unset\n");
+    // printf("ha entrado a unset\n");
     int i = 0;
 
     while (line[i] == 32)
