@@ -7,19 +7,22 @@ void echo_com(t_com *temp, char *line) // gestiona el echo para meter cada cosa 
 
     while (line[i] == 32)
         i++;
-    if (line[i] && line[i] == 'e' && line[i + 1] == 'c' && line[i + 2] == 'h' && line[i + 3] == 'o' && line[i + 4] == ' ')
+    if (line[i] && line[i] == 'e' && line[i + 1] == 'c' && line[i + 2] == 'h' && line[i + 3] == 'o')
     {
+        if (line[i + 4] == ' ')
+        {
+            temp->command_arg = ft_strdup(line + i);
+            temp->arg = ft_strdup(line + i + 5);
+        }
+        if (!line[i + 4])
+        {
+            temp->command_arg = ft_strdup("echo");
+            temp->arg = NULL;
+        }
+        // if (line[i + 4] == 39 || line[i + 4] == 34)
+        //     quotes(line, temp);
         temp->command = ft_strdup("echo");
         temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
-        temp->arg = ft_strdup(line + i + 5);
-    }
-    if (line[i] && line[i] == 'e' && line[i + 1] == 'c' && line[i + 2] == 'h' && line[i + 3] == 'o' && !line[i + 4])
-    {
-        temp->command = ft_strdup("echo");
-        temp->flag_built = 1;
-        temp->command_arg = ft_strdup("echo");
-        temp->arg = NULL;
     }
     else
         temp->flag_built = 0;
