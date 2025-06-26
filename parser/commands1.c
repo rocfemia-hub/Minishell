@@ -20,13 +20,13 @@ void echo_com(t_com *temp, char *line) // gestiona el echo para meter cada cosa 
         if (line[i + 4] == ' ')
         {
             i +=5;
-            if(quotes(line + i, temp) == 0)
+            if(ft_strnstr(line + i, "\"", 1) || ft_strnstr(line + i, "\'", 1))
             {
-                printf("entra a quotes\n");
-                return ;
+                if(quotes(line + i, temp) == 0)
+                    return ;
             }
-            temp->command_arg = ft_strdup(line + i);
-            temp->arg = ft_strdup(line);
+            temp->command_arg = ft_strdup(line);
+            temp->arg = ft_strdup(line + i);
             temp->command = ft_strdup("echo");
             temp->flag_built = 1;
                 return ;

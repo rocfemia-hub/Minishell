@@ -39,6 +39,12 @@ int main(int argc, char **argv, char **env)
 		if (!line || !line_break(line))
 			continue;
 		commands = token(line);		// llama a la funcion tokeniza
+		// printf("%s\n", commands->command);
+		if (commands->command && ft_strnstr(commands->command, "error", 5))
+		{
+			printf("error\n");
+			continue;
+		}
 		commands_control(commands); // llama a la funcion del de bultins
 		free(line);
 		free_list(commands);

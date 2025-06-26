@@ -1,76 +1,26 @@
 #include "../minishell.h"
 
-int simples(char *line, t_com *temp)
+int aux_quotes(char *line, t_com *temp)
 {
     int i = 0;
-    int inicial = 0;
-    int final = 0;
-    int counter = 0;
+    int flag_simple = 0; // 0-cerrada    1-abierta
+    int flag_doble = 0; // 0-cerrada    1-abierta
 
     while (line[i])
     {
-        if (line[i] == 39) //comillas simples
-        {
-            i++;
-            inicial = i;
-            while (line[i] && line[i] != 39)
-            {
-                if (line[i] == 34) // comillas dobles
-                    if(!simples(line + i, temp));
-                        return(0);
-                i++;
-            }
-            if (line[i] == 39)
-            {
-                final = i - 1;
-                counter++;
-                temp->arg = ft_strdup(ft_substr(line, i, final - inicial));
-            }
-        }
+        if (line[i] == 34) //dobles
+            flag_simple = !flag_simple;
+        if (line[i] == 39) //simples
+            flag_doble = !flag_doble;
+        i++;
     }
-    if (counter%2 == 0)
-        return(1);
-    else 
-        return (0);
-}
-int dobles(char *line, t_com *temp)
-{
-    int i = 0;
-    int inicial = 0;
-    int final = 0;
-    int counter = 0;
-
-    while (line[i])
+    if(flag_doble == 1 || flag_simple == 1)
     {
-        if (line[i] == 34) // comillas dobles
-        {
-            i++;
-            inicial = i;
-            while (line[i] && line[i] != 34)
-            {
-                if (line[i] == 39) // comillas simples
-                if(!simples(line + i, temp))
-                return(0);
-                i++;
-            }
-            if (line[i] == 34)
-            {
-                final = i - 1;
-                counter +=2;
-                temp->arg = ft_strdup(ft_substr(line, i, final - inicial));
-                i++;
-            }
-        }
+        if(flag_doble == 1 && flag_simple == 0 || flag_doble == 0 && flag_simple == 1)
+            return(1);
+        return(0);
     }
-    // printf("%d\n", counter);
-    // printf("%d\n", counter%2);
-    if (counter%2 == 0)
-    {
-        printf("prinftreturn1\n");
-        return(1);
-    }
-    else 
-        return (0);
+    return(1);
 }
 
 int quotes(char *line, t_com *temp)
@@ -80,20 +30,13 @@ int quotes(char *line, t_com *temp)
     i = 0;
     while (line[i])
     {
-        if (line[i] == 39)
-        {
-            printf("entra comillas simples\n");
-            if (simples(line, temp) == 0)
-                return(0);
-        }
-        if (line[i] == 34)
-        {
-            if (dobles(line, temp) == 0);
+        if (line[i] == 34 || line[i] == 39) //comillas dobles-34 y comillas simples-39
+            if (doble_quotes(line, temp) == 0)
             {
-                printf("entra comillas dobles\n");
+                printf("entra en doble_quotes\n");
+                temp->command = ft_strdup("error");
                 return(0);
             }
-        }
         i++;
     }
     return(1);

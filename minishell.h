@@ -93,8 +93,8 @@ void *not_built(t_com *temp, char *line);
 
 // UTILS_COMMAND
 int quotes(char *line,t_com *command);
-int dobles(char *line, t_com *temp);
-int simples(char *line, t_com *temp);
+int doble_quotes(char *line, t_com *temp);
+int simple_quotes(char *line, t_com *temp);
 
 
 
