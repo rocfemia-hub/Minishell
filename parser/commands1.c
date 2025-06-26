@@ -9,20 +9,28 @@ void echo_com(t_com *temp, char *line) // gestiona el echo para meter cada cosa 
         i++;
     if (line[i] && line[i] == 'e' && line[i + 1] == 'c' && line[i + 2] == 'h' && line[i + 3] == 'o')
     {
-        if (line[i + 4] == ' ')
-        {
-            temp->command_arg = ft_strdup(line + i);
-            temp->arg = ft_strdup(line + i + 5);
-        }
         if (!line[i + 4])
         {
             temp->command_arg = ft_strdup("echo");
             temp->arg = NULL;
+            temp->command = ft_strdup("echo");
+            temp->flag_built = 1;
+            return ;
         }
-        // if (line[i + 4] == 39 || line[i + 4] == 34)
-        //     quotes(line, temp);
-        temp->command = ft_strdup("echo");
-        temp->flag_built = 1;
+        if (line[i + 4] == ' ')
+        {
+            i +=5;
+            if(quotes(line + i, temp) == 0)
+            {
+                printf("entra a quotes\n");
+                return ;
+            }
+            temp->command_arg = ft_strdup(line + i);
+            temp->arg = ft_strdup(line);
+            temp->command = ft_strdup("echo");
+            temp->flag_built = 1;
+                return ;
+        }
     }
     else
         temp->flag_built = 0;

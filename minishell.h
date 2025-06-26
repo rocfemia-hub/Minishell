@@ -64,7 +64,7 @@ void echo_function(t_com *vars);
 void pwd_function(t_com *vars);
 
 // BUILT-INS
-int salto_linea(char *line);
+int valid_n_option(char *str);
 
 
 
@@ -92,7 +92,7 @@ void exit_com(t_com *temp, char *line);
 void *not_built(t_com *temp, char *line);
 
 // UTILS_COMMAND
-void quotes(char *line,t_com *command);
+int quotes(char *line,t_com *command);
 int dobles(char *line, t_com *temp);
 int simples(char *line, t_com *temp);
 

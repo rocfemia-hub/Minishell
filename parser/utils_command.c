@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int dobles(char *line, t_com *temp)
+int simples(char *line, t_com *temp)
 {
     int i = 0;
     int inicial = 0;
@@ -9,13 +9,13 @@ int dobles(char *line, t_com *temp)
 
     while (line[i])
     {
-        if (line[i] == 39) // comillas dobles
+        if (line[i] == 39) //comillas simples
         {
             i++;
             inicial = i;
             while (line[i] && line[i] != 39)
             {
-                if (line[i] == 34) // comillas simples
+                if (line[i] == 34) // comillas dobles
                     if(!simples(line + i, temp));
                         return(0);
                 i++;
@@ -49,25 +49,31 @@ int dobles(char *line, t_com *temp)
             while (line[i] && line[i] != 34)
             {
                 if (line[i] == 39) // comillas simples
-                    if(!simples(line + i, temp))
-                        return(0);
+                if(!simples(line + i, temp))
+                return(0);
                 i++;
             }
             if (line[i] == 34)
             {
                 final = i - 1;
-                counter++;
+                counter +=2;
                 temp->arg = ft_strdup(ft_substr(line, i, final - inicial));
+                i++;
             }
         }
     }
+    // printf("%d\n", counter);
+    // printf("%d\n", counter%2);
     if (counter%2 == 0)
+    {
+        printf("prinftreturn1\n");
         return(1);
+    }
     else 
         return (0);
 }
 
-void quotes(char *line, t_com *temp)
+int quotes(char *line, t_com *temp)
 {
     int i;
 
@@ -75,10 +81,20 @@ void quotes(char *line, t_com *temp)
     while (line[i])
     {
         if (line[i] == 39)
-            if (!simples(line, temp))
+        {
+            printf("entra comillas simples\n");
+            if (simples(line, temp) == 0)
                 return(0);
+        }
         if (line[i] == 34)
-            if (!dobles(line, temp));
+        {
+            if (dobles(line, temp) == 0);
+            {
+                printf("entra comillas dobles\n");
                 return(0);
+            }
+        }
+        i++;
     }
+    return(1);
 }
