@@ -21,20 +21,25 @@
 #include <stdlib.h>
 #include <dirent.h>
 
+typedef struct s_vars
+{
+	int argc; //añadiendo argc y argv para tenerlos siempre a mano.
+	char **argv;
+	int fd_in; 
+	int fd_out; 
+} t_vars;
+
 typedef struct s_com
 {
 	struct s_com *previous;
 	char *command; // ej: "ls"
 	char *command_arg; // ej: "ls -la"
 	char *arg; // ej: "-la"
-	int argc; //añadiendo argc y argv para tenerlos siempre a mano.
-	char **argv;
 	char *path_command; // ej: "/usr/bin/ls"
-	int fd_in; 
-	int fd_out; 
-	int index;
+	int index; //para saber en que nodo de la lista estas
 	int flag_built; // 1 para built 0 execve
 	struct s_com *next;
+	t_vars *vars;	
 }	t_com;
 
 
@@ -42,57 +47,66 @@ typedef struct s_com
 /*MIX*/ 
 
 // MAIN
+
 void commands_control(t_com *vars);
 int line_break(char *line);
 
 //LISTAS
-t_com	*lstnew(int index);
+
+t_com *lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
-void	print_list(t_com *list);
+void print_list(t_com *list);
 void	free_list(t_com *list);
 
 //ERROR
-void	printf_matrix(char **split);
+void printf_matrix(char **split);
+
+
 
 /*EXEC*/ 
 
-// BUILT_INS
-void	echo_function(t_com *vars);
-void	pwd_function(t_com *vars);
+// BUILT-INS
+
+void echo_function(t_com *vars);
+void pwd_function(t_com *vars);
 void	exit_function(t_com *vars);
 
-// UTILS_BUILT_INS
-int		valid_n_option(char *str);
-int		valid_number(char *str);
+// BUILT-INS
+int valid_n_option(char *str);
+int valid_number(char *str);
+
+
 
 /*PARSER*/ 
 
-// PARSER.C
-t_com	*token(char *line);
-void	*init_commands(char **commands, t_com *temp);
-void	*how_is(char *line, t_com *temp);
-t_com	*init_struct(char **commands);
+// TOKEN.C
+t_com *token(char *line);
+void *init_commands(char **commands, t_com *temp);
+void *how_is(char *line, t_com *temp);
+t_com *init_struct(char *line);
+int pipes_counter(char *line);
+
 
 // SPLIT_MINI.C
 char	**ft_split_mini(char const *s, char c);
 
 // COMMANDS1
-void	echo_com(t_com *temp, char *line);
-void	pwd_com(t_com *temp, char *line);
-void	cd_com(t_com *temp, char *line);
-void	export_com(t_com *temp, char *line);
-void	unset_com(t_com *temp, char *line);
+void echo_com(t_com *temp, char *line);
+void pwd_com(t_com *temp, char *line);
+void cd_com(t_com *temp, char *line);
+void export_com(t_com *temp, char *line);
+void unset_com(t_com *temp, char *line);
 
 // COMMANDS2
-void	env_com(t_com *temp, char *line);
-void	exit_com(t_com *temp, char *line);
-void	*not_built(t_com *temp, char *line);
+void env_com(t_com *temp, char *line);
+void exit_com(t_com *temp, char *line);
+void *not_built(t_com *temp, char *line);
 
 // UTILS_COMMAND
-int		quotes(char *line,t_com *command);
-int		doble_quotes(char *line, t_com *temp);
-int		simple_quotes(char *line, t_com *temp);
-
+int quotes(char *line,t_com *command);
+int aux_quotes(char *line);
+int quotes_in_commands(char *line, t_com *temp);
+// int pipes_quotes(char *line);
 
 
 #endif

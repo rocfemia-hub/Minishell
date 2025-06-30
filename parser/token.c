@@ -1,16 +1,49 @@
 #include "../minishell.h"
 
-t_com *init_struct(char **commands) // me crea la lista donde voy a meter los index y los fd_out
+int pipes_counter(char *line)
+{
+    int pipes;
+    int i;
+
+    i = 0;
+    pipes = 0;
+    while (line[i])
+    {
+        if (line[i] == '|')
+        {
+            if (pipes_quotes(line + i - 1) == 2)
+            {
+                printf("devuelve 2\n");
+                pipes = -1;
+            }
+            if (pipes_quotes(line + i - 1) == 1)
+            {
+                printf("devuelve 1\n");
+                pipes++;
+            }
+            if (pipes_quotes(line + i - 1) == 0)
+            {
+                printf("devuelve 0\n");
+                pipes = pipes;
+            }
+        }
+        i++;
+    }
+    return (pipes);
+}
+t_com *init_struct(char *line) // me crea la lista donde voy a meter los index y los fd_out
 {
     int i;
+    int pipes;
     t_com *new;
     t_com *head;
 
-    i = 0;
+    pipes = pipes_counter(line); // me cuenta los pipes que hay, sin qeu sean argumentos
+    printf("%d\n", pipes);
     head = lstnew(i);
     if (!head)
         return (NULL);
-    while (commands[++i])
+    while (line[++i] && i < pipes + 1)
     {
         new = lstnew(i);
         if (!new)
@@ -22,30 +55,6 @@ t_com *init_struct(char **commands) // me crea la lista donde voy a meter los in
 
 void *how_is(char *line, t_com *temp) // me mira que es cada cosa y llama a las funciones que lo va a meter en la estructura
 {
-    int i = 0;
-    char **split = ft_split_mini(line, ' '); //hago un split por espacios y separo el comando por espacios "echo hola" --> "echo" "hola"
-
-    if (split[i] && ft_strlen(split[0]) > 0)
-    {
-        if (ft_strnstr(split[i], "echo", 4))
-            echo_com(temp, line);
-        else if (ft_strnstr(split[i], "pwd", 3))
-            pwd_com(temp, line);
-        else if (ft_strnstr(split[i], "cd", 2))
-            cd_com(temp, line);
-        else if (ft_strnstr(split[i], "export", 6))
-            export_com(temp, line);
-        else if (ft_strnstr(split[i], "unset", 5))
-            unset_com(temp, line);
-        else if (ft_strnstr(split[i], "env", 3))
-            env_com(temp, line);
-        else if (ft_strnstr(split[i], "exit", 4))
-            exit_com(temp, line);
-        else
-            not_built(temp, line);
-    }
-    ft_free_free(split);
-    // printf("Index: %d, command: %s, arg: %s, flag_built: %d, command_arg: %s\n", temp->index, temp->command, temp->arg,temp->flag_built, temp->command_arg); //debugueo estructura
 }
 
 void *init_commands(char **commands /*split por pipes*/, t_com *temp) // me va llamando a la funcion que mira lo que es cada comando, pasando cada array de la matriz que hemos separado en pipes
@@ -62,16 +71,9 @@ void *init_commands(char **commands /*split por pipes*/, t_com *temp) // me va l
 
 t_com *token(char *line) // me separa la array de comandos, arg y flags en una estructura
 {
-    char **split;
     t_com *temp;
-
-    split = ft_split_mini(line, '|');
-    if (!split)
-        return (0);
-    // printf_matrix(split); // debugueo contenido de la matriz
-    temp = init_struct(split); 
-    init_commands(split, temp); 
-    ft_free_free(split);
-    // printf("Index: %d, command: %s, arg: %s, flag_built: %d, command_arg: %s\n", temp->index, temp->command, temp->arg,temp->flag_built, temp->command_arg);
+    temp = init_struct(line);
+    // init_commands(split, temp);
+    // ft_free_free(split);
     return (temp);
 }

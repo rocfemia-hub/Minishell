@@ -1,39 +1,8 @@
 #include "../minishell.h"
 
-void echo_com(t_com *temp, char *line) // gestiona el echo para meter cada cosa en la estructura
+void echo_com(t_com *temp, char *line)
 {
-    // printf("ha entrado a echo\n");
-    int i = 0;
 
-    while (line[i] == 32)
-        i++;
-    if (line[i] && line[i] == 'e' && line[i + 1] == 'c' && line[i + 2] == 'h' && line[i + 3] == 'o')
-    {
-        if (!line[i + 4])
-        {
-            temp->command_arg = ft_strdup("echo");
-            temp->arg = NULL;
-            temp->command = ft_strdup("echo");
-            temp->flag_built = 1;
-            return ;
-        }
-        if (line[i + 4] == ' ')
-        {
-            i +=5;
-            if(ft_strnstr(line + i, "\"", 1) || ft_strnstr(line + i, "\'", 1))
-            {
-                if(quotes(line + i, temp) == 0)
-                    return ;
-            }
-            temp->command_arg = ft_strdup(line);
-            temp->arg = ft_strdup(line + i);
-            temp->command = ft_strdup("echo");
-            temp->flag_built = 1;
-                return ;
-        }
-    }
-    else
-        temp->flag_built = 0;
 }
 
 void pwd_com(t_com *temp, char *line) // gestiona el pwd para meter cada cosa en la estructura

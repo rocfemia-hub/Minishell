@@ -10,6 +10,10 @@ t_com *lstnew(int index)
 	new->previous = NULL;
 	new->index = index;
 	new->fd_out = 1;
+	new->command = NULL;
+	new->arg = NULL;
+	new->command_arg = NULL;
+	new->flag_built = 0;
 	new->next = NULL;
 	return (new);
 }
@@ -32,9 +36,9 @@ void lstadd_back(t_com **lst, t_com *new)
 	new->previous = node;
 }
 
-void	free_list(t_com *list)
+void free_list(t_com *list)
 {
-	t_com	*temp;
+	t_com *temp;
 
 	while (list)
 	{
@@ -44,7 +48,7 @@ void	free_list(t_com *list)
 	}
 }
 
-void print_list(t_com *list) //funcion para debuguear
+void print_list(t_com *list) // funcion para debuguear
 {
 	while (list)
 	{

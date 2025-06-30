@@ -35,16 +35,14 @@ int main(int argc, char **argv, char **env)
 	if (!argc && argv)
 		return 1;
 	ft_bzero(&commands, sizeof(commands));
-	commands->argc = argc; // Guarda valor de argc y argv en la estructura
-	commands->argv = argv;
 	while (1)
 	{
 		line = readline("minishell-> ");
 		if (!line || !line_break(line))
 			continue;
-		commands = token(line);		// llama a la funcion tokeniza
+		commands = token(line); // llama a la funcion tokeniza
 		// printf("%s\n", commands->command);
-		if (commands->command && ft_strnstr(commands->command, "error", 5))
+		if (commands && commands->command && ft_strnstr(commands->command, "error", 5))
 		{
 			printf("error\n");
 			continue;
