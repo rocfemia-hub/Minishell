@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/06/30 02:32:15 by roo              ###   ########.fr       */
+/*   Updated: 2025/06/30 17:32:24 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_vars
 {
 	int argc; //añadiendo argc y argv para tenerlos siempre a mano.
 	char **argv;
+	char **env;
 	int fd_in; 
 	int fd_out; 
 } t_vars;
@@ -46,38 +47,37 @@ typedef struct s_com
 
 /*MIX*/ 
 
-// MAIN
 
-void commands_control(t_com *vars);
+// MAIN
+void commands_control(t_com *list, t_vars *vars);
 int line_break(char *line);
+void init_vars(t_vars *vars, int argc, char **argv,  char **env);
 
 //LISTAS
-
 t_com *lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
-void print_list(t_com *list);
+void 	print_list(t_com *list);
 void	free_list(t_com *list);
 
 //ERROR
-void printf_matrix(char **split);
-
+void	printf_matrix(char **split);
 
 
 /*EXEC*/ 
 
-// BUILT-INS
-
-void echo_function(t_com *vars);
-void pwd_function(t_com *vars);
-void	exit_function(t_com *vars);
 
 // BUILT-INS
-int valid_n_option(char *str);
-int valid_number(char *str);
+void	echo_function(t_com *list, t_vars *vars);
+void	pwd_function(t_com *list, t_vars *vars);
+void	exit_function(t_com *list, t_vars *vars);
 
+// UTILS_BUILT-INS
+int		valid_n_option(char *str);
+int		valid_number(char *str);
 
 
 /*PARSER*/ 
+
 
 // TOKEN.C
 t_com *token(char *line);

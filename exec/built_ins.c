@@ -1,14 +1,14 @@
 #include "minishell.h"
 
-void echo_function(t_com *vars)
+void echo_function(t_com *list, t_vars *vars)
 {
 	int i;
 	int newline;
 	char **args;
 
-	if (!vars->arg || !*vars->arg)
+	if (!list->arg || !*list->arg)
 		return (void)write(vars->fd_out, "\n", 1);
-	args = ft_split(vars->arg, ' ');
+	args = ft_split(list->arg, ' ');
 	i = 0;
 	newline = 1;
 	while (args[i] && valid_n_option(args[i]))
@@ -28,7 +28,7 @@ void echo_function(t_com *vars)
 	ft_free_free(args);
 }
 
-void pwd_function(t_com *vars)
+void pwd_function(t_com *list, t_vars *vars)
 {
 	char cwd[1024];
 	ssize_t bytes_written;
@@ -40,7 +40,7 @@ void pwd_function(t_com *vars)
 		write(vars->fd_out, "\n", 1);
 }
 
-void	exit_function(t_com *vars) // gestiona el exit de maera que salga por la salida de error que deba salir
+void	exit_function(t_com *list, t_vars *vars) // gestiona el exit de maera que salga por la salida de error que deba salir
 {
 	if (vars->argc == 1) // argc = 1: solo "exit"
         exit(0);
