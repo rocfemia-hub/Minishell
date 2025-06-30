@@ -8,6 +8,8 @@ void commands_control(t_com *vars)
 		echo_function(vars);
 	if (vars->command && ft_strnstr(vars->command, "pwd", 3))
 		pwd_function(vars);
+	if (vars->command && ft_strnstr(vars->command, "exit", 4))
+        exit_function(vars);
 }
 
 int line_break(char *line)
@@ -33,6 +35,8 @@ int main(int argc, char **argv, char **env)
 	if (!argc && argv)
 		return 1;
 	ft_bzero(&commands, sizeof(commands));
+	commands->argc = argc; // Guarda valor de argc y argv en la estructura
+	commands->argv = argv;
 	while (1)
 	{
 		line = readline("minishell-> ");

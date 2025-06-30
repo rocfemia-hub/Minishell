@@ -39,3 +39,21 @@ void pwd_function(t_com *vars)
 	if (bytes_written != -1)
 		write(vars->fd_out, "\n", 1);
 }
+
+void	exit_function(t_com *vars) // gestiona el exit de maera que salga por la salida de error que deba salir
+{
+	if (vars->argc == 1) // argc = 1: solo "exit"
+        exit(0);
+    if (vars->argc == 2) // argc = 2: "exit" + un argumento
+    {
+        if (valid_number(vars->argv[1])) // verifica si protege tu programa de numeros inválidos
+            exit(ft_atoi(vars->argv[1]));
+        else
+        {
+            write(2, "exit: numeric argument required\n", 32);
+            exit(2);
+        }
+    }
+    write(2, "exit: too many arguments\n", 25);
+    exit(1);
+}
