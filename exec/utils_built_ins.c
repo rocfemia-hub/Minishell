@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 int valid_n_option(char *str)
 {
