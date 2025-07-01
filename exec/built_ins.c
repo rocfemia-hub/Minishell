@@ -40,6 +40,7 @@ void pwd_function(t_com *list, t_vars *vars)
 		write(vars->fd_out, "\n", 1);
 }
 
+// FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
 void	exit_function(t_com *list, t_vars *vars) // gestiona el exit de maera que salga por la salida de error que deba salir
 {
 	if (vars->argc == 1) // argc = 1: solo "exit"
@@ -58,6 +59,7 @@ void	exit_function(t_com *list, t_vars *vars) // gestiona el exit de maera que s
     exit(1);
 }
 
+// FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
 void env_function(t_com *list, t_vars *vars) // gestiona la impresión de env
 {
     int i = 0;
@@ -70,4 +72,25 @@ void env_function(t_com *list, t_vars *vars) // gestiona la impresión de env
         write(vars->fd_out, "\n", 1);
         i++;
     }
+}
+
+// FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
+void cd_function(t_com *list, t_vars *vars)
+{
+    if (!list->arg || !*list->arg) // cd debe tener SOLO un argumento
+        return(write(2, "cd: missing argument\n", 21));
+    char **args = ft_split_mini(list->arg, ' '); // Separa argumentos para verificar que solo hay uno
+    if (!args || !args[0])
+        return(ft_free_free(args), write(2, "cd: missing argument\n", 21));
+    if (args[1]) // Verifica que solo hay un argumento
+        return(write(2, "cd: too many arguments\n", 23), ft_free_free(args));
+    if (chdir(args[0]) == -1) // Intentar cambiar al directorio
+    {
+        write(2, "cd: ", 4);
+        write(2, args[0], ft_strlen(args[0]));
+        write(2, ": No such file or directory\n", 28);
+        ft_free_free(args);
+        return;
+    }
+    ft_free_free(args);
 }

@@ -12,6 +12,8 @@ void commands_control(t_com *list, t_vars *vars) //añado ambas estructuras en t
         exit_function(list, vars);
 	if (list->command && ft_strnstr(list->command, "env", 3))
         env_function(list, vars);
+	if (list->command && ft_strnstr(list->command, "cd", 2))
+        cd_function(list, vars);
 }
 
 void init_vars(t_vars *vars, int argc, char **argv,  char **env)
