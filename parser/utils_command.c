@@ -69,47 +69,5 @@ int quotes_in_commands(char *line, t_com *temp)
 
 int pipes_quotes(char *line)
 {
-    int i = 0;
-    int counter_simple = 0;
-    int counter_doble = 0;
 
-    if (!ft_strchr(line, '\'') || !ft_strchr(line, '"'))
-    {
-        printf("entra a que no hay comillas\n");
-        return (0); //no hay comillas
-    }
-    while (line[i])
-    {
-        if (line[i] == 39) // simple
-        {
-            printf("simple_counter: %d\n", counter_simple);
-            counter_simple++;
-            while (line[i])
-            {
-                if (line[i] == 39)
-                    counter_simple++;
-                if (counter_simple > 2)
-                    return (1); //comillas cerradas
-                i++;
-            }
-            if (counter_simple == 1)
-                return(2); //comillas sin cerrar
-        }
-        if (line[i] == 34) // doble
-        {
-            printf("double_counter: %d\n", counter_doble);
-            counter_doble++;
-            while (line[i])
-            {
-                if (line[i] == 34)
-                    counter_doble++;
-                if (counter_doble > 2)
-                    return (1); //comillas cerradas
-                i++;
-            }
-            if (counter_doble == 1)
-                return(2); //comillas sin cerrar
-        }
-        i++;
-    }
 }

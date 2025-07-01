@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-t_com *lstnew(int index) // he borrado el new->fd_out = 1; porque lo he declarado en otra función y hacía q la min explotara
+t_com *lstnew(int index)
 {
 	t_com *new;
 
@@ -9,6 +9,7 @@ t_com *lstnew(int index) // he borrado el new->fd_out = 1; porque lo he declarad
 		return (NULL);
 	new->previous = NULL;
 	new->index = index;
+	new->vars->fd_in = 1;
 	new->command = NULL;
 	new->arg = NULL;
 	new->command_arg = NULL;

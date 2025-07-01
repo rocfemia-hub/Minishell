@@ -6,14 +6,14 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/01 20:03:43 by roo              ###   ########.fr       */
+/*   Updated: 2025/06/30 02:32:15 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
-#include "./Helicopter/libft.h"
+#include "./libft/libft.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>
@@ -25,7 +25,6 @@ typedef struct s_vars
 {
 	int argc; //añadiendo argc y argv para tenerlos siempre a mano.
 	char **argv;
-	char **env;
 	int fd_in; 
 	int fd_out; 
 } t_vars;
@@ -47,40 +46,38 @@ typedef struct s_com
 
 /*MIX*/ 
 
-
 // MAIN
-void commands_control(t_com *list, t_vars *vars);
+
+void commands_control(t_com *vars);
 int line_break(char *line);
-void init_vars(t_vars *vars, int argc, char **argv,  char **env);
 
 //LISTAS
+
 t_com *lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
-void 	print_list(t_com *list);
+void print_list(t_com *list);
 void	free_list(t_com *list);
 
 //ERROR
-void	printf_matrix(char **split);
+void printf_matrix(char **split);
+
 
 
 /*EXEC*/ 
 
+// BUILT-INS
+
+void echo_function(t_com *vars);
+void pwd_function(t_com *vars);
+void	exit_function(t_com *vars);
 
 // BUILT-INS
-void	echo_function(t_com *list, t_vars *vars);
-void	pwd_function(t_com *list, t_vars *vars);
-void	exit_function(t_com *list, t_vars *vars);
-void	env_function(t_com *list, t_vars *vars);
-void	cd_function(t_com *list, t_vars *vars);
+int valid_n_option(char *str);
+int valid_number(char *str);
 
-
-// UTILS_BUILT-INS
-int		valid_n_option(char *str);
-int		valid_number(char *str);
 
 
 /*PARSER*/ 
-
 
 // TOKEN.C
 t_com *token(char *line);
@@ -109,7 +106,7 @@ void *not_built(t_com *temp, char *line);
 int quotes(char *line,t_com *command);
 int aux_quotes(char *line);
 int quotes_in_commands(char *line, t_com *temp);
-// int pipes_quotes(char *line);
+int pipes_quotes(char *line);
 
 
 #endif

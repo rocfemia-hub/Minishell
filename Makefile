@@ -11,13 +11,13 @@ SRC = mix/listas.c mix/main.c mix/error.c \
 
 OBJS = ${SRC:.c=.o}
 
-INCLUDES = -I. -IHelicopter
-LIBFTA = Helicopter/libft.a
+INCLUDES = -I. -Ilibft
+LIBFTA = libft/libft.a
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@$(MAKE) -C Helicopter
+	@$(MAKE) -C libft
 	@$(CC) $(CCFLAGS) $(OBJS) $(LIBFTA) -lreadline -lhistory -o $(NAME)
 	@echo "$(BLUE)||>> minishell compiled!! <<||$(RESET)"
 
@@ -32,11 +32,11 @@ parser/%.o: parser/%.c
 
 clean:
 	@$(RM) $(OBJS)
-	@$(MAKE) -C Helicopter clean
+	@$(MAKE) -C libft clean
 
 fclean: clean
 	@$(RM) $(NAME)
-	@$(MAKE) -C Helicopter fclean
+	@$(MAKE) -C libft fclean
 
 re: fclean all
 
