@@ -9,7 +9,7 @@ t_com *lstnew(int index)
 		return (NULL);
 	new->previous = NULL;
 	new->index = index;
-	new->fd_out = 1;
+	new->vars->fd_out = 1; //he incluido la llamada a la otra estructura para q esto funcione
 	new->command = NULL;
 	new->arg = NULL;
 	new->command_arg = NULL;

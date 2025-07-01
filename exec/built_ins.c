@@ -57,3 +57,17 @@ void	exit_function(t_com *list, t_vars *vars) // gestiona el exit de maera que s
     write(2, "exit: too many arguments\n", 25);
     exit(1);
 }
+
+void env_function(t_com *list, t_vars *vars) // gestiona la impresión de env
+{
+    int i = 0;
+    
+    if (!vars->env)
+        return;
+    while (vars->env[i])
+    {
+        write(vars->fd_out, vars->env[i], ft_strlen(vars->env[i])); // simplemente imprime linea a linea lo que hay en el env, sin opciones ni argmentos (lo pone en el subject)
+        write(vars->fd_out, "\n", 1);
+        i++;
+    }
+}

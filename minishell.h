@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/06/30 17:32:24 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/01 16:35:17 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	printf_matrix(char **split);
 void	echo_function(t_com *list, t_vars *vars);
 void	pwd_function(t_com *list, t_vars *vars);
 void	exit_function(t_com *list, t_vars *vars);
+void	env_function(t_com *list, t_vars *vars);
+
 
 // UTILS_BUILT-INS
 int		valid_n_option(char *str);
