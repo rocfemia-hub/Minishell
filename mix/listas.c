@@ -43,6 +43,15 @@ void free_list(t_com *list)
 	{
 		temp = list;
 		list = list->next;
+		// he añadido muchos más frees para liberar todas las strings de la lista
+		if (temp->command)
+            free(temp->command);
+        if (temp->arg)
+            free(temp->arg);
+        if (temp->command_arg)
+            free(temp->command_arg);
+        if (temp->path_command)
+            free(temp->path_command);
 		free(temp);
 	}
 }
