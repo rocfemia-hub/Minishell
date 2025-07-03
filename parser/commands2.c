@@ -40,8 +40,10 @@ void *not_built(t_com *temp, char *line)
     while (line[i] == 32)
         i++;
     char **split = ft_split_mini(line + i, ' '); //hago un split por espacios
-    temp->command = split[0];
+    temp->command = ft_strdup(split[0]); // ft_strdup para crear copias en lugar de split[0] directo
     temp->command_arg = ft_strdup(line + i);
     temp->arg = ft_strdup(line + i);
     temp->flag_built = 0;
+
+	ft_free_free(split); // free para liberar el split que ya no necesitamos
 }
