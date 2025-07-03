@@ -1,36 +1,5 @@
 #include "../minishell.h"
 
-int pipes_counter(char *line)
-{
-    int pipes;
-    int i;
-
-    i = 0;
-    pipes = 0;
-    while (line[i])
-    {
-        if (line[i] == '|')
-        {
-            if (pipes_quotes(line + i - 1) == 2)
-            {
-                printf("devuelve 2\n");
-                pipes = -1;
-            }
-            if (pipes_quotes(line + i - 1) == 1)
-            {
-                printf("devuelve 1\n");
-                pipes++;
-            }
-            if (pipes_quotes(line + i - 1) == 0)
-            {
-                printf("devuelve 0\n");
-                pipes = pipes;
-            }
-        }
-        i++;
-    }
-    return (pipes);
-}
 t_com *init_struct(char *line) // me crea la lista donde voy a meter los index y los fd_out
 {
     int i;
@@ -39,7 +8,7 @@ t_com *init_struct(char *line) // me crea la lista donde voy a meter los index y
     t_com *head;
 
     pipes = pipes_counter(line); // me cuenta los pipes que hay, sin qeu sean argumentos
-    printf("%d\n", pipes);
+    printf("pipes: %d\n", pipes);
     head = lstnew(i);
     if (!head)
         return (NULL);

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/01 20:03:43 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/03 14:28:24 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ t_com *token(char *line);
 void *init_commands(char **commands, t_com *temp);
 void *how_is(char *line, t_com *temp);
 t_com *init_struct(char *line);
-int pipes_counter(char *line);
 
 
 // SPLIT_MINI.C
@@ -105,11 +104,13 @@ void env_com(t_com *temp, char *line);
 void exit_com(t_com *temp, char *line);
 void *not_built(t_com *temp, char *line);
 
-// UTILS_COMMAND
-int quotes(char *line,t_com *command);
+// 	QUOTES
 int aux_quotes(char *line);
+int quotes(char *line);
 int quotes_in_commands(char *line, t_com *temp);
-// int pipes_quotes(char *line);
+int find_quotes(char *line);
+int pipes_quotes(char *line);
+int pipes_counter(char *line);
 
 
 #endif

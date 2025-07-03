@@ -21,7 +21,7 @@ int aux_quotes(char *line)
     return (open_quote == 0); // devuelve 1 si todo balanceado
 }
 
-int quotes(char *line, t_com *temp)
+int quotes(char *line)
 {
     int i;
 
@@ -30,10 +30,7 @@ int quotes(char *line, t_com *temp)
     {
         if (line[i] == 34 || line[i] == 39) // comillas dobles-34 y comillas simples-39
             if (aux_quotes(line) == 0)
-            {
-                temp->command = ft_strdup("error");
                 return (0);
-            }
         i++;
     }
     return (1);
@@ -69,5 +66,36 @@ int quotes_in_commands(char *line, t_com *temp)
 
 int pipes_quotes(char *line)
 {
+    if (!quotes(line)) // hay comillas pero no estan cerradas, da error
+        return (2);
+    else // hay comillas y estan cerradas
+        return (1);
+}
 
+int pipes_counter(char *line)
+{
+    int pipes;
+    int i;
+    int j;
+
+    i = 0;
+    j = 0;
+    pipes = 0;
+    while (line[i])
+    {
+        j = i;
+        if (line[i] == '|')
+        {
+            while (j > 0 && line[j - 1] && line[j - 1] != 39 && line[j - 1] != 34)
+                j--;
+            if (j == 0) // no hay comillas porque no las encuentra en el bucle de arriba
+                pipes++;
+            else if (pipes_quotes(line + j -1) == 2) // comillas no cerradas
+                pipes = -1;
+            else if (pipes_quotes(line + j -1) == 1) // pipes como argumentos
+                pipes = pipes;
+        }
+        i++;
+    }
+    return (pipes);
 }
