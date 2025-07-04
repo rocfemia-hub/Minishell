@@ -30,14 +30,6 @@ typedef struct s_vars
 	int fd_out; 
 } t_vars;
 
-typedef struct s_temp
-{
-	int pipes;
-	int i;
-	int j;
-	int flag;
-} t_temp;
-
 typedef struct s_com
 {
 	struct s_com *previous;
@@ -110,11 +102,11 @@ void exit_com(t_com *temp, char *line);
 void *not_built(t_com *temp, char *line);
 
 // 	QUOTES
-int aux_quotes(char *line,t_temp *temp);
-int quotes(char *line, t_temp *temp);
+int aux_quotes(char *lin);
+int quotes(char *line);
 int quotes_in_commands(char *line, t_com *temp);
 int find_quotes(char *line);
-int pipes_quotes(char *line, t_temp *temp);
+int pipes_quotes(char *line);
 int pipes_counter(char *line);
 
 
