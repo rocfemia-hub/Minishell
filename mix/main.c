@@ -2,7 +2,8 @@
 
 void commands_control(t_com *list, t_vars *vars) //añado ambas estructuras en todas lsa funciones por si acaso
 {
-	if (!list || !list->command)
+	printf("ro:))\n");
+	if (!list || !list->command) //entra aqui porque la lista no está bien inicializada o ns, la lista no -----------> ERROR AQUI <-----------
 		return;
 	if (list->command && ft_strnstr(list->command, "echo", 4))
 		echo_function(list, vars);
