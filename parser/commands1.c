@@ -24,6 +24,13 @@ void echo_com(t_com *temp, char *line) // echo_com implementada
         else
             temp->arg = ft_strdup(""); // Solo "echo" sin argumentos
     }
+	else // inicializamos con valores seguros si no coincide
+    {
+        temp->command = ft_strdup("unknown");
+        temp->command_arg = ft_strdup(line);
+        temp->arg = ft_strdup("");
+        temp->flag_built = 0;
+    }
 }
 
 void pwd_com(t_com *temp, char *line) // pwd_com modificada
@@ -38,7 +45,14 @@ void pwd_com(t_com *temp, char *line) // pwd_com modificada
         temp->command = ft_strdup("pwd");
         temp->flag_built = 1;
         temp->command_arg = ft_strdup(line + i);
-        temp->arg = ft_strdup(line + i + 4);
+        temp->arg = ft_strdup(""); //ft_strdup(line + i + 4);
+    }
+	else // inicializamos con valores seguros si no coincide
+    {
+        temp->command = ft_strdup("unknown");
+        temp->command_arg = ft_strdup(line);
+        temp->arg = ft_strdup("");
+        temp->flag_built = 0;
     }
 }
 

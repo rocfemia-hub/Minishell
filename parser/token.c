@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 02:24:15 by roo               #+#    #+#             */
-/*   Updated: 2025/07/04 03:37:10 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/04 04:09:09 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ t_com *token(char *line) // me separa la array de comandos, arg y flags en una e
     commands = ft_split(line, '|'); // Dividir primero por pipes
     if (!commands)
         return (NULL);
-	head = NULL;
     i = 0;
 	while (commands[i]) // gestionar cada comando de manera individual
     {
