@@ -3,8 +3,10 @@
 void echo_com(t_com *temp, char *line) // echo_com implementada
 {
 	int i;
+	int j;
 
 	i = 0;
+	j = 0;
     while (line[i] == 32) // para saltar los espacios al principio
         i++;
     if (ft_strncmp(line + i, "echo", 4) == 0 && (line[i + 4] == ' ' || line[i + 4] == '\0')) // debe haber espacio o ser el final de la string
@@ -13,7 +15,12 @@ void echo_com(t_com *temp, char *line) // echo_com implementada
         temp->flag_built = 1;
         temp->command_arg = ft_strdup(line + i);
         if (line[i + 4] == ' ') // Si hay espacio después de "echo" significa que hay argumentos
-            temp->arg = ft_strdup(line + i + 5);
+		{
+			j = i + 4; // saltar espacios después de echo
+			while (line[j] == ' ')
+                j++;
+            temp->arg = ft_strdup(line + j);
+		}
         else
             temp->arg = ft_strdup(""); // Solo "echo" sin argumentos
     }

@@ -1,20 +1,22 @@
 #include "../minishell.h"
 
-void commands_control(t_com *list, t_vars *vars) //añado ambas estructuras en todas lsa funciones por si acaso
+void commands_control(t_com *list, t_vars *vars)
 {
-	printf("ro:))\n");
-	if (!list || !list->command) //entra aqui porque la lista no está bien inicializada o ns, la lista no -----------> ERROR AQUI <-----------
+	if (!list || !list->command)
 		return;
-	if (list->command && ft_strnstr(list->command, "echo", 4))
+	else if (list->command && ft_strnstr(list->command, "echo", 4))
 		echo_function(list, vars);
-	if (list->command && ft_strnstr(list->command, "pwd", 3))
+	else if (list->command && ft_strnstr(list->command, "pwd", 3))
 		pwd_function(list, vars);
-	if (list->command && ft_strnstr(list->command, "exit", 4))
+	else if (list->command && ft_strnstr(list->command, "exit", 4))
         exit_function(list, vars);
-	if (list->command && ft_strnstr(list->command, "env", 3))
+	else if (list->command && ft_strnstr(list->command, "env", 3))
         env_function(list, vars);
-	if (list->command && ft_strnstr(list->command, "cd", 2))
+	else if (list->command && ft_strnstr(list->command, "cd", 2))
         cd_function(list, vars);
+	else
+        printf("Command '%s' not found\n", list->command);
+	// Aquí irá la lógica de execve para la ejecución del resto de comandos
 }
 
 void init_vars(t_vars *vars, int argc, char **argv,  char **env)
@@ -46,25 +48,42 @@ int main(int argc, char **argv, char **env)
 	t_com *commands;
 	t_vars vars; //nueva struct
 
-	if (!argc && argv)
+	if (argc < 1 && !argv)
 		return 1;
-	ft_bzero(&commands, sizeof(commands));
-	ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
+	commands = NULL;// la verdad aqui no tengo del todo calro porque no se hace malloc, pero claude dice que es así y yo le creo xd
+	//ft_bzero(&commands, sizeof(commands));
+	//ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
 	init_vars(&vars, argc, argv, env);
 	while (1)
 	{
 		line = readline("minishell-> ");
-		if (!line || !line_break(line))
+		if (!line) // Ctrl+D
+            break;
+		add_history(line); // añade al historial para poder usar las flechitas arriba y abajo
+		if (!line_break(line))
+		{
+			free(line);
 			continue;
+		}
 		commands = token(line); // llama a la funcion tokeniza
+		if (!commands) // debug para comprobar que el comando sea valido
+        {
+			printf("Error: failed to parse command\n");
+            free(line);
+            continue;
+        }
 		// printf("%s\n", commands->command);
 		if (commands && commands->command && ft_strnstr(commands->command, "error", 5))
 		{
 			printf("error\n");
+			free(line);
+            free_list(commands);
 			continue;
 		}
 		commands_control(commands, &vars); // llama a la funcion del de bultins
 		free(line);
 		free_list(commands);
+		commands = NULL; // reseteamos el puntero
 	}
+	return(0);
 }

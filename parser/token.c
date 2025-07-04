@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 02:24:15 by roo               #+#    #+#             */
-/*   Updated: 2025/07/04 03:19:19 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/04 03:37:10 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,25 +42,29 @@
 
 void *how_is(char *line, t_com *temp) // me mira que es cada cosa y llama a las funciones que lo va a meter en la estructura
 {
-	char *spaces; // para añadir espacios
+	char *spaces;
+	int i;
 	
+	i = 0; 
 	if (!line || !temp) // implementando esta función paara que funcionen los built-in
         return (NULL);
 	spaces = ft_strtrim(line, " \t");
     if (!spaces)
         return (NULL);
-    if (ft_strnstr(spaces, "echo", 4))
+	while (spaces[i] == ' ' || spaces[i] == '\t')
+        i++;
+    if (ft_strncmp(spaces + i, "echo", 4) == 0 && (spaces[i + 4] == ' ' || spaces[i + 4] == '\0')) // Verifica comando al inicio de la línea
         echo_com(temp, spaces);
-    else if (ft_strnstr(spaces, "pwd", 3))
+    else if (ft_strncmp(spaces + i, "pwd", 3) == 0 && (spaces[i + 3] == ' ' || spaces[i + 3] == '\0'))
         pwd_com(temp, spaces);
-    else if (ft_strnstr(spaces, "cd", 2))
+    else if (ft_strncmp(spaces + i, "cd", 2) == 0 && (spaces[i + 2] == ' ' || spaces[i + 2] == '\0'))
         cd_com(temp, spaces);
-    else if (ft_strnstr(spaces, "env", 3))
+    else if (ft_strncmp(spaces + i, "env", 3) == 0 && (spaces[i + 3] == ' ' || spaces[i + 3] == '\0'))
         env_com(temp, spaces);
-    else if (ft_strnstr(spaces, "exit", 4))
+    else if (ft_strncmp(spaces + i, "exit", 4) == 0 && (spaces[i + 4] == ' ' || spaces[i + 4] == '\0'))
         exit_com(temp, spaces);
     else
-        not_built(temp, spaces);  // para que siempre asigne algo
+        not_built(temp, spaces); // para que siempre asigne algo
     return (free(spaces), NULL);
 }
 
