@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int aux_quotes(char *line)
+int aux_quotes(char *line, t_temp *temp)
 {
     int i = 0;
     char open_quote = 0; // 0 = ninguna, '\'' o '"'
@@ -18,10 +18,11 @@ int aux_quotes(char *line)
         }
         i++;
     }
+    temp->i = i;
     return (open_quote == 0); // devuelve 1 si todo balanceado
 }
 
-int quotes(char *line)
+int quotes(char *line, t_temp *temp)
 {
     int i;
 
@@ -29,10 +30,11 @@ int quotes(char *line)
     while (line[i])
     {
         if (line[i] == 34 || line[i] == 39) // comillas dobles-34 y comillas simples-39
-            if (aux_quotes(line) == 0)
+            if (aux_quotes(line, temp) == 0)
                 return (0);
         i++;
     }
+
     return (1);
 }
 
@@ -64,9 +66,9 @@ int quotes_in_commands(char *line, t_com *temp)
     return (quotes == 0);
 }
 
-int pipes_quotes(char *line)
+int pipes_quotes(char *line, t_temp *temp)
 {
-    if (!quotes(line)) // hay comillas pero no estan cerradas, da error
+    if (!quotes(line, temp)) // hay comillas pero no estan cerradas, da error
         return (2);
     else // hay comillas y estan cerradas
         return (1);
@@ -74,28 +76,28 @@ int pipes_quotes(char *line)
 
 int pipes_counter(char *line)
 {
-    int pipes;
-    int i;
-    int j;
-
-    i = 0;
-    j = 0;
-    pipes = 0;
-    while (line[i])
+    t_temp *temp = calloc(1, sizeof(t_temp));
+    if (!temp)
+        return (-1); // o manejar error
+    while (line[temp->i])
     {
-        j = i;
-        if (line[i] == '|')
+        if (line[temp->i] == '|')
         {
-            while (j > 0 && line[j - 1] && line[j - 1] != 39 && line[j - 1] != 34)
-                j--;
-            if (j == 0) // no hay comillas porque no las encuentra en el bucle de arriba
-                pipes++;
-            else if (pipes_quotes(line + j -1) == 2) // comillas no cerradas
-                pipes = -1;
-            else if (pipes_quotes(line + j -1) == 1) // pipes como argumentos
-                pipes = pipes;
+            while (temp->j > 0 && line[temp->j - 1] && line[temp->j - 1] != 39 && line[temp->j - 1] != 34) // va hacia atras hasta que se encuentra comillas
+                temp->j--;
+            if (temp->j == 0) // no hay comillas porque no las encuentra en el bucle de arriba
+                temp->pipes++;
+            else if (pipes_quotes(line + temp->j - 1, temp) == 2) // comillas no cerradas
+                temp->flag = 1;
+            else if (pipes_quotes(line + temp->j - 1, temp) == 1) // pipes como argumentos
+                temp->pipes = temp->pipes;
+            temp->j = temp->i;
+            printf("i despues de ver si estan cerradas o abiertas: %d\n", temp->i);
+            printf("--> j despues de ver si estan cerradas o abiertas: %d\n", temp->j);
         }
-        i++;
+        if (temp->flag == 1)
+            return (-1);
+        temp->i++;;
     }
-    return (pipes);
+    return (temp->pipes);
 }
