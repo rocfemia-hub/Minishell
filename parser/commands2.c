@@ -7,7 +7,7 @@ void env_com(t_com *temp, char *line) // gestiona el env para meter cada cosa en
 
     while (line[i] == 32)
         i++;
-    if (line[i] && line[i] == 'e' && line[i + 1] == 'n' && line[i + 2] == 'v' && line[i + 3] == ' ')
+    if (line[i] && line[i] == 'e' && line[i + 1] == 'n' && line[i + 2] == 'v') // && line[i + 3] == ' ') no funciona con eso porque no asigna el env si no lleva espacio después
     {
         temp->command = ft_strdup("env");
         temp->flag_built = 1;
