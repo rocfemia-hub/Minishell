@@ -2,6 +2,7 @@
 
 void commands_control(t_com *list, t_vars *vars)
 {
+	//printf("list->command = '%s' \n", list->command);
 	if (!list || !list->command)
 		return;
 	else if (list->command && ft_strnstr(list->command, "echo", 5)) // 5 para incluir '\0'

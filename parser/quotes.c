@@ -82,14 +82,10 @@ int pipes_counter(char *line)
                 open_quote = 0;       // cierra comilla
         }
         else if (line[i] == '|' && !open_quote)
-        {
             count++; // solo si NO estamos dentro de comillas
-        }
         i++;
     }
-
     if (open_quote != 0)
         return -1; // comillas no cerradas
-
     return count;
 }

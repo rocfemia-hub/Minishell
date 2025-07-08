@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 void echo_function(t_com *list, t_vars *vars)
-{
+{ // Ya funciona correctamente :)))
 	int i;
 	int newline;
 	char **args;
@@ -29,7 +29,7 @@ void echo_function(t_com *list, t_vars *vars)
 }
 
 void pwd_function(t_com *list, t_vars *vars)
-{
+{ // Ya funciona correctamente :)))
 	char cwd[1024];
 	ssize_t bytes_written;
 
@@ -41,8 +41,8 @@ void pwd_function(t_com *list, t_vars *vars)
 }
 
 // FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
-void exit_function(t_com *list, t_vars *vars) // gestiona el exit de maera que salga por la salida de error que deba salir
-{
+void exit_function(t_com *list, t_vars *vars)
+{  // gestiona el exit de maera que salga por la salida de error que deba salir
 	if (vars->argc == 1) // argc = 1: solo "exit"
 		exit(0);
 	if (vars->argc == 2) // argc = 2: "exit" + un argumento
@@ -60,8 +60,8 @@ void exit_function(t_com *list, t_vars *vars) // gestiona el exit de maera que s
 }
 
 // FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
-void env_function(t_com *list, t_vars *vars) // gestiona la impresión de env
-{
+void env_function(t_com *list, t_vars *vars)
+{  // gestiona la impresión de env
 	int i = 0;
 
 	if (!vars->env)
@@ -74,9 +74,8 @@ void env_function(t_com *list, t_vars *vars) // gestiona la impresión de env
 	}
 }
 
-// FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
 void cd_function(t_com *list, t_vars *vars)
-{
+{ // Ya funciona correctamente :)))
 	if (!list->arg || !*list->arg) // cd debe tener SOLO un argumento
 	{
 		write(2, "cd: missing argument\n", 21);
@@ -91,7 +90,7 @@ void cd_function(t_com *list, t_vars *vars)
 	}
 	if (args[1]) // Verifica que solo hay un argumento
 		return (write(2, "cd: too many arguments\n", 23), ft_free_free(args));
-	if (chdir(args[0]) == -1) // Intentar cambiar al directorio
+	if (chdir(args[0]) == -1) // chdir cambia el directorio actual desde donde se ha ejecutado tu programa y pude recibir una ruta absoluta o relativa
 	{
 		write(2, "cd: ", 4);
 		write(2, args[0], ft_strlen(args[0]));

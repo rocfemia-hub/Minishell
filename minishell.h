@@ -21,6 +21,12 @@
 #include <stdlib.h>
 #include <dirent.h>
 
+
+typedef struct s_pipes
+{
+	int pipes;
+} t_pipes;
+
 typedef struct s_vars
 {
 	int argc; //añadiendo argc y argv para tenerlos siempre a mano.
@@ -82,8 +88,9 @@ int		valid_number(char *str);
 
 
 // TOKEN.C
+t_com *init_struct(char *line, t_pipes pipes);
+void init_commmands(char **split, t_com commands);
 t_com *token(char *line);
-t_com *init_struct(char *line);
 
 
 // SPLIT_MINI.C
@@ -105,8 +112,6 @@ void *not_built(t_com *temp, char *line);
 int aux_quotes(char *lin);
 int quotes(char *line);
 int quotes_in_commands(char *line, t_com *temp);
-int find_quotes(char *line);
-int pipes_quotes(char *line);
 int pipes_counter(char *line);
 
 
