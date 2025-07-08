@@ -98,7 +98,7 @@ t_com *token(char *line);
 char	**ft_split_mini(char const *s, char c);
 
 // COMMANDS1
-void echo_com(t_com *temp, char *line);
+void echo_com(t_com *temp, char *line, char *cmd);
 void pwd_com(t_com *temp, char *line);
 void cd_com(t_com *temp, char *line);
 void export_com(t_com *temp, char *line);
@@ -112,7 +112,7 @@ void *not_built(t_com *temp, char *line);
 // 	QUOTES
 int aux_quotes(char *lin);
 int quotes(char *line);
-int quotes_in_commands(char *line, t_com *temp);
+char *get_clean_command(char *line);
 int pipes_counter(char *line);
 
 

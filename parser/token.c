@@ -25,23 +25,28 @@ t_com *init_struct(char *line, t_pipes pipes)
 
 void type_command(char *line, t_com *commands)
 {
-    // printf("line: %s\n", line);
-    if (!ft_strncmp(line, "echo", 4))
-        echo_com(commands, line);
-    else if (!ft_strncmp(line, "pwd", 3))
+    char *cmd = get_clean_command(line);
+
+    if (!cmd)
+        return;
+    printf("cmd: %s\n", cmd);
+    if (!ft_strncmp(cmd, "echo", 5))
+        echo_com(commands, line, cmd);
+    else if (!ft_strncmp(cmd, "pwd", 4))
         pwd_com(commands, line);
-    else if (!ft_strncmp(line, "cd", 2))
+    else if (!ft_strncmp(cmd, "cd", 3))
         cd_com(commands, line);
-    else if (!ft_strncmp(line, "export", 6))
+    else if (!ft_strncmp(cmd, "export", 7))
         export_com(commands, line);
-    else if (!ft_strncmp(line, "unset", 5))
+    else if (!ft_strncmp(cmd, "unset", 6))
         unset_com(commands, line);
-    else if (!ft_strncmp(line, "env", 3))
+    else if (!ft_strncmp(cmd, "env", 4))
         env_com(commands, line);
-    else if (!ft_strncmp(line, "exit", 4))
+    else if (!ft_strncmp(cmd, "exit", 5))
         exit_com(commands, line);
     else
         not_built(commands, line);
+    free(cmd); 
 }
 
 void init_commands(char *line, t_com *commands)

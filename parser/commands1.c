@@ -1,38 +1,38 @@
 #include "../minishell.h"
 
-void echo_com(t_com *temp, char *line)
-{ // MODIFICADA
-	// printf("ha entrado a echo\n");
+void echo_com(t_com *temp, char *line, char *cmd)
+{
 	int i;
-	int j;
+    char quote;
 
-	i = 0;
-	j = 0;
-    while (line[i] == 32) // para saltar los espacios al principio
-        i++;
-    if (ft_strncmp(line + i, "echo", 4) == 0 && (line[i + 4] == ' ' || line[i + 4] == '\0')) // debe haber espacio o ser el final de la string
-    {
-        temp->command = ft_strdup("echo");
-        temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
-        if (line[i + 4] == ' ') // Si hay espacio después de "echo" significa que hay argumentos
-		{
-			j = i + 4; // saltar espacios después de echo
-			while (line[j] == ' ')
-                j++;
-            temp->arg = ft_strdup(line + j);
-		}
-        else
-            temp->arg = ft_strdup(""); // Solo "echo" sin argumentos
-    }
-	else // inicializamos con valores seguros si no coincide
-    {
-        temp->command = ft_strdup("unknown");
-        temp->command_arg = ft_strdup(line);
-        temp->arg = ft_strdup("");
-        temp->flag_built = 0;
-    }
+    i = 0;
+	if (ft_strncmp(cmd, "echo", 4))
+		return;
+	temp->command = ft_strdup("echo");
+	temp->flag_built = 1;
+	temp->command_arg = ft_strdup(line);
+	while (line[i] == ' ')
+		i++;
+	if (line[i] == '"' || line[i] == '\'') 	// Saltar el comando, teniendo en cuenta si viene con comillas
+	{
+		quote = line[i++];
+		while (line[i] && line[i] != quote)
+			i++;
+		if (line[i] == quote)
+			i++; // salto la comilla de cierre
+	}
+	else
+		while (line[i] && line[i] != ' ')
+			i++; // salto el comando normal
+	while (line[i] == ' ') 	// Saltar espacios antes del argumento
+		i++;
+	if (line[i]) 	// Guardar el argumento (si hay)
+		temp->arg = ft_strdup(line + i);
+	else
+		temp->arg = ft_strdup("");
 }
+
+
 
 void pwd_com(t_com *temp, char *line)
 { // MODIFICADA
@@ -48,23 +48,16 @@ void pwd_com(t_com *temp, char *line)
         temp->command_arg = ft_strdup(line + i);
         temp->arg = ft_strdup("");
     }
-	else // inicializamos con valores seguros si no coincide
-    {
-        temp->command = ft_strdup("unknown");
-        temp->command_arg = ft_strdup(line);
-        temp->arg = ft_strdup("");
-        temp->flag_built = 0;
-    }
 }
 
 void cd_com(t_com *temp, char *line)
 { // MODIFICADA
     // printf("ha entrado a cd\n");
     int i;
-	int j;
+    int j;
 
-	i = 0;
-	j = 0;
+    i = 0;
+    j = 0;
     while (line[i] == 32) // para saltar los espacios al principio
         i++;
     if (ft_strncmp(line + i, "cd", 2) == 0 && (line[i + 2] == ' ' || line[i + 2] == '\0')) // debe haber espacio o ser el final de la string
@@ -73,21 +66,14 @@ void cd_com(t_com *temp, char *line)
         temp->flag_built = 1;
         temp->command_arg = ft_strdup(line + i);
         if (line[i + 2] == ' ') // Si hay espacio después de "cd" significa que hay argumentos
-		{
-			j = i + 2; // saltar espacios después de cd
-			while (line[j] == ' ')
+        {
+            j = i + 2; // saltar espacios después de cd
+            while (line[j] == ' ')
                 j++;
             temp->arg = ft_strdup(line + j);
-		}
+        }
         else
             temp->arg = ft_strdup(""); // Solo "cd" sin argumentos
-    }
-	else // inicializamos con valores seguros si no coincide
-    {
-        temp->command = ft_strdup("unknown");
-        temp->command_arg = ft_strdup(line);
-        temp->arg = ft_strdup("");
-        temp->flag_built = 0;
     }
 }
 
@@ -105,13 +91,6 @@ void export_com(t_com *temp, char *line)
         temp->command_arg = ft_strdup(line + i);
         temp->arg = ft_strdup("");
     }
-	else // inicializamos con valores seguros si no coincide
-    {
-        temp->command = ft_strdup("unknown");
-        temp->command_arg = ft_strdup(line);
-        temp->arg = ft_strdup("");
-        temp->flag_built = 0;
-    }
 }
 
 void unset_com(t_com *temp, char *line)
@@ -127,12 +106,5 @@ void unset_com(t_com *temp, char *line)
         temp->flag_built = 1;
         temp->command_arg = ft_strdup(line + i);
         temp->arg = ft_strdup("");
-    }
-	else // inicializamos con valores seguros si no coincide
-    {
-        temp->command = ft_strdup("unknown");
-        temp->command_arg = ft_strdup(line);
-        temp->arg = ft_strdup("");
-        temp->flag_built = 0;
     }
 }

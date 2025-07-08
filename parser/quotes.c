@@ -16,7 +16,7 @@ int aux_quotes(char *line)
             else if (line[i] == open_quote)
                 open_quote = 0; // cierra comilla
             else
-                ; // comilla dentro de otra → ignorar
+                ; // comilla dentro de otra se ignorar
         }
         i++;
     }
@@ -38,32 +38,26 @@ int quotes(char *line)
     return (1);
 }
 
-int quotes_in_commands(char *line, t_com *temp)
+char *get_clean_command(char *line)
 {
-    int i;
-    char quotes;
-    int counter;
+    int i = 0;
+    char quote;
 
-    i = 0;
-    quotes = 0;
-    counter = 0;
-    while (line[i])
-    {
-        if ((line[i] == '\'' || line[i] == '"'))
-        {
-            if (!quotes)
-                quotes = line[i]; // abre comilla
-            else if (line[i] == quotes)
-                quotes = 0;
-            if (counter > 2)
-            {
-                temp->command = ft_strdup("echo");
-                return (0);
-            }
-        }
+    while (line[i] == ' ')
         i++;
+    if (line[i] == '\'' || line[i] == '"')
+    {
+        quote = line[i];
+        int j = i + 1;
+        while (line[j] && line[j] != quote)
+            j++;
+        if (line[j] == quote)
+            return ft_substr(line, i + 1, j - i - 1);  // devuelve solo la palabra sin comillas
     }
-    return (quotes == 0);
+    int j = i; // Si no hay comillas, va hasta primer espacio
+    while (line[j] && line[j] != ' ')
+        j++;
+    return ft_substr(line, i, j - i);
 }
 
 int pipes_counter(char *line)
@@ -79,7 +73,7 @@ int pipes_counter(char *line)
             if (!open_quote)
                 open_quote = line[i]; // abre comilla
             else if (line[i] == open_quote)
-                open_quote = 0;       // cierra comilla
+                open_quote = 0; // cierra comilla
         }
         else if (line[i] == '|' && !open_quote)
             count++; // solo si NO estamos dentro de comillas
@@ -89,3 +83,4 @@ int pipes_counter(char *line)
         return -1; // comillas no cerradas
     return count;
 }
+
