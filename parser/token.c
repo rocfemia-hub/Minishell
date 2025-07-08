@@ -81,6 +81,6 @@ t_com *token(char *line) // me separa la array de comandos, arg y flags en una e
 
     commands = init_struct(line, pipes);
     init_commands(line, commands);
-    // print_list(commands);
+    print_list(commands);
     return (commands);
 }

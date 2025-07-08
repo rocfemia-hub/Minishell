@@ -45,19 +45,22 @@ void exit_com(t_com *temp, char *line)
         temp->flag_built = 0;
     }
 }
-
 void *not_built(t_com *temp, char *line)
-{ // NO MODIFICADA
-    // printf("ha entrado a not_built\n");
+{
     int i = 0;
+    int j = 0; // longitud del comando
 
-    while (line[i] == 32)
+    while (line[i] && line[i] == ' ') //salta los espacios
         i++;
-    char **split = ft_split_mini(line + i, ' '); //hago un split por espacios
-    temp->command = ft_strdup(split[0]); // ft_strdup para crear copias en lugar de split[0] directo
-    temp->command_arg = ft_strdup(line + i);
-    temp->arg = ft_strdup(line + i);
-    temp->flag_built = 0;
-
-	ft_free_free(split); // free para liberar el split que ya no necesitamos
+    while (line[i + j] && line[i + j] != ' ') // me llega al final del comando
+        j++;
+    temp->command = ft_substr(line, i, j); // compia el comando (empieza en i y la longitud del comando que es j)
+    i += j; // me avanza hasta el final del comando
+    while (line[i] == ' ')
+        i++; // me salta los espacios
+    if (line[i]) // me copia en arg el resto de linea, sin el comando
+        temp->arg = ft_strdup(line + i);
+    temp->command_arg = ft_strdup(line); // me copia toda la linea
+    temp->flag_built = 0; // no es un built
+    return (NULL);
 }
