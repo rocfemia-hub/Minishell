@@ -52,12 +52,12 @@ char *get_clean_command(char *line)
         while (line[j] && line[j] != quote)
             j++;
         if (line[j] == quote)
-            return ft_substr(line, i + 1, j - i - 1);  // devuelve solo la palabra sin comillas
+            return (ft_substr(line, i + 1, j - i - 1));  // devuelve solo la palabra sin comillas
     }
     int j = i; // Si no hay comillas, va hasta primer espacio
     while (line[j] && line[j] != ' ')
         j++;
-    return ft_substr(line, i, j - i);
+    return (ft_substr(line, i, j - i));
 }
 
 int pipes_counter(char *line)
@@ -80,7 +80,7 @@ int pipes_counter(char *line)
         i++;
     }
     if (open_quote != 0)
-        return -1; // comillas no cerradas
+        return (-1); // comillas no cerradas
     return count;
 }
 
