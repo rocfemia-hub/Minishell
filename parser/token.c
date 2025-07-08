@@ -2,26 +2,26 @@
 
 t_com *init_struct(char *line, t_pipes pipes)
 {
-    int i;
+    int i = 0;
     t_com *new;
     t_com *head;
 
-    i = 0;
-    pipes.pipes = pipes_counter(line); // me cuenta los pipes que hay, sin qeu sean argumentos
+    pipes.pipes = pipes_counter(line); //me cuenta las pipes que no estan como argumento
+    if (pipes.pipes < 0)
+        return (NULL); 
     head = lstnew(i);
     if (!head)
         return (NULL);
-    pipes.pipes--;
-    while (pipes.pipes > 0)
+    while (++i <= pipes.pipes) // crea nodos necesarios
     {
         new = lstnew(i);
         if (!new)
             return (NULL);
         lstadd_back(&head, new);
-        pipes.pipes--;
     }
     return (head);
 }
+
 
 void type_command(char *line, t_com *commands)
 {
@@ -53,16 +53,16 @@ void init_commands(char *line, t_com *commands)
 
     while (line[i])
     {
-        if ((line[i] == '"' || line[i] == '\'')) // Control de comillas
+        if ((line[i] == '"' || line[i] == '\''))
         {
             if (!quote)
                 quote = line[i];
             else if (quote == line[i])
                 quote = 0;
         }
-        if (line[i] == '|' && !quote) // Pipe fuera de comillas
+        if (line[i] == '|' && !quote) 
         {
-            line[i] = '\0'; // Cortamos el string temporalmente
+            line[i] = '\0'; 
             type_command(line + start, current);
             start = i + 1;
             current = current->next;
@@ -81,5 +81,6 @@ t_com *token(char *line) // me separa la array de comandos, arg y flags en una e
 
     commands = init_struct(line, pipes);
     init_commands(line, commands);
+    // print_list(commands);
     return (commands);
 }

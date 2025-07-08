@@ -61,7 +61,8 @@ void print_list(t_com *list) // funcion para debuguear
 {
 	while (list)
 	{
-		printf("Index: %d, command: %s\n, command_arg: %s\n", list->index, list->command, list->command_arg);
+		printf("entra en la funcion\n");
+		printf("Index: %d, command: %s\n", list->index, list->command);
 		list = list->next;
 	}
 }
