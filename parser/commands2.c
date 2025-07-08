@@ -11,7 +11,7 @@ void env_com(t_com *temp, char *line)
     {
         temp->command = ft_strdup("env");
         temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
+        temp->command_arg = ft_strdup(line + i); // (line + i) significa "dame un puntero al carácter que está en la posición i de la cadena"
         temp->arg = ft_strdup("");
     }
 	else // inicializamos con valores seguros si no coincide
@@ -34,7 +34,7 @@ void exit_com(t_com *temp, char *line)
     {
         temp->command = ft_strdup("exit");
         temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
+        temp->command_arg = ft_strdup(line + i); // (line + i) significa "dame un puntero al carácter que está en la posición i de la cadena"
         temp->arg = ft_strdup("");
     }
 	else // inicializamos con valores seguros si no coincide

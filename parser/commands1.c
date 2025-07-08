@@ -14,13 +14,13 @@ void echo_com(t_com *temp, char *line)
     {
         temp->command = ft_strdup("echo");
         temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
+        temp->command_arg = ft_strdup(line + i); // (line + i) significa "dame un puntero al carácter que está en la posición i de la cadena"
         if (line[i + 4] == ' ') // Si hay espacio después de "echo" significa que hay argumentos
 		{
 			j = i + 4; // saltar espacios después de echo
 			while (line[j] == ' ')
                 j++;
-            temp->arg = ft_strdup(line + j);
+            temp->arg = ft_strdup(line + j); // (line + j) significa "dame un puntero al carácter que está en la posición j de la cadena"
 		}
         else
             temp->arg = ft_strdup(""); // Solo "echo" sin argumentos
@@ -45,7 +45,7 @@ void pwd_com(t_com *temp, char *line)
     {
         temp->command = ft_strdup("pwd");
         temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
+        temp->command_arg = ft_strdup(line + i); // (line + i) significa "dame un puntero al carácter que está en la posición i de la cadena"
         temp->arg = ft_strdup("");
     }
 	else // inicializamos con valores seguros si no coincide
@@ -71,13 +71,13 @@ void cd_com(t_com *temp, char *line)
     {
         temp->command = ft_strdup("cd");
         temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
+        temp->command_arg = ft_strdup(line + i); // (line + i) significa "dame un puntero al carácter que está en la posición i de la cadena"
         if (line[i + 2] == ' ') // Si hay espacio después de "cd" significa que hay argumentos
 		{
 			j = i + 2; // saltar espacios después de cd
 			while (line[j] == ' ')
                 j++;
-            temp->arg = ft_strdup(line + j);
+            temp->arg = ft_strdup(line + j); // (line + j) significa "dame un puntero al carácter que está en la posición j de la cadena"
 		}
         else
             temp->arg = ft_strdup(""); // Solo "cd" sin argumentos
@@ -102,7 +102,7 @@ void export_com(t_com *temp, char *line)
     {
         temp->command = ft_strdup("export");
         temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
+        temp->command_arg = ft_strdup(line + i); // (line + i) significa "dame un puntero al carácter que está en la posición i de la cadena"
         temp->arg = ft_strdup("");
     }
 	else // inicializamos con valores seguros si no coincide
@@ -125,7 +125,7 @@ void unset_com(t_com *temp, char *line)
     {
         temp->command = ft_strdup("unset");
         temp->flag_built = 1;
-        temp->command_arg = ft_strdup(line + i);
+        temp->command_arg = ft_strdup(line + i); // (line + i) significa "dame un puntero al carácter que está en la posición i de la cadena"
         temp->arg = ft_strdup("");
     }
 	else // inicializamos con valores seguros si no coincide

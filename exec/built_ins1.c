@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_ins1.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
+/*   Updated: 2025/07/08 01:21:45 by roo              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 
 void echo_function(t_com *list, t_vars *vars)
 { // Ya funciona correctamente :)))
@@ -40,9 +52,8 @@ void pwd_function(t_com *list, t_vars *vars)
 		write(vars->fd_out, "\n", 1);
 }
 
-// FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
 void exit_function(t_com *list, t_vars *vars)
-{  // gestiona el exit de maera que salga por la salida de error que deba salir
+{  // Ya funciona correctamente :)))
 	if (vars->argc == 1) // argc = 1: solo "exit"
 		exit(0);
 	if (vars->argc == 2) // argc = 2: "exit" + un argumento
@@ -57,21 +68,6 @@ void exit_function(t_com *list, t_vars *vars)
 	}
 	write(2, "exit: too many arguments\n", 25);
 	exit(1);
-}
-
-// FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
-void env_function(t_com *list, t_vars *vars)
-{  // gestiona la impresión de env
-	int i = 0;
-
-	if (!vars->env)
-		return;
-	while (vars->env[i])
-	{
-		write(vars->fd_out, vars->env[i], ft_strlen(vars->env[i])); // simplemente imprime linea a linea lo que hay en el env, sin opciones ni argmentos (lo pone en el subject)
-		write(vars->fd_out, "\n", 1);
-		i++;
-	}
 }
 
 void cd_function(t_com *list, t_vars *vars)
