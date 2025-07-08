@@ -89,7 +89,8 @@ int		valid_number(char *str);
 
 // TOKEN.C
 t_com *init_struct(char *line, t_pipes pipes);
-void init_commmands(char **split, t_com commands);
+void type_command(char *line, t_com *commands);
+void init_commands(char *line, t_com *commands);
 t_com *token(char *line);
 
 
