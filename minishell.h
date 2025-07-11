@@ -6,12 +6,14 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/11 21:21:50 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/11 23:54:23 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
+#define READ_FD 0
+#define WRITE_FD 1
 
 #include "./libft/libft.h"
 #include <readline/readline.h>
@@ -38,6 +40,7 @@ typedef struct s_com
 	int fd_in; // cada comando tiene su propio input y output
 	int fd_out; // cada comando tiene su propio input y output
 	int index; //para saber en que nodo de la lista estas
+	int i; // no guarda información util, es para ahorrar lineas, un iterador normal
 	int flag_built; // 1 para built 0 execve
 	struct s_com *next;
 	t_vars *vars;	
@@ -66,12 +69,17 @@ void	printf_matrix(char **split);
 /*EXEC*/ 
 
 
+// EXECUTOR
+char	*get_path(char *cmd, char **envp, t_com *pipex);
+int		execute(t_com *list);
+void	close_all(int fd[2], t_com *cmd);
+
 // BUILT-INS
 void	echo_function(t_com *list, t_vars *vars);
 void	pwd_function(t_com *list, t_vars *vars);
 void	exit_function(t_com *list, t_vars *vars);
-void	env_function(t_com *list, t_vars *vars);
 void	cd_function(t_com *list, t_vars *vars);
+void	env_function(t_com *list, t_vars *vars);
 
 
 // UTILS_BUILT-INS
