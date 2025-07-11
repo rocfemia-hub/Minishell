@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/07/08 01:21:45 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/11 21:30:44 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void echo_function(t_com *list, t_vars *vars)
 	char **args;
 
 	if (!list->arg || !*list->arg)
-		return (void)write(vars->fd_out, "\n", 1);
+		return (void)write(list->fd_out, "\n", 1);
 	args = ft_split(list->arg, ' ');
 	i = 0;
 	newline = 1;
@@ -30,13 +30,13 @@ void echo_function(t_com *list, t_vars *vars)
 	}
 	while (args[i])
 	{
-		write(vars->fd_out, args[i], ft_strlen(args[i]));
+		write(list->fd_out, args[i], ft_strlen(args[i]));
 		if (args[i + 1])
-			write(vars->fd_out, " ", 1);
+			write(list->fd_out, " ", 1);
 		i++;
 	}
 	if (newline)
-		write(vars->fd_out, "\n", 1);
+		write(list->fd_out, "\n", 1);
 	ft_free_free(args);
 }
 
@@ -47,9 +47,9 @@ void pwd_function(t_com *list, t_vars *vars)
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL) // getcwd me dice el directorio que estoy actualemte, es gestion de errores
 		return (perror("pwd"));
-	bytes_written = write(vars->fd_out, cwd, ft_strlen(cwd));
+	bytes_written = write(list->fd_out, cwd, ft_strlen(cwd));
 	if (bytes_written != -1)
-		write(vars->fd_out, "\n", 1);
+		write(list->fd_out, "\n", 1);
 }
 
 void exit_function(t_com *list, t_vars *vars)

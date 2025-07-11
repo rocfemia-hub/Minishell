@@ -24,7 +24,6 @@ void init_vars(t_vars *vars, int argc, char **argv,  char **env)
 	vars->argc = argc;
 	vars->argv = argv;
 	vars->env = env;
-	vars->fd_out = 1;
 }
 
 int line_break(char *line)
@@ -54,6 +53,7 @@ int main(int argc, char **argv, char **env)
 	//ft_bzero(&commands, sizeof(commands));
 	//ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
 	init_vars(&vars, argc, argv, env);
+	commands->fd_out = 1; // TEMPORAL!!!!  hay que CAMBIAR esto, el 1 es para poder probar que funcione el ejecutor y los builtings
 	while (1)
 	{
 		line = readline("minishell-> ");

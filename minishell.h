@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/03 14:28:24 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/11 21:21:50 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ typedef struct s_vars
 	int argc; //añadiendo argc y argv para tenerlos siempre a mano.
 	char **argv;
 	char **env;
-	int fd_in; 
-	int fd_out; 
 } t_vars;
 
 typedef struct s_com
@@ -37,6 +35,8 @@ typedef struct s_com
 	char *command_arg; // ej: "ls -la"
 	char *arg; // ej: "-la"
 	char *path_command; // ej: "/usr/bin/ls"
+	int fd_in; // cada comando tiene su propio input y output
+	int fd_out; // cada comando tiene su propio input y output
 	int index; //para saber en que nodo de la lista estas
 	int flag_built; // 1 para built 0 execve
 	struct s_com *next;

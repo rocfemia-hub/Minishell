@@ -6,7 +6,7 @@ BLUE = \033[34m
 RESET = \033[0m
 
 SRC = mix/listas.c mix/main.c mix/error.c \
-      exec/built_ins.c exec/utils_built_ins.c \
+      exec/built_ins1.c exec/built_ins2.c exec/executor.c exec/utils_built_ins.c \
       parser/token.c parser/split_mini.c parser/commands1.c parser/commands2.c parser/quotes.c \
 
 OBJS = ${SRC:.c=.o}
