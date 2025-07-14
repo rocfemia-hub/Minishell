@@ -6,22 +6,23 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/11 23:54:23 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/14 14:08:01 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
-#define MINISHELL_H
-#define READ_FD 0
-#define WRITE_FD 1
+# define MINISHELL_H
+# define READ_FD 0
+# define WRITE_FD 1
 
-#include "./libft/libft.h"
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <dirent.h>
+# include "./libft/libft.h"
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <sys/wait.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <dirent.h>
 
 typedef struct s_vars
 {
@@ -43,7 +44,7 @@ typedef struct s_com
 	int i; // no guarda información util, es para ahorrar lineas, un iterador normal
 	int flag_built; // 1 para built 0 execve
 	struct s_com *next;
-	t_vars *vars;	
+	t_vars *vars;
 }	t_com;
 
 
@@ -52,12 +53,12 @@ typedef struct s_com
 
 
 // MAIN
-void commands_control(t_com *list, t_vars *vars);
-int line_break(char *line);
-void init_vars(t_vars *vars, int argc, char **argv,  char **env);
+void	commands_control(t_com *list, t_vars *vars);
+int		line_break(char *line);
+void	init_vars(t_vars *vars, int argc, char **argv,  char **env);
 
 //LISTAS
-t_com *lstnew(int index);
+t_com	*lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
 void 	print_list(t_com *list);
 void	free_list(t_com *list);
@@ -91,10 +92,10 @@ int		valid_number(char *str);
 
 
 // TOKEN.C
-t_com *token(char *line);
-void *init_commands(char **commands, t_com *temp);
-void *how_is(char *line, t_com *temp);
-t_com *init_struct(char *line);
+t_com	*token(char *line);
+void	*init_commands(char **commands, t_com *temp);
+void	*how_is(char *line, t_com *temp);
+t_com	*init_struct(char *line);
 
 
 // SPLIT_MINI.C
