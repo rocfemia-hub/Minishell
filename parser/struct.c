@@ -25,6 +25,7 @@ char *ft_strjoin_mini(int len, t_com *commands)
         j++;
     }
     cmd_arg[j] = '\0';
+    commands->command_arg = cmd_arg;
 }
 
 t_com *create_struct(char *line, t_pipes pipes)
@@ -59,7 +60,7 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     while (line[end] == ' ') // Saltar espacios después del comando
         end++;
     commands->arg = ft_substr(line, end, ft_strlen(line) - end);
-    len = ft_strlen(commands->command) + ft_strlen(commands->arg) + 2; // lomgitud que va a tener cmd_arg;
-    commands->command_arg = ft_strjoin_mini(len, commands);
+    len = ft_strlen(commands->command) + ft_strlen(commands->arg) + 2; // longitud que va a tener cmd_arg;
+    ft_strjoin_mini(len, commands);
     commands->flag_built = 1; // falta un if para saber si es built o no 
 }
