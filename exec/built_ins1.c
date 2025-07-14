@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_ins1.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
+/*   Updated: 2025/07/11 21:30:44 by roo              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 
 void echo_function(t_com *list, t_vars *vars)
 { // Ya funciona correctamente :)))
@@ -6,9 +18,9 @@ void echo_function(t_com *list, t_vars *vars)
 	int newline;
 	char **args;
 
-	if (!list->cmd_arg[1] || !*list->cmd_arg[1])
-		return (void)write(vars->fd_out, "\n", 1);
-	args = ft_split(list->cmd_arg[1], ' ');
+	if (!list->arg || !*list->arg)
+		return (void)write(list->fd_out, "\n", 1);
+	args = ft_split(list->arg, ' ');
 	i = 0;
 	newline = 1;
 	while (args[i] && valid_n_option(args[i]))
@@ -18,13 +30,13 @@ void echo_function(t_com *list, t_vars *vars)
 	}
 	while (args[i])
 	{
-		write(vars->fd_out, args[i], ft_strlen(args[i]));
+		write(list->fd_out, args[i], ft_strlen(args[i]));
 		if (args[i + 1])
-			write(vars->fd_out, " ", 1);
+			write(list->fd_out, " ", 1);
 		i++;
 	}
 	if (newline)
-		write(vars->fd_out, "\n", 1);
+		write(list->fd_out, "\n", 1);
 	ft_free_free(args);
 }
 
@@ -35,14 +47,13 @@ void pwd_function(t_com *list, t_vars *vars)
 
 	if (getcwd(cwd, sizeof(cwd)) == NULL) // getcwd me dice el directorio que estoy actualemte, es gestion de errores
 		return (perror("pwd"));
-	bytes_written = write(vars->fd_out, cwd, ft_strlen(cwd));
+	bytes_written = write(list->fd_out, cwd, ft_strlen(cwd));
 	if (bytes_written != -1)
-		write(vars->fd_out, "\n", 1);
+		write(list->fd_out, "\n", 1);
 }
 
-// FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
 void exit_function(t_com *list, t_vars *vars)
-{  // gestiona el exit de maera que salga por la salida de error que deba salir
+{  // Ya funciona correctamente :)))
 	if (vars->argc == 1) // argc = 1: solo "exit"
 		exit(0);
 	if (vars->argc == 2) // argc = 2: "exit" + un argumento
@@ -59,29 +70,14 @@ void exit_function(t_com *list, t_vars *vars)
 	exit(1);
 }
 
-// FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
-void env_function(t_com *list, t_vars *vars)
-{  // gestiona la impresión de env
-	int i = 0;
-
-	if (!vars->env)
-		return;
-	while (vars->env[i])
-	{
-		write(vars->fd_out, vars->env[i], ft_strlen(vars->env[i])); // simplemente imprime linea a linea lo que hay en el env, sin opciones ni argmentos (lo pone en el subject)
-		write(vars->fd_out, "\n", 1);
-		i++;
-	}
-}
-
 void cd_function(t_com *list, t_vars *vars)
 { // Ya funciona correctamente :)))
-	if (!list->cmd_arg[1] || !*list->cmd_arg[1]) // cd debe tener SOLO un argumento
+	if (!list->arg || !*list->arg) // cd debe tener SOLO un argumento
 	{
 		write(2, "cd: missing argument\n", 21);
 		return;
 	}
-	char **args = ft_split_mini(list->cmd_arg[1], ' '); // Separa argumentos para verificar que solo hay uno
+	char **args = ft_split_mini(list->arg, ' '); // Separa argumentos para verificar que solo hay uno
 	if (!args || !args[0])
 	{
 		ft_free_free(args);

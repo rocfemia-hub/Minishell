@@ -40,7 +40,6 @@ void init_commands(char *line, t_com *commands)
         type_command(line + start, current);
 }
 
-
 t_com *token(char *line) // me separa la array de comandos, arg y flags en una estructura
 {
     t_com *commands;
