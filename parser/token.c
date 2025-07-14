@@ -6,39 +6,11 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 02:24:15 by roo               #+#    #+#             */
-/*   Updated: 2025/07/04 14:26:19 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/14 17:24:34 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-/*t_com *init_struct(char *line) // me crea la lista donde voy a meter los index y los fd_out
-{
-    int i;
-    int pipes;
-    t_com *new_node;
-    t_com *head;
-
-	i = 1;
-    pipes = 0;
-    new_node = NULL;
-    head = NULL;
-	if (!line)
-        return (NULL);
-    pipes = pipes_counter(line); // me cuenta los pipes que hay, sin que sean argumentos
-    //printf("pipes: %d\n", pipes);
-    head = lstnew(0);
-    if (!head)
-        return (NULL);
-    while (line[++i] && i < pipes + 1)
-    {
-        new_node = lstnew(i);
-        if (!new_node)
-            return (free_list(head), NULL);
-        lstadd_back(&head, new_node);
-    }
-    return (head);
-}*/
 
 void *how_is(char *line, t_com *temp) // me mira que es cada cosa y llama a las funciones que lo va a meter en la estructura
 {
@@ -67,22 +39,6 @@ void *how_is(char *line, t_com *temp) // me mira que es cada cosa y llama a las 
         not_built(temp, spaces); // para que siempre asigne algo
     return (free(spaces), NULL);
 }
-
-/*void *init_commands(char **commands /*split por pipes, t_com *temp) // me va llamando a la funcion que mira lo que es cada comando, pasando cada array de la matriz que hemos separado en pipes
-{
-    int i = 0;
-	t_com *aux_temp; // añadiendo un auxiliar para el temp;
-
-	aux_temp = temp;
-	if (!aux_temp || !temp)
-        return(NULL);
-    while (aux_temp && commands[i])
-    {
-        how_is(commands[i], aux_temp);
-        aux_temp = aux_temp->next;
-        i++;
-    }
-}*/
 
 t_com *token(char *line) // me separa la array de comandos, arg y flags en una estructura
 {
