@@ -9,9 +9,7 @@ t_com *lstnew(int index)
 		return (NULL);
 	new->previous = NULL;
 	new->index = index;
-	new->command = NULL;
-	new->arg = NULL;
-	new->command_arg = NULL;
+	new->cmd_arg = NULL;
 	new->path_command = NULL; // anadiendo la inicialización de pah_command
 	new->flag_built = 0;
 	new->next = NULL;
@@ -45,12 +43,8 @@ void free_list(t_com *list)
 		temp = list;
 		list = list->next;
 		// he añadido muchos más frees para liberar todas las strings de la lista
-		if (temp->command)
-            free(temp->command);
-        if (temp->arg)
-            free(temp->arg);
-        if (temp->command_arg)
-            free(temp->command_arg);
+		if (temp->cmd_arg)
+            ft_free_free(temp->cmd_arg);
         if (temp->path_command)
             free(temp->path_command);
 		free(temp);
@@ -59,9 +53,20 @@ void free_list(t_com *list)
 
 void print_list(t_com *list) // funcion para debuguear
 {
-	while (list)
-	{
-		printf("Index: %d, argumentos: %s, command: %s\n", list->index, list->arg, list->command);
-		list = list->next;
-	}
+    while (list)
+    {
+        printf("Index: %d, ", list->index);
+
+        if (list->cmd_arg && list->cmd_arg[0])
+            printf("command: %s, ", list->cmd_arg[0]);
+        else
+            printf("command: (null), ");
+
+        if (list->cmd_arg && list->cmd_arg[1])
+            printf("argumentos: %s\n", list->cmd_arg[1]);
+        else
+            printf("argumentos: (null)\n");
+
+        list = list->next;
+    }
 }

@@ -38,25 +38,58 @@ int quotes(char *line)
     return (1);
 }
 
-char *get_clean_command(char *line)
+int words_in_quotes(char *line, int start, int end)
+{
+    int i;
+    int in_word;
+    int word_count;
+
+    i = start;
+    in_word = 0;
+    word_count = 0;
+    while (i < end)
+    {
+        if (line[i] != ' ' && !in_word)
+        {
+            in_word = 1;
+            word_count++;
+        }
+        else if (line[i] == ' ')
+            in_word = 0;
+        i++;
+    }
+    return (word_count > 1);
+}
+char *get_clean_command(char *line, int *end_index)
 {
     int i = 0;
+    int j;
     char quote;
 
     while (line[i] == ' ')
         i++;
+    j = i;
     if (line[i] == '\'' || line[i] == '"')
     {
         quote = line[i];
-        int j = i + 1;
+        j += 1;
+        int start = j;
         while (line[j] && line[j] != quote)
             j++;
         if (line[j] == quote)
-            return (ft_substr(line, i + 1, j - i - 1));  // devuelve solo la palabra sin comillas
+        {
+            if (words_in_quotes(line, start, j))
+                return NULL;
+            if (end_index)
+                *end_index = j + 1;
+            return (ft_substr(line, start, j - start));
+        }
+        return NULL; // comillas no cerradas
     }
-    int j = i; // Si no hay comillas, va hasta primer espacio
     while (line[j] && line[j] != ' ')
         j++;
+    if (end_index)
+        *end_index = j;
     return (ft_substr(line, i, j - i));
 }
 

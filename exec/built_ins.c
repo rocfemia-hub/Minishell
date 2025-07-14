@@ -6,9 +6,9 @@ void echo_function(t_com *list, t_vars *vars)
 	int newline;
 	char **args;
 
-	if (!list->arg || !*list->arg)
+	if (!list->cmd_arg[1] || !*list->cmd_arg[1])
 		return (void)write(vars->fd_out, "\n", 1);
-	args = ft_split(list->arg, ' ');
+	args = ft_split(list->cmd_arg[1], ' ');
 	i = 0;
 	newline = 1;
 	while (args[i] && valid_n_option(args[i]))
@@ -76,12 +76,12 @@ void env_function(t_com *list, t_vars *vars)
 
 void cd_function(t_com *list, t_vars *vars)
 { // Ya funciona correctamente :)))
-	if (!list->arg || !*list->arg) // cd debe tener SOLO un argumento
+	if (!list->cmd_arg[1] || !*list->cmd_arg[1]) // cd debe tener SOLO un argumento
 	{
 		write(2, "cd: missing argument\n", 21);
 		return;
 	}
-	char **args = ft_split_mini(list->arg, ' '); // Separa argumentos para verificar que solo hay uno
+	char **args = ft_split_mini(list->cmd_arg[1], ' '); // Separa argumentos para verificar que solo hay uno
 	if (!args || !args[0])
 	{
 		ft_free_free(args);

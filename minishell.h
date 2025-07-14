@@ -39,9 +39,7 @@ typedef struct s_vars
 typedef struct s_com
 {
 	struct s_com *previous;
-	char *command; // ej: "ls"
-	char *command_arg; // ej: "ls -la"
-	char *arg; // ej: "-la"
+	char **cmd_arg; // [0] comando, [1] arg
 	char *path_command; // ej: "/usr/bin/ls"
 	int index; //para saber en que nodo de la lista estas
 	int flag_built; // 1 para built 0 execve
@@ -88,7 +86,6 @@ int		valid_number(char *str);
 
 
 // TOKEN.C
-t_com *init_struct(char *line, t_pipes pipes);
 void type_command(char *line, t_com *commands);
 void init_commands(char *line, t_com *commands);
 t_com *token(char *line);
@@ -97,23 +94,15 @@ t_com *token(char *line);
 // SPLIT_MINI.C
 char	**ft_split_mini(char const *s, char c);
 
-// COMMANDS1
-void echo_com(t_com *temp, char *line, char *cmd);
-void pwd_com(t_com *temp, char *line);
-void cd_com(t_com *temp, char *line);
-void export_com(t_com *temp, char *line);
-void unset_com(t_com *temp, char *line);
-
-// COMMANDS2
-void env_com(t_com *temp, char *line);
-void exit_com(t_com *temp, char *line);
-void *not_built(t_com *temp, char *line);
-
 // 	QUOTES
 int aux_quotes(char *lin);
 int quotes(char *line);
-char *get_clean_command(char *line);
+char *get_clean_command(char *line, int *end_index);
 int pipes_counter(char *line);
+
+//STRUCT
+t_com *create_struct(char *line, t_pipes pipes);
+void init_struct(char *line, char *cmd, int end, t_com *commands);
 
 
 #endif
