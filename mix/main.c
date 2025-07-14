@@ -53,12 +53,11 @@ int main(int argc, char **argv, char **env)
 	//ft_bzero(&commands, sizeof(commands));
 	//ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
 	init_vars(&vars, argc, argv, env);
-	commands->fd_out = 1; // TEMPORAL!!!!  hay que CAMBIAR esto, el 1 es para poder probar que funcione el ejecutor y los builtings
 	while (1)
 	{
 		line = readline("minishell-> ");
 		if (!line) // Ctrl+D
-            break;
+		break;
 		add_history(line); // añade al historial para poder usar las flechitas arriba y abajo
 		if (!line_break(line))
 		{
@@ -72,7 +71,15 @@ int main(int argc, char **argv, char **env)
             free(line);
             continue;
         }
+		commands->fd_out = 1; // TEMPORAL!!!!  hay que CAMBIAR esto, el 1 es para poder probar que funcione el ejecutor y los builtings
 		// printf("%s\n", commands->command);
+		if (!commands->command) 
+		{
+    		printf("Error: empty command\n");
+    		free(line);
+    		free_list(commands);
+    		continue;
+		}
 		if (commands && commands->command && ft_strnstr(commands->command, "error", 5))
 		{
 			printf("error\n");
