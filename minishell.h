@@ -110,7 +110,8 @@ int		aux_quotes(char *lin);
 int		quotes(char *line);
 char	*get_clean_command(char *line, int *end_index);
 int		pipes_counter(char *line);
-char *strip_outer_quotes(char *arg);
+char *parse_line_bash_flat(const char *line);
+
 
 //STRUCT
 t_com	*create_struct(char *line, t_pipes pipes);

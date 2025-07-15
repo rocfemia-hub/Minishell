@@ -100,19 +100,62 @@ int pipes_counter(char *line)
     return count;
 }
 
-char *strip_outer_quotes(char *arg)
-{
-    int len;
+#include <stdlib.h>
+#include <string.h>
 
-    if (!arg)
-        return NULL;
-    len = ft_strlen(arg);
-    if (len > 1 && ((arg[0] == '\'' || arg[0] == '"') && arg[len - 1] == arg[0]))
+// Verifica si la comilla inicial está escapada
+int is_escaped(const char *str, int pos)
+{
+    int count = 0;
+    pos--;
+    while (pos >= 0 && str[pos] == '\\')
     {
-        char *new_arg = ft_substr(arg, 1, len - 2);
-        free(arg);
-        return new_arg;
+        count++;
+        pos--;
     }
-    return(arg);
+    return (count % 2 == 1); // impar → está escapada
 }
 
+char *parse_line_bash_flat(const char *line)
+{
+    int i = 0; 
+    int j = 0;
+    int len = strlen(line);
+    char quote = 0;
+    char *result = malloc(len * 2 + 1); // espacio suficiente por si se expande
+    int need_space = 0;
+
+    if (!result)
+        return NULL;
+    while (i < len)
+    {
+        while (line[i] == ' ') // Saltar espacios iniciales
+            i++;
+        if (i >= len)
+            break;
+        if (need_space)
+            result[j++] = ' ';
+        need_space = 1;
+        quote = 0;
+        while (i < len && (quote || line[i] != ' '))
+        {
+            if (!quote && (line[i] == '\'' || line[i] == '"'))
+                quote = line[i++];
+            else if (quote && line[i] == quote)
+            {
+                quote = 0;
+                i++;
+            }
+            else if ((quote == '"' && line[i] == '\\' && (line[i + 1] == '"' || line[i + 1] == '\\' ||
+                line[i + 1] == '$' || line[i + 1] == '`')) || (!quote && line[i] == '\\' && line[i + 1]))
+            {
+                result[j++] = line[i + 1];
+                i += 2;
+            }
+            else
+                result[j++] = line[i++];
+        }
+    }
+    result[j] = '\0';
+    return result;
+}

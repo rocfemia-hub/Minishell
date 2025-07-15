@@ -4,14 +4,14 @@ void check_arg(t_com *commands)
 {
     if (!commands->command || !commands->arg)
         return;
-    printf("argumentos sin limpiar comillas: %s\n", commands->arg);
+    // printf("argumentos sin limpiar comillas: %s\n", commands->arg);
     if (!quotes(commands->arg))
     {
         free(commands->command);
         commands->command = ft_strdup("error");
     }
     else
-        commands->arg = strip_outer_quotes(commands->arg);
+        commands->arg = parse_line_bash_flat(commands->arg);
 }
 
 void type_command(char *line, t_com *commands)
