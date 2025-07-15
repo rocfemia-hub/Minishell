@@ -110,9 +110,9 @@ int		aux_quotes(char *lin);
 int		quotes(char *line);
 char	*get_clean_command(char *line, int *end_index);
 int		pipes_counter(char *line);
+char *strip_outer_quotes(char *arg);
 
 //STRUCT
-char	*ft_strjoin_mini(int len, t_com *commands);
 t_com	*create_struct(char *line, t_pipes pipes);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 

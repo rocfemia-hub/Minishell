@@ -38,63 +38,46 @@ int quotes(char *line)
     return (1);
 }
 
-int words_in_quotes(char *line, int start, int end)
-{
-    int i;
-    int in_word;
-    int word_count;
-
-    i = start;
-    in_word = 0;
-    word_count = 0;
-    while (i < end)
-    {
-        if (line[i] != ' ' && !in_word)
-        {
-            in_word = 1;
-            word_count++;
-        }
-        else if (line[i] == ' ')
-            in_word = 0;
-        i++;
-    }
-    return (word_count > 1);
-}
 char *get_clean_command(char *line, int *end_index)
 {
     int i = 0;
-    int j;
+    int start = 0;
+    int end = 0;
     char quote;
+    char *cmd;
 
-    while (line[i] == ' ')
+    while (line[i] == ' ') // Saltar espacios al inicio
         i++;
-    j = i;
     if (line[i] == '\'' || line[i] == '"')
     {
         quote = line[i];
-        j += 1;
-        int start = j;
-        while (line[j] && line[j] != quote)
-            j++;
-        if (line[j] == quote)
+        i++;
+        start = i;
+        while (line[i] && line[i] != quote) // Buscar comilla de cierre
         {
-            if (words_in_quotes(line, start, j))
+            if (line[i] == ' ') // espacio dentro de comillas: inválido
                 return NULL;
-            if (end_index)
-                *end_index = j + 1;
-            return (ft_substr(line, start, j - start));
+            i++;
         }
-        return NULL; // comillas no cerradas
+        if (!line[i]) // no encontró cierre
+            return (NULL);
+        end = i;
+        if (end_index)
+            *end_index = i + 1;
+        return (ft_substr(line, start, end - start)); // sin comillas
     }
-    while (line[j] && line[j] != ' ')
-        j++;
+    start = i;
+    while (line[i] && line[i] != ' ')   // Sin comillas: comando termina en espacio o final
+        i++;
+    end = i;
     if (end_index)
-        *end_index = j;
-    return (ft_substr(line, i, j - i));
+        *end_index = end;
+    return ft_substr(line, start, end - start);
 }
 
+
 int pipes_counter(char *line)
-{
+{ //cuenta las pipes que no son argumentos
     int i = 0;
     int count = 0;
     char open_quote = 0;
@@ -115,5 +98,21 @@ int pipes_counter(char *line)
     if (open_quote != 0)
         return (-1); // comillas no cerradas
     return count;
+}
+
+char *strip_outer_quotes(char *arg)
+{
+    int len;
+
+    if (!arg)
+        return NULL;
+    len = ft_strlen(arg);
+    if (len > 1 && ((arg[0] == '\'' || arg[0] == '"') && arg[len - 1] == arg[0]))
+    {
+        char *new_arg = ft_substr(arg, 1, len - 2);
+        free(arg);
+        return new_arg;
+    }
+    return(arg);
 }
 
