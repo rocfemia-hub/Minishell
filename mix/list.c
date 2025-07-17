@@ -57,12 +57,11 @@ void free_list(t_com *list)
 	}
 }
 
-void print_list(t_com *list)
+/*void print_list(t_com *list)
 { // funcion para debuguear
     while (list)
     {
         printf("Index: %d, ", list->index);
-
         if (list->command && list->command)
             printf("command: %s, ", list->command);
         else
@@ -75,4 +74,4 @@ void print_list(t_com *list)
 
         list = list->next;
     }
-}
+}*/

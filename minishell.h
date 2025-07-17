@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/14 18:06:48 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/17 01:48:45 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,16 @@ void	echo_function(t_com *list, t_vars *vars);
 void	pwd_function(t_com *list, t_vars *vars);
 void	exit_function(t_com *list, t_vars *vars);
 void	cd_function(t_com *list, t_vars *vars);
+
 void	env_function(t_com *list, t_vars *vars);
+void	export_function(t_com *list, t_vars *vars);
 
 
 // UTILS_BUILT-INS
 int		valid_n_option(char *str);
 int		valid_number(char *str);
+void	add_env_vars(char *new_var, t_vars *vars);
+void	print_export_vars(t_com *list, t_vars *vars);
 
 
 /*PARSER*/ 
