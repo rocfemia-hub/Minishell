@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/07/17 02:23:32 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/19 02:14:47 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void env_function(t_com *list, t_vars *vars)
 }
 
 void export_function(t_com *list, t_vars *vars)
-{ //AUN ¡*NO*! FUNCIONA COMO DEBE!!!
+{ //AUN ¡*NO*! FUNCIONA COMO DEBE!!! (bueno, ahora funciona algo mejor que la he retocado) "export MY_VAR=bye"
 	char **args;
     char *equals_pos; // Puntero para buscar el símbolo '='
     int i;
@@ -42,7 +42,7 @@ void export_function(t_com *list, t_vars *vars)
     {
         equals_pos = ft_strchr(args[i], '='); // Buscar símbolo '=' en el argumento actual
         if (equals_pos) // Solo procesar argumentos con formato VAR=valor
-            add_env_vars(args[i], vars); // Añadir variable al entorno
+            add_env_var(args[i], vars); // Añadir variable al entorno
         i++; // Si no tiene '=', ignorar
     }
     ft_free_free(args);
