@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/19 20:51:17 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/19 20:53:01 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int find_env_var(char *var_name, t_vars *vars)
     
     if (!var_name)
         return (-1);
-    
     name_len = ft_strlen(var_name);
     i = 0;
     while (vars->env[i])

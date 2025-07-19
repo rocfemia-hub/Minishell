@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/07/19 16:38:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/20 00:09:41 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,20 @@ void print_export_vars(t_com *list, t_vars *vars)
         write(list->fd_out, "\n", 1); // Añadir salto de línea después de cada variable
         i++;
     }
+}
+
+void remove_env_var(char **env, int index)
+{
+    int i;
+
+	i = index; // Mover todas las entradas una posición hacia atrás
+    if (!env || index < 0)
+        return;
+    free(env[index]);
+    while (env[i + 1])
+    {
+        env[i] = env[i + 1];
+        i++;
+    }
+    env[i] = NULL;
 }
