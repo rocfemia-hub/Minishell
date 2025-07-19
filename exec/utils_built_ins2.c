@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/19 16:57:10 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/19 20:51:17 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void add_env_var(char *new_var, t_vars *vars)
     }
     else // Añadir nueva variable
         add_new_env_vars(new_var, vars);
-    
     free(var_name);
 }
 
@@ -79,20 +78,16 @@ char *get_var_name(char *var_assignment)
     equals_pos = ft_strchr(var_assignment, '=');
     if (!equals_pos)
         return (ft_strdup(var_assignment));  // Sin '=', todo es el nombre
-    
-    // Extraer solo la parte antes de '='
-    return (ft_substr(var_assignment, 0, equals_pos - var_assignment));
+    return (ft_substr(var_assignment, 0, equals_pos - var_assignment)); // Extraer solo la parte antes de '='
 }
 
 void export_existing_var(char *var_name, t_vars *vars)
 {
     char *empty_var;
     
-    // Crear variable con valor vacío
-    empty_var = ft_strjoin(var_name, "=");
+    empty_var = ft_strjoin(var_name, "="); // Crear variable con valor vacío
     if (!empty_var)
         return;
-    
     add_env_var(empty_var, vars); // Exportar la variable
     free(empty_var);
 }
