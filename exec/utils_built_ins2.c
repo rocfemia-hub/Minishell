@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/19 02:10:43 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/19 16:57:10 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,16 +84,15 @@ char *get_var_name(char *var_assignment)
     return (ft_substr(var_assignment, 0, equals_pos - var_assignment));
 }
 
-void print_export_vars(t_com *list, t_vars *vars)
+void export_existing_var(char *var_name, t_vars *vars)
 {
-    int i;
+    char *empty_var;
     
-    i = 0;
-    while (vars->env[i])
-    {
-        write(list->fd_out, "declare -x ", 11); // Escribir prefijo estándar de bash para variables exportadas
-        write(list->fd_out, vars->env[i], ft_strlen(vars->env[i])); // Escribir la variable completa (formato: VAR=valor)
-        write(list->fd_out, "\n", 1); // Añadir salto de línea después de cada variable
-        i++;
-    }
+    // Crear variable con valor vacío
+    empty_var = ft_strjoin(var_name, "=");
+    if (!empty_var)
+        return;
+    
+    add_env_var(empty_var, vars); // Exportar la variable
+    free(empty_var);
 }

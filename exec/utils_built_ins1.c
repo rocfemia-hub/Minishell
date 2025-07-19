@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/07/18 22:44:32 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/19 16:38:00 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,18 @@ int valid_number(char *str)
     }
     
     return (1);
+}
+
+void print_export_vars(t_com *list, t_vars *vars)
+{
+    int i;
+    
+    i = 0;
+    while (vars->env[i])
+    {
+        write(list->fd_out, "declare -x ", 11); // Escribir prefijo estándar de bash para variables exportadas
+        write(list->fd_out, vars->env[i], ft_strlen(vars->env[i])); // Escribir la variable completa (formato: VAR=valor)
+        write(list->fd_out, "\n", 1); // Añadir salto de línea después de cada variable
+        i++;
+    }
 }

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/18 22:58:21 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/19 16:49:48 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,13 @@ void	export_function(t_com *list, t_vars *vars);
 // UTILS_BUILT-INS
 int		valid_n_option(char *str);
 int		valid_number(char *str);
+void	print_export_vars(t_com *list, t_vars *vars);
 
 void	add_env_var(char *new_var, t_vars *vars);
 void	add_new_env_vars(char *new_var, t_vars *vars);
 int		find_env_var(char *var_name, t_vars *vars);
 char	*get_var_name(char *var_assignment);
-void	print_export_vars(t_com *list, t_vars *vars);
+void	export_existing_var(char *var_name, t_vars *vars);
 
 
 /*PARSER*/ 
