@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/14 18:06:48 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/20 00:10:19 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,15 @@ typedef struct s_pipes
 	int pipes;
 } t_pipes;
 
+typedef struct s_clean_cmd
+{
+	int i;
+    int start;
+    int end;
+    char quote;
+    char *cmd;
+	int end_index;
+} t_clean_cmd;
 
 typedef struct s_vars
 {
@@ -86,12 +95,22 @@ void	echo_function(t_com *list, t_vars *vars);
 void	pwd_function(t_com *list, t_vars *vars);
 void	exit_function(t_com *list, t_vars *vars);
 void	cd_function(t_com *list, t_vars *vars);
-void	env_function(t_com *list, t_vars *vars);
 
+void	env_function(t_com *list, t_vars *vars);
+void	export_function(t_com *list, t_vars *vars);
+void	unset_function(t_com *list, t_vars *vars);
 
 // UTILS_BUILT-INS
 int		valid_n_option(char *str);
 int		valid_number(char *str);
+void	print_export_vars(t_com *list, t_vars *vars);
+void	remove_env_var(char **env, int index);
+
+void	add_env_var(char *new_var, t_vars *vars);
+void	add_new_env_vars(char *new_var, t_vars *vars);
+int		find_env_var(char *var_name, t_vars *vars);
+char	*get_var_name(char *var_assignment);
+void	export_existing_var(char *var_name, t_vars *vars);
 
 
 /*PARSER*/ 
@@ -108,7 +127,7 @@ char	**ft_split_mini(char const *s, char c);
 // 	QUOTES
 int		aux_quotes(char *lin);
 int		quotes(char *line);
-char	*get_clean_command(char *line, int *end_index);
+char	*clean_cmd(char *line, t_clean_cmd *data);
 int		pipes_counter(char *line);
 
 //STRUCT

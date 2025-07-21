@@ -17,6 +17,10 @@ void commands_control(t_com *list, t_vars *vars)
 			env_function(list, vars);
 		else if (list->command && ft_strnstr(list->command, "cd", 3)) // 3 para incluir '\0'
 			cd_function(list, vars);
+		else if (list->command && ft_strnstr(list->command, "export", 7)) // 7 para incluir '\0'
+			export_function(list, vars);
+		else if (list->command && ft_strnstr(list->command, "unset", 6)) // 6 para incluir '\0'
+			unset_function(list, vars);
 		else
 			printf("Command '%s' not found\n", list->command); // no se si hace algo ahora mismo o se puede borrar
 	}

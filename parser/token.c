@@ -2,18 +2,24 @@
 
 void type_command(char *line, t_com *commands)
 {
-    int end;
-    char *cmd = get_clean_command(line, &end);
+    t_clean_cmd data;
 
-    if (!cmd)
+    ft_bzero(&data, sizeof(t_clean_cmd));
+    data.cmd = clean_cmd(line, &data);
+    printf("cmd: %s\n", data.cmd);
+    if (!data.cmd || !ft_strncmp(data.cmd, "error", 5))
+    {
+        commands->command = ft_strdup("error");
+        commands->arg = NULL;
         return;
-    init_struct(line, cmd, end, commands);
-    free(cmd); 
+    }
+    init_struct(line, data.cmd, data.end_index, commands);
+    free(data.cmd);
 }
 
 void init_commands(char *line, t_com *commands)
 {
-    int i = 0; 
+    int i = 0;
     int start = 0;
     char quote = 0;
     t_com *current = commands;
@@ -22,25 +28,25 @@ void init_commands(char *line, t_com *commands)
     {
         if ((line[i] == '"' || line[i] == '\''))
         {
-            if (!quote)
+            if (!quote) // quotes open or closed
                 quote = line[i];
             else if (quote == line[i])
                 quote = 0;
         }
-        if (line[i] == '|' && !quote) 
+        if (line[i] == '|' && !quote)
         {
-            line[i] = '\0'; 
+            line[i] = '\0';
             type_command(line + start, current);
             start = i + 1;
             current = current->next;
         }
         i++;
     }
-    if (current)  // Último comando después del último pipe (o único comando)
+    if (current) // last command and arg
         type_command(line + start, current);
 }
 
-t_com *token(char *line) // me separa la array de comandos, arg y flags en una estructura
+t_com *token(char *line) 
 {
     t_com *commands;
     t_pipes pipes;

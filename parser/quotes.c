@@ -6,21 +6,21 @@ int aux_quotes(char *line)
     char open_quote;
 
     i = 0;
-    open_quote = 0; // 0 = ninguna, '\'' o '"'
+    open_quote = 0; 
     while (line[i])
     {
         if ((line[i] == '\'' || line[i] == '"'))
         {
             if (!open_quote)
-                open_quote = line[i]; // abre comilla
+                open_quote = line[i]; 
             else if (line[i] == open_quote)
-                open_quote = 0; // cierra comilla
+                open_quote = 0;
             else
-                ; // comilla dentro de otra se ignorar
+                ;
         }
         i++;
     }
-    return (open_quote == 0); // devuelve 1 si todo balanceado
+    return (open_quote == 0);
 }
 
 int quotes(char *line)
@@ -30,71 +30,46 @@ int quotes(char *line)
     i = 0;
     while (line[i])
     {
-        if (line[i] == 34 || line[i] == 39) // comillas dobles-34 y comillas simples-39
+        if (line[i] == '\'' || line[i] == '"') 
             if (aux_quotes(line) == 0)
                 return (0);
         i++;
     }
-    return (1);
+    return (1); // return 1 if is okay 
 }
 
-int words_in_quotes(char *line, int start, int end)
+char *clean_cmd(char *line, t_clean_cmd *data)
 {
-    int i;
-    int in_word;
-    int word_count;
-
-    i = start;
-    in_word = 0;
-    word_count = 0;
-    while (i < end)
+    while (line[data->i] == ' ')
+        data->i++;
+    if (line[data->i] == '\'' || line[data->i] == '"')
     {
-        if (line[i] != ' ' && !in_word)
+        data->quote = line[data->i]; 
+        data->i++;
+        data->start = data->i;
+        while (line[data->i] && line[data->i] != data->quote)
         {
-            in_word = 1;
-            word_count++;
+            if (line[data->i] == ' ') // spaces inside command - invalid
+                return (ft_substr("error", 0, 5));
+            data->i++;
         }
-        else if (line[i] == ' ')
-            in_word = 0;
-        i++;
+        if (!line[data->i]) // quotes not closed
+            return (ft_substr("error", 0, 5));
+        data->end = data->i;
+        data->end_index = data->i + 1;
+        return ft_substr(line, data->start, data->end - data->start);
     }
-    return (word_count > 1);
+    data->start = data->i;
+    while (line[data->i] && line[data->i] != ' ')
+        data->i++;
+    data->end = data->i;
+    data->end_index = data->end;
+    return (ft_substr(line, data->start, data->end - data->start));
 }
-char *get_clean_command(char *line, int *end_index)
-{
-    int i = 0;
-    int j;
-    char quote;
 
-    while (line[i] == ' ')
-        i++;
-    j = i;
-    if (line[i] == '\'' || line[i] == '"')
-    {
-        quote = line[i];
-        j += 1;
-        int start = j;
-        while (line[j] && line[j] != quote)
-            j++;
-        if (line[j] == quote)
-        {
-            if (words_in_quotes(line, start, j))
-                return NULL;
-            if (end_index)
-                *end_index = j + 1;
-            return (ft_substr(line, start, j - start));
-        }
-        return NULL; // comillas no cerradas
-    }
-    while (line[j] && line[j] != ' ')
-        j++;
-    if (end_index)
-        *end_index = j;
-    return (ft_substr(line, i, j - i));
-}
 
 int pipes_counter(char *line)
-{
+{ // pipes
     int i = 0;
     int count = 0;
     char open_quote = 0;
@@ -104,16 +79,15 @@ int pipes_counter(char *line)
         if (line[i] == '\'' || line[i] == '"')
         {
             if (!open_quote)
-                open_quote = line[i]; // abre comilla
+                open_quote = line[i]; 
             else if (line[i] == open_quote)
-                open_quote = 0; // cierra comilla
+                open_quote = 0; 
         }
         else if (line[i] == '|' && !open_quote)
-            count++; // solo si NO estamos dentro de comillas
+            count++; 
         i++;
     }
     if (open_quote != 0)
-        return (-1); // comillas no cerradas
+        return (-1); 
     return count;
 }
-

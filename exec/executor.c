@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/14 14:17:20 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/19 21:14:46 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,8 @@ char	*get_path(char *cmd, char **envp, t_com *pipex)
 	return (ft_free_free(paths), result);
 }
 
-// recibir estructura de comando y hacer execve en funcion del contenido de la estructura
 int	execute(t_com *list)
-{
+{ // recibir estructura de comando y hacer execve en funcion del contenido de la estructura
 	char **command; // resultado de split de command_arg xq execve recibe un (char **)
 	int	fd[2];
 	int	pid1;
