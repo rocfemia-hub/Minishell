@@ -9,7 +9,7 @@ void type_command(char *line, t_com *commands)
     if (!data.cmd || !ft_strncmp(data.cmd, "error", 5))
     {
         commands->command = ft_strdup("error");
-        commands->arg = NULL;
+        commands->args = NULL;
         return;
     }
     init_struct(line, data.cmd, data.end_index, commands);
@@ -55,7 +55,6 @@ t_com *token(char *line)
         return(NULL);
     init_commands(line, commands);
     check_arg(commands);
-
     print_list(commands);
     return (commands);
 }

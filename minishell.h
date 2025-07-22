@@ -51,7 +51,7 @@ typedef struct s_com
 	struct s_com *previous;
 	char *command; // ej: "ls"
 	char *command_arg; // ej: "ls -la"
-	char *arg; // ej: "-la"
+	char **args; // ej: "-la" ---> 
 	char *path_command; // ej: "/usr/bin/ls"
 	int fd_in; // cada comando tiene su propio input y output
 	int fd_out; // cada comando tiene su propio input y output

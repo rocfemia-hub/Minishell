@@ -39,33 +39,37 @@ void free_list(t_com *list)
 		list = list->next;
 		// he añadido muchos más frees para liberar todas las strings de la lista
 		if (temp->command)
-            free(temp->command);
-        if (temp->arg)
-            free(temp->arg);
-        if (temp->command_arg)
-            free(temp->command_arg);
-        if (temp->path_command)
-            free(temp->path_command);
+			free(temp->command);
+		if (temp->args)
+			free(temp->args);
+		if (temp->command_arg)
+			free(temp->command_arg);
+		if (temp->path_command)
+			free(temp->path_command);
 		free(temp);
 	}
 }
 
 void print_list(t_com *list)
 { // funcion para debuguear
-    while (list)
-    {
-        printf("Index: %d, ", list->index);
+	while (list)
+	{
+		printf("Index: %d, ", list->index);
 
-        if (list->command && list->command)
-            printf("command: %s, ", list->command);
-        else
-            printf("command: (null), ");
+		if (list->command && list->command)
+			printf("command: %s, ", list->command);
+		else
+			printf("command: (null), ");
 
-        if (list->arg && list->arg)
-            printf("argumentos: %s\n", list->arg);
-        else
-            printf("argumentos: (null)\n");
+		if (list->args && list->args)
+			printf("argumentos: %s\n", list->args);
+		else
+			printf("argumentos: (null)\n");
+		if (list->command_arg && list->command_arg)
+			printf("command_arg: %s\n", list->command_arg);
+		else
+			printf("command_arg: (null)\n");
 
-        list = list->next;
-    }
+		list = list->next;
+	}
 }

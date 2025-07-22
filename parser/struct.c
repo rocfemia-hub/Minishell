@@ -14,8 +14,8 @@ char *ft_strjoin_mini(int len, t_com *commands)
     cmd_arg[j] = ' ';
     j++;
     i = 0;
-    while (commands->arg[i])
-        cmd_arg[j++] = commands->arg[i++];
+    while (commands->args[i])
+        cmd_arg[j++] = commands->args[i++];
     cmd_arg[j] = '\0';
     commands->command_arg = cmd_arg;
 }
@@ -51,7 +51,7 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd) + 1);
     while (line[end] == ' ')
         end++;
-    commands->arg = ft_substr(line, end, ft_strlen(line) - end);
+    commands->args = ft_substr(line, end, ft_strlen(line) - end);
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
             !ft_strncmp(commands->command, "unset", 5))
@@ -61,12 +61,12 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
 void check_arg(t_com *commands)
 {
     int len;
-    if (!commands || !commands->arg || !commands->command)
+    if (!commands || !commands->args || !commands->command)
         return ;
     // if (is_expansor(commands))
     //     expander(commands);
     // else
     clean_arg(commands);
-    len = ft_strlen(commands->command) + ft_strlen(commands->arg) + 2; // len cmd_arg;
+    len = ft_strlen(commands->command) + ft_strlen(commands->args) + 2; // len cmd_arg;
     ft_strjoin_mini(len, commands);
 }
