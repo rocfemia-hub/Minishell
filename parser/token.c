@@ -55,6 +55,7 @@ t_com *token(char *line)
         return(NULL);
     init_commands(line, commands);
     check_arg(commands);
+
     print_list(commands);
     return (commands);
 }
