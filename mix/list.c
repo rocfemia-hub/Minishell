@@ -4,17 +4,10 @@ t_com *lstnew(int index) // he borrado el new->fd_out = 1; porque lo he declarad
 {
 	t_com *new;
 
-	new = (t_com *)malloc(sizeof(t_com));
+	new = (t_com *)ft_calloc(sizeof(t_com), 1);
 	if (!new)
 		return (NULL);
-	new->previous = NULL;
 	new->index = index;
-	new->command = NULL;
-	new->arg = NULL;
-	new->command_arg = NULL;
-	new->path_command = NULL; // anadiendo la inicialización de pah_command
-	new->flag_built = 0;
-	new->next = NULL;
 	return (new);
 }
 

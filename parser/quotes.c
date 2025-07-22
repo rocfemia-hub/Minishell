@@ -3,28 +3,27 @@
 
 void *clean_arg(t_com *commands)
 {
-    char *arg = commands->arg;
     char *cleaned;
     int i = 0;
     int j = 0;
     char quote = 0;
 
-    cleaned = ft_malloc(ft_strlen(arg) + 1);
+    cleaned = malloc(ft_strlen(commands->arg) + 1);
     if (!cleaned)
         return (NULL);
-    while (arg[i])
+    while (commands->arg[i])
     {
-        if ((arg[i] == '\'' || arg[i] == '"'))
+        if ((commands->arg[i] == '\'' || commands->arg[i] == '"'))
         {
             if (!quote) //open
-                quote = arg[i];
-            else if (quote == arg[i]) // close
+                quote = commands->arg[i];
+            else if (quote == commands->arg[i]) // close
                 quote = 0;
             else
-                cleaned[j++] = arg[i];
+                cleaned[j++] = commands->arg[i];
         }
         else
-            cleaned[j++] = arg[i];
+            cleaned[j++] = commands->arg[i];
         i++;
     }
     cleaned[j] = '\0';
@@ -33,7 +32,7 @@ void *clean_arg(t_com *commands)
     return (NULL);
 }
 
-char *clean_cmd(char *line, t_clean_cmd *data)
+char *clean_cmd(char *line, t_clean_cmd *data) 
 {
     while (line[data->i] == ' ')
         data->i++;
@@ -62,20 +61,23 @@ char *clean_cmd(char *line, t_clean_cmd *data)
     return (ft_substr(line, data->start, data->end - data->start));
 }
 
-
+// |, <, >, >>, <<
 int pipes_counter(char *line)
 { // pipes
-    int i = 0;
-    int count = 0;
-    char open_quote = 0;
+    int i;
+    int count;
+    char open_quote;
 
+    i = 0;
+    count = 0;
+    open_quote = 0;
     while (line[i])
     {
         if (line[i] == '\'' || line[i] == '"')
         {
-            if (!open_quote)
+            if (!open_quote) //open
                 open_quote = line[i]; 
-            else if (line[i] == open_quote)
+            else if (line[i] == open_quote) //close
                 open_quote = 0; 
         }
         else if (line[i] == '|' && !open_quote)
@@ -84,5 +86,5 @@ int pipes_counter(char *line)
     }
     if (open_quote != 0)
         return (-1); 
-    return count;
+    return (count);
 }

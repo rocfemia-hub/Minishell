@@ -6,7 +6,6 @@ void type_command(char *line, t_com *commands)
 
     ft_bzero(&data, sizeof(t_clean_cmd));
     data.cmd = clean_cmd(line, &data);
-    printf("cmd: %s\n", data.cmd);
     if (!data.cmd || !ft_strncmp(data.cmd, "error", 5))
     {
         commands->command = ft_strdup("error");
@@ -33,7 +32,7 @@ void init_commands(char *line, t_com *commands)
             else if (quote == line[i])
                 quote = 0;
         }
-        if (line[i] == '|' && !quote)
+        if (line[i] == '|' && !quote) // < << >> <
         {
             line[i] = '\0';
             type_command(line + start, current);
@@ -52,6 +51,8 @@ t_com *token(char *line)
     t_pipes pipes;
 
     commands = create_struct(line, pipes);
+    if (!commands)
+        return(NULL);
     init_commands(line, commands);
     check_arg(commands);
     print_list(commands);

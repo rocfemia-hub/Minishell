@@ -24,7 +24,7 @@ t_com *create_struct(char *line, t_pipes pipes)
 { // create nodes list
     int i = 0;
     t_com *new;
-    t_com *head;
+    t_com *head; 
 
     pipes.pipes = pipes_counter(line); // counter pipes 
     if (pipes.pipes < 0)
