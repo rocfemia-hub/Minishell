@@ -62,5 +62,5 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     commands->arg = ft_substr(line, end, ft_strlen(line) - end);
     len = ft_strlen(commands->command) + ft_strlen(commands->arg) + 2; // longitud que va a tener cmd_arg;
     ft_strjoin_mini(len, commands);
-    commands->flag_built = 1; // falta un if para saber si es built o no
+    commands->flag_built = 0; // falta un if para saber si es built o no
 }

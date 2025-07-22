@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/19 21:14:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/22 20:49:52 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	execute(t_com *list)
 	int	fd[2];
 	int	pid1;
 	
+	//dprintf(1, "--->%s<---", list->command_arg);
 	if (pipe(fd) == -1)
 		return (ft_printf("Error de creación de pipe\n"), -1);
 	command = ft_split_mini(list->command_arg, ' '); // se hace split porque execve recibe un char **
