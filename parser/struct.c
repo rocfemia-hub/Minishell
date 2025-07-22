@@ -55,3 +55,13 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
             !ft_strncmp(commands->command, "unset", 5))
         commands->flag_built = 1;
 }
+
+void check_arg(t_com *commands)
+{
+    if (!commands || !commands->arg || !commands->command)
+        return ;
+    // if (is_expansor(commands))
+    //     expander(commands);
+    // else
+    clean_arg(commands);
+}

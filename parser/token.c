@@ -53,6 +53,7 @@ t_com *token(char *line)
 
     commands = create_struct(line, pipes);
     init_commands(line, commands);
+    check_arg(commands);
     print_list(commands);
     return (commands);
 }

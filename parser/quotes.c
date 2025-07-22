@@ -1,41 +1,36 @@
 #include "../minishell.h"
 
-int aux_quotes(char *line)
-{
-    int i;
-    char open_quote;
 
-    i = 0;
-    open_quote = 0; 
-    while (line[i])
+void *clean_arg(t_com *commands)
+{
+    char *arg = commands->arg;
+    char *cleaned;
+    int i = 0;
+    int j = 0;
+    char quote = 0;
+
+    cleaned = ft_malloc(ft_strlen(arg) + 1);
+    if (!cleaned)
+        return (NULL);
+    while (arg[i])
     {
-        if ((line[i] == '\'' || line[i] == '"'))
+        if ((arg[i] == '\'' || arg[i] == '"'))
         {
-            if (!open_quote)
-                open_quote = line[i]; 
-            else if (line[i] == open_quote)
-                open_quote = 0;
+            if (!quote) //open
+                quote = arg[i];
+            else if (quote == arg[i]) // close
+                quote = 0;
             else
-                ;
+                cleaned[j++] = arg[i];
         }
+        else
+            cleaned[j++] = arg[i];
         i++;
     }
-    return (open_quote == 0);
-}
-
-int quotes(char *line)
-{
-    int i;
-
-    i = 0;
-    while (line[i])
-    {
-        if (line[i] == '\'' || line[i] == '"') 
-            if (aux_quotes(line) == 0)
-                return (0);
-        i++;
-    }
-    return (1); // return 1 if is okay 
+    cleaned[j] = '\0';
+    free(commands->arg);
+    commands->arg = cleaned;
+    return (NULL);
 }
 
 char *clean_cmd(char *line, t_clean_cmd *data)
