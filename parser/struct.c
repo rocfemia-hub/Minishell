@@ -44,12 +44,16 @@ t_com *create_struct(char *line, t_pipes pipes)
 
 void init_struct(char *line, char *cmd, int end, t_com *commands)
 { // init commands and arg
+    int len;
+
     if (!cmd || !line)
         return;
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd) + 1);
     while (line[end] == ' ')
         end++;
     commands->arg = ft_substr(line, end, ft_strlen(line) - end);
+    len = ft_strlen(commands->command) + ft_strlen(commands->arg) + 2; // len cmd_arg;
+    ft_strjoin_mini(len, commands);
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
             !ft_strncmp(commands->command, "unset", 5))
