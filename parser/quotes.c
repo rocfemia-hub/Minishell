@@ -8,27 +8,27 @@ void *clean_arg(t_com *commands)
     int j = 0;
     char quote = 0;
 
-    cleaned = malloc(ft_strlen(commands->arg) + 1);
+    cleaned = malloc(ft_strlen(commands->args) + 1);
     if (!cleaned)
         return (NULL);
-    while (commands->arg[i])
+    while (commands->args[i])
     {
-        if ((commands->arg[i] == '\'' || commands->arg[i] == '"'))
+        if ((commands->args[i] == '\'' || commands->args[i] == '"'))
         {
             if (!quote) //open
-                quote = commands->arg[i];
-            else if (quote == commands->arg[i]) // close
+                quote = commands->args[i];
+            else if (quote == commands->args[i]) // close
                 quote = 0;
             else
-                cleaned[j++] = commands->arg[i];
+                cleaned[j++] = commands->args[i];
         }
         else
-            cleaned[j++] = commands->arg[i];
+            cleaned[j++] = commands->args[i];
         i++;
     }
     cleaned[j] = '\0';
-    free(commands->arg);
-    commands->arg = cleaned;
+    free(commands->args);
+    commands->args = cleaned;
     return (NULL);
 }
 

@@ -33,21 +33,20 @@ void export_function(t_com *list, t_vars *vars)
     int i;
 	
     i = 0;
-    if (!list->arg || !*list->arg) // Verificar si no hay argumentos: solo "export"
+    if (!list->args || !*list->args) // Verificar si no hay argumentos: solo "export"
         return(print_export_vars(list, vars));
-    args = ft_split_mini(list->arg, ' '); // Dividir argumentos por espacios
-    if (!args)  // Si el split falla, salir
+    if (!list->args)  // Si el split falla, salir
         return;
-    while (args[i]) // Procesar cada argumento individualmente
+    while (list->args[i]) // Procesar cada argumento individualmente
     {
-        equals_pos = ft_strchr(args[i], '='); // Buscar símbolo '=' en el argumento actual
+        equals_pos = ft_strchr(list->args[i], '='); // Buscar símbolo '=' en el argumento actual
         if (equals_pos) // Solo procesar argumentos con formato VAR=valor
-            add_env_var(args[i], vars); // Añadir variable al entorno
+            add_env_var(list->args[i], vars); // Añadir variable al entorno
 		else // Formato VAR (sin valor)
-			export_existing_var(args[i], vars);
+			export_existing_var(list->args[i], vars);
         i++; // Si no tiene '=', ignorar
     }
-    ft_free_free(args);
+    ft_free_free(list->args);
 }
 
 void unset_function(t_com *list, t_vars *vars)
@@ -57,20 +56,19 @@ void unset_function(t_com *list, t_vars *vars)
     int var_index;
 
 	i = 0;
-    if (!list->arg || !*list->arg) // Si no hay argumentos, no hacer nada
+    if (!list->args || !*list->args) // Si no hay argumentos, no hacer nada
         return;
-    args = ft_split_mini(list->arg, ' '); // Dividir los argumentos
-    if (!args)
+    if (!list->args)
         return;
-    while (args[i]) // Procesar cada variable a eliminar
+    while (list->args[i]) // Procesar cada variable a eliminar
     {
-        if (ft_strlen(args[i]) > 0) // Validar que sea un nombre de variable válido
+        if (ft_strlen(list->args[i]) > 0) // Validar que sea un nombre de variable válido
         {
-            var_index = find_env_var(args[i], vars); // Buscar la variable en el entorno usando tu función
+            var_index = find_env_var(list->args[i], vars); // Buscar la variable en el entorno usando tu función
             if (var_index != -1)
                 remove_env_var(vars->env, var_index); // Eliminar la variable del entorno
         } // No hay error si la variable no existe
         i++;
     }
-    ft_free_free(args); // Liberar memoria de los argumentos
+    ft_free_free(list->args); // Liberar memoria de los argumentos
 }

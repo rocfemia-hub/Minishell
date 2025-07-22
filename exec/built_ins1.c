@@ -18,26 +18,25 @@ void echo_function(t_com *list, t_vars *vars)
 	int newline;
 	char **args;
 
-	if (!list->arg || !*list->arg)
+	if (!list->args || !*list->args)
 		return (void)write(list->fd_out, "\n", 1);
-	args = ft_split(list->arg, ' ');
 	i = 0;
 	newline = 1;
-	while (args[i] && valid_n_option(args[i]))
+	while (list->args[i] && valid_n_option(list->args[i]))
 	{
 		newline = 0;
 		i++;
 	}
-	while (args[i])
+	while (list->args[i])
 	{
-		write(list->fd_out, args[i], ft_strlen(args[i]));
-		if (args[i + 1])
+		write(list->fd_out, list->args[i], ft_strlen(list->args[i]));
+		if (list->args[i + 1])
 			write(list->fd_out, " ", 1);
 		i++;
 	}
 	if (newline)
 		write(list->fd_out, "\n", 1);
-	ft_free_free(args);
+	ft_free_free(list->args);
 }
 
 void pwd_function(t_com *list, t_vars *vars)
@@ -72,27 +71,26 @@ void exit_function(t_com *list, t_vars *vars)
 
 void cd_function(t_com *list, t_vars *vars)
 { // Ya funciona correctamente :)))
-	if (!list->arg || !*list->arg) // cd debe tener SOLO un argumento
+	if (!list->args || !*list->args) // cd debe tener SOLO un argumento
 	{
 		write(2, "cd: missing argument\n", 21);
 		return;
 	}
-	char **args = ft_split_mini(list->arg, ' '); // Separa argumentos para verificar que solo hay uno
-	if (!args || !args[0])
+	if (!list->args  || !list->args [0])
 	{
-		ft_free_free(args);
+		ft_free_free(list->args );
 		write(2, "cd: missing argument\n", 21);
 		return ;
 	}
-	if (args[1]) // Verifica que solo hay un argumento
-		return (write(2, "cd: too many arguments\n", 23), ft_free_free(args));
-	if (chdir(args[0]) == -1) // chdir cambia el directorio actual desde donde se ha ejecutado tu programa y pude recibir una ruta absoluta o relativa
+	if (list->args [1]) // Verifica que solo hay un argumento
+		return (write(2, "cd: too many arguments\n", 23), ft_free_free(list->args ));
+	if (chdir(list->args [0]) == -1) // chdir cambia el directorio actual desde donde se ha ejecutado tu programa y pude recibir una ruta absoluta o relativa
 	{
 		write(2, "cd: ", 4);
-		write(2, args[0], ft_strlen(args[0]));
+		write(2, list->args [0], ft_strlen(list->args [0]));
 		write(2, ": No such file or directory\n", 28);
-		ft_free_free(args);
+		ft_free_free(list->args );
 		return;
 	}
-	ft_free_free(args);
+	ft_free_free(list->args );
 }
