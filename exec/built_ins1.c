@@ -16,7 +16,6 @@ void echo_function(t_com *list, t_vars *vars)
 { // Ya funciona correctamente :)))
 	int i;
 	int newline;
-	char **args;
 
 	if (!list->args || !*list->args)
 		return (void)write(list->fd_out, "\n", 1);
@@ -36,7 +35,6 @@ void echo_function(t_com *list, t_vars *vars)
 	}
 	if (newline)
 		write(list->fd_out, "\n", 1);
-	ft_free_free(list->args);
 }
 
 void pwd_function(t_com *list, t_vars *vars)
@@ -92,5 +90,4 @@ void cd_function(t_com *list, t_vars *vars)
 		ft_free_free(list->args );
 		return;
 	}
-	ft_free_free(list->args );
 }

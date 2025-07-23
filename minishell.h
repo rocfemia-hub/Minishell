@@ -125,7 +125,7 @@ t_com	*token(char *line);
 char	**ft_split_mini(char const *s, char c);
 
 // 	QUOTES
-void 	*clean_arg(t_com *commands);
+void 	*clean_arg(t_com *commands, char *line);
 char	*clean_cmd(char *line, t_clean_cmd *data);
 int		pipes_counter(char *line);
 
@@ -133,7 +133,7 @@ int		pipes_counter(char *line);
 char	*ft_strjoin_mini(int len, t_com *commands);
 t_com	*create_struct(char *line, t_pipes pipes);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
-void 	check_arg(t_com *commands);
+void 	clean_and_fill_arg(t_com *commands, char *line);
 
 //EXPANDER
 int is_expansor(t_com *commands);

@@ -1,36 +1,45 @@
 #include "../minishell.h"
 
 
-void *clean_arg(t_com *commands)
+void clean_and_fill_arg(t_com *commands, char *line)
 {
-    char *cleaned;
     int i = 0;
     int j = 0;
+    int start;
     char quote = 0;
+    char **args = ft_calloc(sizeof(char *), (ft_strlen(line) + 1));
 
-    cleaned = malloc(ft_strlen(commands->args) + 1);
-    if (!cleaned)
-        return (NULL);
-    while (commands->args[i])
+    if (!args)
+        return ;
+    while (line[i])
     {
-        if ((commands->args[i] == '\'' || commands->args[i] == '"'))
+        while (line[i] == ' ')
+            i++;
+        if (!line[i])
+            break;
+        if (line[i] == '\'' || line[i] == '"')
         {
-            if (!quote) //open
-                quote = commands->args[i];
-            else if (quote == commands->args[i]) // close
-                quote = 0;
-            else
-                cleaned[j++] = commands->args[i];
+            quote = line[i++];
+            start = i;
+            while (line[i] && line[i] != quote)
+                i++;
+            args[j++] = ft_substr(line, start, i - start);
+            if (line[i] == quote)
+                i++;
         }
         else
-            cleaned[j++] = commands->args[i];
-        i++;
+        {
+            start = i;
+            while (line[i] && line[i] != ' ' && line[i] != '\'' && line[i] != '"')
+                i++;
+            args[j++] = ft_substr(line, start, i - start);
+        }
     }
-    cleaned[j] = '\0';
-    free(commands->args);
-    commands->args = cleaned;
-    return (NULL);
+    args[j] = NULL;
+    commands->args = args;
+    return ;
 }
+
 
 char *clean_cmd(char *line, t_clean_cmd *data) 
 {
@@ -42,16 +51,10 @@ char *clean_cmd(char *line, t_clean_cmd *data)
         data->i++;
         data->start = data->i;
         while (line[data->i] && line[data->i] != data->quote)
-        {
-            if (line[data->i] == ' ') // spaces inside command - invalid
-                return (ft_substr("error", 0, 5));
             data->i++;
-        }
-        if (!line[data->i]) // quotes not closed
-            return (ft_substr("error", 0, 5));
         data->end = data->i;
         data->end_index = data->i + 1;
-        return ft_substr(line, data->start, data->end - data->start);
+        return (ft_substr(line, data->start, data->end - data->start));
     }
     data->start = data->i;
     while (line[data->i] && line[data->i] != ' ')
@@ -61,8 +64,7 @@ char *clean_cmd(char *line, t_clean_cmd *data)
     return (ft_substr(line, data->start, data->end - data->start));
 }
 
-// |, <, >, >>, <<
-int pipes_counter(char *line)
+int pipes_counter(char *line) // |, <, >, >>, <<
 { // pipes
     int i;
     int count;

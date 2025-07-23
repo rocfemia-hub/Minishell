@@ -54,22 +54,30 @@ void print_list(t_com *list)
 { // funcion para debuguear
 	while (list)
 	{
+		int i = 0;
 		printf("Index: %d, ", list->index);
-
-		if (list->command && list->command)
+		if (list->command)
 			printf("command: %s, ", list->command);
 		else
 			printf("command: (null), ");
-
-		if (list->args && list->args)
-			printf("argumentos: %s\n", list->args);
+		if (list->args)
+		{
+			while(list->args && list->args[i])
+			{
+				printf("argumentos: %s\n", list->args[i]);
+				i++;
+			}
+		}
 		else
 			printf("argumentos: (null)\n");
-		if (list->command_arg && list->command_arg)
-			printf("command_arg: %s\n", list->command_arg);
-		else
-			printf("command_arg: (null)\n");
-
+		// if (list->command_arg)
+		// 	printf("command_arg: %s\n", list->command_arg);
+		// else
+		// 	printf("command_arg: (null)\n");
+		// if (list->flag_built)
+		// 	printf("flag_built: %d\n", list->flag_built);
+		// else
+		// 	printf("flag_built: (null)\n");
 		list = list->next;
 	}
 }

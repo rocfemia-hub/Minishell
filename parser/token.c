@@ -6,12 +6,6 @@ void type_command(char *line, t_com *commands)
 
     ft_bzero(&data, sizeof(t_clean_cmd));
     data.cmd = clean_cmd(line, &data);
-    if (!data.cmd || !ft_strncmp(data.cmd, "error", 5))
-    {
-        commands->command = ft_strdup("error");
-        commands->args = NULL;
-        return;
-    }
     init_struct(line, data.cmd, data.end_index, commands);
     free(data.cmd);
 }
@@ -54,7 +48,7 @@ t_com *token(char *line)
     if (!commands)
         return(NULL);
     init_commands(line, commands);
-    check_arg(commands);
+    // check_arg(commands);
     print_list(commands);
     return (commands);
 }
