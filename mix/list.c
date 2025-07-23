@@ -70,10 +70,10 @@ void print_list(t_com *list)
 		}
 		else
 			printf("argumentos: (null)\n");
-		// if (list->command_arg)
-		// 	printf("command_arg: %s\n", list->command_arg);
-		// else
-		// 	printf("command_arg: (null)\n");
+		if (list->command_arg)
+			printf("command_arg: %s\n", list->command_arg);
+		else
+			printf("command_arg: (null)\n");
 		// if (list->flag_built)
 		// 	printf("flag_built: %d\n", list->flag_built);
 		// else

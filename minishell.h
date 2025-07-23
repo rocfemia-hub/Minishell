@@ -130,7 +130,7 @@ char	*clean_cmd(char *line, t_clean_cmd *data);
 int		pipes_counter(char *line);
 
 //STRUCT
-char	*ft_strjoin_mini(int len, t_com *commands);
+char 	*ft_strjoin_mini(t_com *commands);
 t_com	*create_struct(char *line, t_pipes pipes);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 void 	clean_and_fill_arg(t_com *commands, char *line);

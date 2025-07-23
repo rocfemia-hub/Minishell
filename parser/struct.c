@@ -1,23 +1,41 @@
 #include "../minishell.h"
 
-char *ft_strjoin_mini(int len, t_com *commands)
+char *ft_strjoin_mini(t_com *commands)
 { //join cmd and arg --> cmd_arg
     int i;
-    char *cmd_arg;
     int j;
+    int k;
+    int len = 0;
+    char *cmd_arg;
 
+    len += ft_strlen(commands->command) + 1; 
+    k = 0;
+    while (commands->args && commands->args[k]) 
+    {
+        len += ft_strlen(commands->args[k]) + 1; 
+        k++;
+    }
+    cmd_arg = ft_calloc(len + 1, sizeof(char));
+    if (!cmd_arg)
+        return (NULL);
     i = 0;
     j = 0;
-    cmd_arg = calloc(len, sizeof(char));
     while (commands->command[i])
         cmd_arg[j++] = commands->command[i++];
-    cmd_arg[j] = ' ';
-    j++;
-    i = 0;
-    while (commands->args[i])
-        cmd_arg[j++] = commands->args[i++];
-    cmd_arg[j] = '\0';
+    cmd_arg[j++] = ' ';
+    k = 0;
+    while (commands->args && commands->args[k])
+    {
+        i = 0;
+        while (commands->args[k][i])
+            cmd_arg[j++] = commands->args[k][i++];
+        cmd_arg[j++] = ' ';
+        k++;
+    }
+    if (j > 0 && cmd_arg[j - 1] == ' ')
+        j--;
     commands->command_arg = cmd_arg;
+    return (cmd_arg);
 }
 
 t_com *create_struct(char *line, t_pipes pipes)
@@ -56,6 +74,7 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
             !ft_strncmp(commands->command, "unset", 5))
         commands->flag_built = 1;
+    ft_strjoin_mini(commands);
 }
 
 void check_arg(t_com *commands)
