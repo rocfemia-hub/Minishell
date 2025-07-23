@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/07/20 00:57:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/24 01:31:27 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void export_function(t_com *list, t_vars *vars)
         return(print_export_vars(list, vars));
     if (!list->args)  // Si el split falla, salir
         return;
-    while (list->args[i]) // Procesar cada argumento individualmente
+    while (list->args && list->args[i]) // Procesar cada argumento individualmente
     {
         equals_pos = ft_strchr(list->args[i], '='); // Buscar símbolo '=' en el argumento actual
         if (equals_pos) // Solo procesar argumentos con formato VAR=valor
@@ -71,4 +71,5 @@ void unset_function(t_com *list, t_vars *vars)
         i++;
     }
     ft_free_free(list->args); // Liberar memoria de los argumentos
+	list->args = NULL;
 }

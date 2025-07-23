@@ -1,5 +1,16 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
+/*   Updated: 2025/07/24 01:34:57 by roo              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "../minishell.h"
 
 void clean_and_fill_arg(t_com *commands, char *line)
 {
@@ -37,9 +48,10 @@ void clean_and_fill_arg(t_com *commands, char *line)
     }
     args[j] = NULL;
     commands->args = args;
+	if(!commands->args)
+		ft_free_free(commands->args);
     return ;
 }
-
 
 char *clean_cmd(char *line, t_clean_cmd *data) 
 {
@@ -64,8 +76,8 @@ char *clean_cmd(char *line, t_clean_cmd *data)
     return (ft_substr(line, data->start, data->end - data->start));
 }
 
-int pipes_counter(char *line) // |, <, >, >>, <<
-{ // pipes
+int pipes_counter(char *line)
+{  // |, <, >, >>, <<  pipes
     int i;
     int count;
     char open_quote;

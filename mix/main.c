@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
+/*   Updated: 2025/07/24 01:23:56 by roo              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void commands_control(t_com *list, t_vars *vars)
@@ -60,7 +72,7 @@ int main(int argc, char **argv, char **env)
 		return 1;
 	commands = NULL; // la verdad aqui no tengo del todo calro porque no se hace malloc, pero claude dice que es así y yo le creo xd
 	//ft_bzero(&commands, sizeof(commands)); // usa calloc mjr (recomendacion de jainavas)
-	//ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
+	ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
 	init_vars(&vars, argc, argv, env);
 	while (1)
 	{

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/07/11 21:30:44 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/24 01:30:43 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void cd_function(t_com *list, t_vars *vars)
 	if (!list->args  || !list->args [0])
 	{
 		ft_free_free(list->args );
+		list->args = NULL;
 		write(2, "cd: missing argument\n", 21);
 		return ;
 	}
@@ -87,7 +88,8 @@ void cd_function(t_com *list, t_vars *vars)
 		write(2, "cd: ", 4);
 		write(2, list->args [0], ft_strlen(list->args [0]));
 		write(2, ": No such file or directory\n", 28);
-		ft_free_free(list->args );
+		ft_free_free(list->args);
+		list->args = NULL;
 		return;
 	}
 }
