@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 01:31:27 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/24 02:21:44 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void export_function(t_com *list, t_vars *vars)
         i++; // Si no tiene '=', ignorar
     }
     ft_free_free(list->args);
+	list->args = NULL;
 }
 
 void unset_function(t_com *list, t_vars *vars)

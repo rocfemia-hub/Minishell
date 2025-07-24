@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 01:23:21 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/24 01:55:54 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,6 @@ t_com *token(char *line)
     if (!commands)
         return(NULL);
     init_commands(line, commands);
-    print_list(commands);
+    //print_list(commands);
     return (commands);
 }

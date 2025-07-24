@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 01:23:56 by roo              ###   ########.fr       */
+/*   Updated: 2025/07/24 02:09:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 void commands_control(t_com *list, t_vars *vars)
 {
 	//printf("list->command = '%s' \n", list->command);
+	//dprintf(1, "--->%s<---\n", list->command);
+	//dprintf(1, "--->%s<---\n", list->command_arg);
+	//dprintf(1, "--->%s<---\n", list->args[1]);
+
 	if(list->flag_built == 1)
 	{
 		if (!list || !list->command)
