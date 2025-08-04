@@ -6,11 +6,51 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/19 21:14:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/08/04 22:16:47 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void execute_control(t_com *list, t_vars *vars)
+{
+	if(list->next == NULL)
+		commands_control(list, vars); // llama a la funcion del de bultins
+	// si llega aquí significa que hay más de un comando y habría que crear una pipe
+	// dentro de la pipe hay que ir comprobando continuamente si es builting o no
+}
+
+void commands_control(t_com *list, t_vars *vars)
+{
+	//printf("list->command = '%s' \n", list->command);
+	//dprintf(1, "--->%s<---\n", list->command);
+	//dprintf(1, "--->%s<---\n", list->command_arg);
+	//dprintf(1, "--->%s<---\n", list->args[1]);
+
+	if(list->flag_built == 1)
+	{
+		if (!list || !list->command)
+			return;
+		else if (list->command && ft_strnstr(list->command, "echo", 5)) // 5 para incluir '\0'
+			echo_function(list, vars);
+		else if (list->command && ft_strnstr(list->command, "pwd", 4)) // 4 para incluir '\0'
+			pwd_function(list, vars);
+		else if (list->command && ft_strnstr(list->command, "exit", 5)) // 5 para incluir '\0'
+			exit_function(list, vars);
+		else if (list->command && ft_strnstr(list->command, "env", 4)) // 4 para incluir '\0'
+			env_function(list, vars);
+		else if (list->command && ft_strnstr(list->command, "cd", 3)) // 3 para incluir '\0'
+			cd_function(list, vars);
+		else if (list->command && ft_strnstr(list->command, "export", 7)) // 7 para incluir '\0'
+			export_function(list, vars);
+		else if (list->command && ft_strnstr(list->command, "unset", 6)) // 6 para incluir '\0'
+			unset_function(list, vars);
+		else
+			printf("Command '%s' not found\n", list->command); // no se si hace algo ahora mismo o se puede borrar
+	}
+	else
+		execute(list);
+}
 
 char	*get_path(char *cmd, char **envp, t_com *pipex)
 {

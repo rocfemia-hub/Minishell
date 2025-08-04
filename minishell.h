@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/07/20 00:10:19 by roo              ###   ########.fr       */
+/*   Updated: 2025/08/04 21:28:14 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ typedef struct s_com
 
 
 // MAIN
-void	commands_control(t_com *list, t_vars *vars);
 int		line_break(char *line);
 void	init_vars(t_vars *vars, int argc, char **argv,  char **env);
 
@@ -86,6 +85,8 @@ void	printf_matrix(char **split);
 
 
 // EXECUTOR
+void	execute_control(t_com *list, t_vars *vars);
+void	commands_control(t_com *list, t_vars *vars);
 char	*get_path(char *cmd, char **envp, t_com *pipex);
 int		execute(t_com *list);
 void	close_all(int fd[2], t_com *cmd);
