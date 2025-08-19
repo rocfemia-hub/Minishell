@@ -51,7 +51,7 @@ char *ft_strjoin_mini(t_com *commands)
 }
 
 t_com *create_struct(char *line, t_pipes pipes)
-{ // create nodes list
+{ // create nodes list 
     int i = 0;
     t_com *new;
     t_com *head; 
@@ -81,22 +81,12 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd) + 1);
     while (line[end] == ' ')
         end++;
-    clean_and_fill_arg(commands, line + end); // create double array and fill it
+    clean_and_fill_arg(commands, line + end); // create double array and fill it in arg
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
             !ft_strncmp(commands->command, "unset", 5))
         commands->flag_built = 1;
-    ft_strjoin_mini(commands);
+    ft_strjoin_mini(commands); // join arg and cmd in a char *comands_arg
+    redirects(commands); // manage redirects
 }
 
-void check_arg(t_com *commands)
-{
-    int len;
-    if (!commands || !commands->args || !commands->command)
-        return ;
-    // if (is_expansor(commands))
-    //     expander(commands);
-    // else
-    // len = ft_strlen(commands->command) + ft_strlen(commands->args) + 2; // len cmd_arg; ESTO NO FUNCIONA
-    // ft_strjoin_mini(len, commands);
-}

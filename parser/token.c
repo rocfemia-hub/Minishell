@@ -17,8 +17,8 @@ void type_command(char *line, t_com *commands)
     t_clean_cmd data;
 
     ft_bzero(&data, sizeof(t_clean_cmd));
-    data.cmd = clean_cmd(line, &data);
-    init_struct(line, data.cmd, data.end_index, commands);
+    data.cmd = clean_cmd(line, &data); // cmd without quotes
+    init_struct(line, data.cmd, data.end_index, commands); //fill cmd and arg
     free(data.cmd);
 }
 
@@ -60,6 +60,6 @@ t_com *token(char *line)
     if (!commands)
         return(NULL);
     init_commands(line, commands);
-    //print_list(commands);
+    // print_list(commands);
     return (commands);
 }

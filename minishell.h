@@ -140,5 +140,8 @@ void 	clean_and_fill_arg(t_com *commands, char *line);
 int is_expansor(t_com *commands);
 void expander(t_com *commands);
 
+//REDIRECTS
+void redirects(t_com *commands);
+
 
 #endif

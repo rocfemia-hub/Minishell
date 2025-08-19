@@ -13,7 +13,7 @@
 #include "../minishell.h"
 
 void clean_and_fill_arg(t_com *commands, char *line)
-{
+{ // clean quotes in arguments
     int i = 0;
     int j = 0;
     int start;
@@ -54,7 +54,7 @@ void clean_and_fill_arg(t_com *commands, char *line)
 }
 
 char *clean_cmd(char *line, t_clean_cmd *data) 
-{
+{ // clean quotes of command
     while (line[data->i] == ' ')
         data->i++;
     if (line[data->i] == '\'' || line[data->i] == '"')
@@ -77,7 +77,7 @@ char *clean_cmd(char *line, t_clean_cmd *data)
 }
 
 int pipes_counter(char *line)
-{  // |, <, >, >>, <<  pipes
+{  // pipes counter
     int i;
     int count;
     char open_quote;
@@ -99,6 +99,7 @@ int pipes_counter(char *line)
         i++;
     }
     if (open_quote != 0)
-        return (-1); 
+        return (-1);
+    printf("count: %d\n", count); 
     return (count);
 }
