@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/08/04 21:27:03 by roo              ###   ########.fr       */
+/*   Updated: 2025/08/19 20:30:14 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int main(int argc, char **argv, char **env)
             free_list(commands);
 			continue;
 		}
+		set_redirections(commands);
 		execute_control(commands, &vars);
 		free(line);
 		free_list(commands);

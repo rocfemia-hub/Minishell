@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/08/04 21:28:14 by roo              ###   ########.fr       */
+/*   Updated: 2025/08/19 20:31:49 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,12 @@ typedef struct s_com
 	int index; //para saber en que nodo de la lista estas
 	int i; // no guarda información util, es para ahorrar lineas, un iterador normal
 	int flag_built; // 1 para built 0 execve
+	char *input_file;      // archivo para ej: "entrada.txt"
+    char *output_file;     // archivo para > ej: "salida.txt"
+    char *append_file;     // archivo para >> ej "test.txt"
+    int redirect_in;       // flag: 1 si hay <, 0 si no hay
+    int redirect_out;      // flag: 1 si hay >, 0 si no hay
+    int redirect_append;   // flag: 1 si hay >>, 0 si no hay
 	struct s_com *next;
 	t_vars *vars;
 }	t_com;
@@ -112,6 +118,10 @@ void	add_new_env_vars(char *new_var, t_vars *vars);
 int		find_env_var(char *var_name, t_vars *vars);
 char	*get_var_name(char *var_assignment);
 void	export_existing_var(char *var_name, t_vars *vars);
+
+// REDIRECTIONS
+void set_redirections(t_com *cmd);
+void clean_fds(t_com *cmd);
 
 
 /*PARSER*/ 
