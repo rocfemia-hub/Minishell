@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/08/04 22:16:47 by roo              ###   ########.fr       */
+/*   Updated: 2025/08/21 17:38:29 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 
 void execute_control(t_com *list, t_vars *vars)
 {
+	set_redirections(list);
 	if(list->next == NULL)
 		commands_control(list, vars); // llama a la funcion del de bultins
 	// si llega aquí significa que hay más de un comando y habría que crear una pipe
 	// dentro de la pipe hay que ir comprobando continuamente si es builting o no
+	clean_fds(list);
 }
 
 void commands_control(t_com *list, t_vars *vars)

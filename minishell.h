@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/08/19 20:31:49 by roo              ###   ########.fr       */
+/*   Updated: 2025/08/21 17:37:55 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,8 @@ char	*get_var_name(char *var_assignment);
 void	export_existing_var(char *var_name, t_vars *vars);
 
 // REDIRECTIONS
-void set_redirections(t_com *cmd);
-void clean_fds(t_com *cmd);
+void set_redirections(t_com *list);
+void clean_fds(t_com *list);
 
 
 /*PARSER*/ 
