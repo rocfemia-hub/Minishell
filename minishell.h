@@ -54,6 +54,9 @@ typedef struct s_red
 	int redirect_in; // flag 1 si hay
 	int redirect_out; // flag 1 si hay >
 	int redirect_append; // flag 1 si hay >>
+	int i;
+	int j;
+	char **new_arg; // argumentos que tienen que estar dentro del archivo
 }t_red;
 
 
@@ -157,7 +160,8 @@ int is_expansor(t_com *commands);
 void expander(t_com *commands);
 
 //REDIRECTS
-void fill_struct_redirect(t_com *commands, int j);
+char **copy_matrix(char **args);
+void fill_struct_redirect(t_com *commands);
 void look_for_redirects(t_com *commands);
 void redirects(t_com *commands);
 

@@ -55,6 +55,7 @@ t_com *token(char *line)
 {
     t_com *commands;
     t_pipes pipes;
+    
 
     commands = create_struct(line, pipes);
     if (!commands)
