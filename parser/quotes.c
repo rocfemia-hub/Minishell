@@ -100,6 +100,6 @@ int pipes_counter(char *line)
     }
     if (open_quote != 0)
         return (-1);
-    printf("count: %d\n", count); 
+    // printf("count: %d\n", count); 
     return (count);
 }

@@ -46,6 +46,17 @@ typedef struct s_vars
 	char **env;
 } t_vars;
 
+typedef struct s_red
+{
+	char *input_file; //archivo para
+	char *output_file; // archivo para >
+	char *append_file; //archivo para >>
+	int redirect_in; // flag 1 si hay
+	int redirect_out; // flag 1 si hay >
+	int redirect_append; // flag 1 si hay >>
+}t_red;
+
+
 typedef struct s_com
 {
 	struct s_com *previous;
@@ -58,13 +69,8 @@ typedef struct s_com
 	int index; //para saber en que nodo de la lista estas
 	int i; // no guarda información util, es para ahorrar lineas, un iterador normal
 	int flag_built; // 1 para built 0 execve
-	char *input_file;      // archivo para ej: "entrada.txt"
-    char *output_file;     // archivo para > ej: "salida.txt"
-    char *append_file;     // archivo para >> ej "test.txt"
-    int redirect_in;       // flag: 1 si hay <, 0 si no hay
-    int redirect_out;      // flag: 1 si hay >, 0 si no hay
-    int redirect_append;   // flag: 1 si hay >>, 0 si no hay
 	struct s_com *next;
+	t_red *redirects; // estructura para > >> < <<
 	t_vars *vars;
 }	t_com;
 
@@ -151,6 +157,8 @@ int is_expansor(t_com *commands);
 void expander(t_com *commands);
 
 //REDIRECTS
+void fill_struct_redirect(t_com *commands, int j);
+void look_for_redirects(t_com *commands);
 void redirects(t_com *commands);
 
 
