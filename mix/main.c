@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/08/19 20:30:14 by roo              ###   ########.fr       */
+/*   Updated: 2025/08/31 22:40:13 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,17 @@ int main(int argc, char **argv, char **env)
 		if (!commands->command) 
 		{
     		printf("Error: empty command\n");
-    		free(line);
-    		free_list(commands);
+    		(free(line), free_list(commands));
     		continue;
 		}
 		if (commands && commands->command && ft_strnstr(commands->command, "error", 5))
 		{
 			printf("error\n");
-			free(line);
-            free_list(commands);
+			(free(line), free_list(commands));
 			continue;
 		}
-		set_redirections(commands);
-		execute_control(commands, &vars);
-		free(line);
-		free_list(commands);
+		(set_redirections(commands), execute_control(commands, &vars));
+		(free(line), free_list(commands));
 		commands = NULL; // reseteamos el puntero
 	}
 	return(0);

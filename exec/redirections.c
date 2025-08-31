@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/08/21 17:37:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/08/31 22:56:26 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 void set_redirections(t_com *list)
 {
-    if (list->redirects->output_file) // Redirección de salida > "¿Hay un archivo para escribir?""
+	if (list->redirects == NULL)
+		return;
+    if (list->redirects->output_file) // Redirección de salida > "¿Hay un archivo para escribir?"
     {
         list->fd_out = open(list->redirects->output_file, O_CREAT | O_WRONLY | O_TRUNC, 0644); //Crear archivo si no existe, solo escritura, sobreescribir, permisos: propietario lee/escribe, otros solo leen
         if (list->fd_out == -1)
@@ -32,6 +34,7 @@ void set_redirections(t_com *list)
         if (list->fd_out == -1)
             return(perror("Error opening append file"));
     }
+	clean_fds(list);
 }
 
 void clean_fds(t_com *list)
