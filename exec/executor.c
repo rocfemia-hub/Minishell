@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/08/31 22:55:54 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/01 18:04:21 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,13 +100,24 @@ int	execute(t_com *list)
 	if (pid1 == 0)
 	{
 		if (list->fd_in != 0)
-			(dup2(list->fd_in, STDIN_FILENO), close_all(fd, list)); // Esto se usará cuando me redireccionen la entrada o salida
+		{
+			dup2(list->fd_in, STDIN_FILENO); // Esto se usará cuando me redireccionen la entrada o salida
+			//close(list->fd_in);
+		}
 		if (list->fd_out != 1)
-			(dup2(fd[WRITE_FD], STDOUT_FILENO), close_all(fd, list));
-		//close_all(fd, list); // Esto se usará cuando haya pipes y tenga que estar cerrando fds todo el rato
+		{
+			dup2(list->fd_out, STDOUT_FILENO);
+			//close(list->fd_out);
+		}
+		//close(fd[READ_FD]);
+        //close(fd[WRITE_FD]);
+		close_all(fd, list); // Esto se usará cuando haya pipes y tenga que estar cerrando fds todo el rato
 		if (execve(list->path_command, command, list->vars->env) == -1)
 			return (ft_printf("Error de ejecución\n"), -1); // hay que echar un ojo a las salidad de error
 	}
+	//close(fd[READ_FD]);
+    //close(fd[WRITE_FD]);
+	close_all(fd, list);
 	waitpid(pid1, NULL, 0);
 	return (0);
 }
