@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/08/21 17:37:55 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/01 20:01:41 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ void	execute_control(t_com *list, t_vars *vars);
 void	commands_control(t_com *list, t_vars *vars);
 char	*get_path(char *cmd, char **envp, t_com *pipex);
 int		execute(t_com *list);
-void	close_all(int fd[2], t_com *cmd);
 
 // BUILT-INS
 void	echo_function(t_com *list, t_vars *vars);
