@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/01 20:01:41 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/04 17:45:27 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,11 @@ typedef struct s_red
 	char *input_file; //archivo para
 	char *output_file; // archivo para >
 	char *append_file; //archivo para >>
+	char *delimiter; // palabra que delimita el heredoc
 	int redirect_in; // flag 1 si hay
 	int redirect_out; // flag 1 si hay >
 	int redirect_append; // flag 1 si hay >>
+	int redirect_heredoc; // flag 1 si hay <<
 	int i;
 	int j;
 	char **new_arg; // argumentos que tienen que estar dentro del archivo
@@ -72,6 +74,7 @@ typedef struct s_com
 	int index; //para saber en que nodo de la lista estas
 	int i; // no guarda información util, es para ahorrar lineas, un iterador normal
 	int flag_built; // 1 para built 0 execve
+	int flag_pipe; // 1 si hay pipe 0 si no
 	struct s_com *next;
 	t_red *redirects; // estructura para > >> < <<
 	t_vars *vars;
@@ -85,6 +88,7 @@ typedef struct s_com
 // MAIN
 int		line_break(char *line);
 void	init_vars(t_vars *vars, int argc, char **argv,  char **env);
+void	init_fds(t_com *list, t_vars *vars);
 
 //LISTAS
 t_com	*lstnew(int index);

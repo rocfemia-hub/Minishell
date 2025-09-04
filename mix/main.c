@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/08/31 22:40:13 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/04 17:43:56 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,22 @@ void init_vars(t_vars *vars, int argc, char **argv,  char **env)
 	vars->argc = argc;
 	vars->argv = argv;
 	vars->env = env;
+}
+
+void init_fds(t_com *list, t_vars *vars)
+{   
+    while (list)
+    {
+        // Valores por defecto
+        list->fd_in = STDIN_FILENO; // 0
+        list->fd_out = STDOUT_FILENO; // 1
+        list->vars = vars; // Asignar vars a todos
+        
+        if (list->next) // Si hay siguiente comando, necesitamos pipe
+            list->flag_pipe = 1; // Se configurará en create_pipes()
+        
+        list = list->next;
+    }
 }
 
 int line_break(char *line)
@@ -62,13 +78,14 @@ int main(int argc, char **argv, char **env)
 		commands = token(line); // llama a la funcion tokeniza
 		if (!commands) // debug para comprobar que el comando sea valido
         {
-			printf("Error: failed to parse command\n");
-            free(line);
+			(printf("Error: failed to parse command\n"), free(line));
             continue;
         }
-		commands->vars = &vars; // Estas tres inicializaciones son temporales, hay que hacerlo bien iniciando cada una nodo a nodo, porque ahora solo funcionan una sola vez.
-		commands->fd_out = 1; // TEMPORAL!!!!  hay que CAMBIAR esto, el 1 es para poder probar que funcione el ejecutor y los builtings
-		commands->fd_in = 0; // TEMPORAL!!!!  hay que CAMBIAR esto, el 0 es para poder probar que funcione el ejecutor y los builtings
+		init_fds(commands, &vars);
+		//commands->vars = &vars; // Estas tres inicializaciones son temporales, hay que hacerlo bien iniciando cada una nodo a nodo, porque ahora solo funcionan una sola vez.
+		//commands->fd_out = 1; // TEMPORAL!!!!  hay que CAMBIAR esto, el 1 es para poder probar que funcione el ejecutor y los builtings
+		//commands->fd_in = 0; // TEMPORAL!!!!  hay que CAMBIAR esto, el 0 es para poder probar que funcione el ejecutor y los builtings
+		//commands = commands->next; //para que funcione con mas de un comando
 		// printf("%s\n", commands->command);
 		if (!commands->command) 
 		{

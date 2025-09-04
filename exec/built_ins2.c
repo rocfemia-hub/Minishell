@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 02:21:44 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/03 17:39:02 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void env_function(t_com *list, t_vars *vars)
 
 void export_function(t_com *list, t_vars *vars)
 { //¡¡¡NO FUNCIONA BIEN, si metes espacios en las variables, te hace dos variables distintas("hola) por un lado y (mundo") por otro.!!!
-	char **args; // TIENE FUGAS DE MEMORIA "export MY_VAR=bye"
+	//char **args; // TIENE FUGAS DE MEMORIA "export MY_VAR=bye"
     char *equals_pos; // Puntero para buscar el símbolo '='
     int i;
 	

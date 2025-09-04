@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 01:30:43 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/03 19:51:16 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,15 @@ void exit_function(t_com *list, t_vars *vars)
 
 void cd_function(t_com *list, t_vars *vars)
 { // Ya funciona correctamente :)))
-	if (!list->args || !*list->args) // cd debe tener SOLO un argumento
-	{
-		write(2, "cd: missing argument\n", 21);
-		return;
-	}
-	if (!list->args  || !list->args [0])
+	if (!list->args || !list->args[0]) // cd debe tener SOLO un argumento
 	{
 		ft_free_free(list->args );
 		list->args = NULL;
 		write(2, "cd: missing argument\n", 21);
-		return ;
+		return;
 	}
 	if (list->args [1]) // Verifica que solo hay un argumento
-		return (write(2, "cd: too many arguments\n", 23), ft_free_free(list->args ));
+		return (write(2, "cd: too many arguments\n", 23), ft_free_free(list->args));
 	if (chdir(list->args [0]) == -1) // chdir cambia el directorio actual desde donde se ha ejecutado tu programa y pude recibir una ruta absoluta o relativa
 	{
 		write(2, "cd: ", 4);
