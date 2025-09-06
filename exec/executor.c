@@ -6,11 +6,29 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/09/01 20:28:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/06 15:21:59 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void setup_pipeline(t_com *list)
+{
+    t_com *tmp_list = list;
+    int pipe_fd[2];
+    
+    while (tmp_list && tmp_list->next) // Crear pipe entre comando actual y siguiente
+    {
+        if (pipe(pipe_fd) == -1) // Crea una conexión para comunicación entre procesos, es un canal unidireccional donde la salida de un proceso se convierte en la entrada de otro
+            return(perror("pipe"));
+        tmp_list->fd_out = pipe_fd[WRITE_FD]; // El comando actual escribirá al pipe
+        tmp_list->next->fd_in = pipe_fd[READ_FD]; // El siguiente comando leerá del pipe
+        set_redirections(tmp_list); // Configurar redirecciones individuales (pueden sobrescribir pipes)
+        tmp_list = tmp_list->next;
+    }
+    if (tmp_list) // Último comando, configura sus redirecciones
+        set_redirections(tmp_list);
+}
 
 void execute_control(t_com *list, t_vars *vars)
 {
@@ -23,12 +41,7 @@ void execute_control(t_com *list, t_vars *vars)
 }
 
 void commands_control(t_com *list, t_vars *vars)
-{
-	//printf("list->command = '%s' \n", list->command);
-	//dprintf(1, "--->%s<---\n", list->command);
-	//dprintf(1, "--->%s<---\n", list->command_arg);
-	//dprintf(1, "--->%s<---\n", list->args[1]);
-
+{ //printf("list->command = '%s' \n", list->command); //dprintf(1, "--->%s<---\n", list->command); //dprintf(1, "--->%s<---\n", list->command_arg); //dprintf(1, "--->%s<---\n", list->args[1]);
 	if(list->flag_built == 1)
 	{
 		if (!list || !list->command)
@@ -94,23 +107,11 @@ int	execute(t_com *list)
 	command = ft_split_mini(list->command_arg, ' '); // se hace split porque execve recibe un char **
 	list->path_command = get_path(list->command, list->vars->env, list);
 	if (list->path_command == NULL)
-		return (ft_printf("Command not found\n"));
-	//dprintf(1, "--->%s<---", list->command);
+		return (ft_printf("Command not found\n"), -1);
 	pid1 = fork();
 	if (pid1 == 0)
 	{
-		if (list->fd_in != 0)
-		{
-			dup2(list->fd_in, STDIN_FILENO); // Esto se usará cuando me redireccionen la entrada o salida
-			close(list->fd_in);
-		}
-		if (list->fd_out != 1)
-		{
-			dup2(list->fd_out, STDOUT_FILENO);
-			close(list->fd_out);
-		}
-		close(fd[READ_FD]);
-        close(fd[WRITE_FD]);
+		execute_two(list, fd);
 		if (execve(list->path_command, command, list->vars->env) == -1)
 			return (ft_printf("Error de ejecución\n"), -1); // hay que echar un ojo a las salidad de error
 	}
@@ -120,6 +121,23 @@ int	execute(t_com *list)
 	ft_free_free(command);
 	if (list->path_command)
 		free(list->path_command);
-	return (0);
+	return (0); //dprintf(1, "--->%s<---", list->command);
 }
 
+void execute_two(t_com *list, int fd[2])
+{
+	if (list->fd_in != STDIN_FILENO) // 0
+		{
+			if(dup2(list->fd_in, STDIN_FILENO) == -1); // Esto se usará cuando me redireccionen la entrada o salida
+				perror("dup2 stdin");
+			close(list->fd_in);
+		}
+		if (list->fd_out != STDOUT_FILENO) // 1
+		{
+			if(dup2(list->fd_out, STDOUT_FILENO) == -1);
+				perror("dup2 stdout");
+			close(list->fd_out);
+		}
+	close(fd[READ_FD]);
+    close(fd[WRITE_FD]);
+}

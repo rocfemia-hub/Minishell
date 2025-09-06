@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/04 17:45:27 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/06 15:24:49 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,41 +26,40 @@
 
 typedef struct s_pipes
 {
-	int pipes;
+	int		pipes;
 } t_pipes;
 
 typedef struct s_clean_cmd
 {
-	int i;
-    int start;
-    int end;
-    char quote;
-    char *cmd;
-	int end_index;
+	int		i;
+    int		start;
+    int		end;
+    char	quote;
+    char	*cmd;
+	int		end_index;
 } t_clean_cmd;
 
 typedef struct s_vars
 {
-	int argc; //añadiendo argc y argv para tenerlos siempre a mano.
-	char **argv;
-	char **env;
+	int		argc; //añadiendo argc y argv para tenerlos siempre a mano.
+	char	**argv;
+	char	**env;
 } t_vars;
 
 typedef struct s_red
 {
-	char *input_file; //archivo para
-	char *output_file; // archivo para >
-	char *append_file; //archivo para >>
-	char *delimiter; // palabra que delimita el heredoc
-	int redirect_in; // flag 1 si hay
-	int redirect_out; // flag 1 si hay >
-	int redirect_append; // flag 1 si hay >>
-	int redirect_heredoc; // flag 1 si hay <<
-	int i;
-	int j;
-	char **new_arg; // argumentos que tienen que estar dentro del archivo
+	char	*input_file; //archivo para
+	char	*output_file; // archivo para >
+	char	*append_file; //archivo para >>
+	char	*delimiter; // palabra que delimita el heredoc
+	int		redirect_in; // flag 1 si hay
+	int		redirect_out; // flag 1 si hay >
+	int		redirect_append; // flag 1 si hay >>
+	int		redirect_heredoc; // flag 1 si hay <<
+	int		i;
+	int		j;
+	char	**new_arg; // argumentos que tienen que estar dentro del archivo
 }t_red;
-
 
 typedef struct s_com
 {
@@ -79,7 +78,6 @@ typedef struct s_com
 	t_red *redirects; // estructura para > >> < <<
 	t_vars *vars;
 }	t_com;
-
 
 
 /*MIX*/ 
@@ -104,10 +102,12 @@ void	printf_matrix(char **split);
 
 
 // EXECUTOR
+void	setup_pipeline(t_com *list);
 void	execute_control(t_com *list, t_vars *vars);
 void	commands_control(t_com *list, t_vars *vars);
 char	*get_path(char *cmd, char **envp, t_com *pipex);
 int		execute(t_com *list);
+void	execute_two(t_com *list, int fd[2]);
 
 // BUILT-INS
 void	echo_function(t_com *list, t_vars *vars);
@@ -147,22 +147,22 @@ t_com	*token(char *line);
 // SPLIT_MINI.C
 char	**ft_split_mini(char const *s, char c);
 
-// 	QUOTES
+// QUOTES
 void 	*clean_arg(t_com *commands, char *line);
 char	*clean_cmd(char *line, t_clean_cmd *data);
 int		pipes_counter(char *line);
 
-//STRUCT
+// TRUCT
 char 	*ft_strjoin_mini(t_com *commands);
 t_com	*create_struct(char *line, t_pipes pipes);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 void 	clean_and_fill_arg(t_com *commands, char *line);
 
-//EXPANDER
+// EXPANDER
 int is_expansor(t_com *commands);
 void expander(t_com *commands);
 
-//REDIRECTS
+// REDIRECTS
 char **copy_matrix(char **args);
 void fill_struct_redirect(t_com *commands);
 void look_for_redirects(t_com *commands);

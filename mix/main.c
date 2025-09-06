@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/04 17:43:56 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/06 15:22:50 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,13 @@ void init_vars(t_vars *vars, int argc, char **argv,  char **env)
 
 void init_fds(t_com *list, t_vars *vars)
 {   
-    while (list)
+    while (list) // Valores por defecto
     {
-        // Valores por defecto
         list->fd_in = STDIN_FILENO; // 0
         list->fd_out = STDOUT_FILENO; // 1
         list->vars = vars; // Asignar vars a todos
-        
         if (list->next) // Si hay siguiente comando, necesitamos pipe
             list->flag_pipe = 1; // Se configurará en create_pipes()
-        
         list = list->next;
     }
 }
@@ -58,7 +55,7 @@ int main(int argc, char **argv, char **env)
 
 	if (argc < 1 && !argv)
 		return 1;
-	commands = NULL; // la verdad aqui no tengo del todo calro porque no se hace malloc, pero claude dice que es así y yo le creo xd
+	commands = NULL; // la verdad aqui no tengo del todo calro porque no se hace malloc
 	//ft_bzero(&commands, sizeof(commands)); // usa calloc mjr (recomendacion de jainavas)
 	ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
 	init_vars(&vars, argc, argv, env);
@@ -81,7 +78,6 @@ int main(int argc, char **argv, char **env)
 			(printf("Error: failed to parse command\n"), free(line));
             continue;
         }
-		init_fds(commands, &vars);
 		//commands->vars = &vars; // Estas tres inicializaciones son temporales, hay que hacerlo bien iniciando cada una nodo a nodo, porque ahora solo funcionan una sola vez.
 		//commands->fd_out = 1; // TEMPORAL!!!!  hay que CAMBIAR esto, el 1 es para poder probar que funcione el ejecutor y los builtings
 		//commands->fd_in = 0; // TEMPORAL!!!!  hay que CAMBIAR esto, el 0 es para poder probar que funcione el ejecutor y los builtings
@@ -89,7 +85,7 @@ int main(int argc, char **argv, char **env)
 		// printf("%s\n", commands->command);
 		if (!commands->command) 
 		{
-    		printf("Error: empty command\n");
+			printf("Error: empty command\n");
     		(free(line), free_list(commands));
     		continue;
 		}
@@ -99,7 +95,7 @@ int main(int argc, char **argv, char **env)
 			(free(line), free_list(commands));
 			continue;
 		}
-		(set_redirections(commands), execute_control(commands, &vars));
+		(init_fds(commands, &vars), setup_pipeline(commands), execute_control(commands, &vars));
 		(free(line), free_list(commands));
 		commands = NULL; // reseteamos el puntero
 	}
