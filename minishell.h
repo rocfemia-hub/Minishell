@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/07 17:35:41 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/07 20:35:23 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct s_red
 	char	*input_file; //archivo para redirección con <
 	char	*output_file; // archivo para redirección con >
 	char	*append_file; //archivo para redirección con >>
-	char	*delimiter; // palabra que delimita el heredoc >>
+	char	*delimiter; // palabra que delimita el heredoc <<
 	int		redirect_in; // flag 1 si hay <, 0 si no hay
 	int		redirect_out; // flag 1 si hay >, 0 si no hay
 	int		redirect_append; // flag 1 si hay >>, 0 si no hay
