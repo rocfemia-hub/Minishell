@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/06 15:24:49 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/07 17:35:41 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,22 +44,23 @@ typedef struct s_vars
 	int		argc; //añadiendo argc y argv para tenerlos siempre a mano.
 	char	**argv;
 	char	**env;
-} t_vars;
+}	t_vars;
 
 typedef struct s_red
 {
-	char	*input_file; //archivo para
-	char	*output_file; // archivo para >
-	char	*append_file; //archivo para >>
-	char	*delimiter; // palabra que delimita el heredoc
-	int		redirect_in; // flag 1 si hay
-	int		redirect_out; // flag 1 si hay >
-	int		redirect_append; // flag 1 si hay >>
-	int		redirect_heredoc; // flag 1 si hay <<
-	int		i;
-	int		j;
-	char	**new_arg; // argumentos que tienen que estar dentro del archivo
-}t_red;
+	char	*input_file; //archivo para redirección con <
+	char	*output_file; // archivo para redirección con >
+	char	*append_file; //archivo para redirección con >>
+	char	*delimiter; // palabra que delimita el heredoc >>
+	int		redirect_in; // flag 1 si hay <, 0 si no hay
+	int		redirect_out; // flag 1 si hay >, 0 si no hay
+	int		redirect_append; // flag 1 si hay >>, 0 si no hay
+	int		redirect_heredoc; // flag 1 si hay <<, 0 si no hay
+	int		j; //posicion en char * de < ó >
+	int		i; //posicion en char ** de < ó >
+	int		sintax_error; //sintax error
+	int		error; //falta a donde redireccionar
+}	t_red;
 
 typedef struct s_com
 {
