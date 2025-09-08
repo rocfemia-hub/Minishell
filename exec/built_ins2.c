@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/09/03 17:39:02 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/08 20:41:28 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,7 @@ void export_function(t_com *list, t_vars *vars)
 	
     i = 0;
     if (!list->args || !*list->args) // Verificar si no hay argumentos: solo "export"
-        return(print_export_vars(list, vars));
-    if (!list->args)  // Si el split falla, salir
-        return;
+        return(free(list->args), print_export_vars(list, vars));
     while (list->args && list->args[i]) // Procesar cada argumento individualmente
     {
         equals_pos = ft_strchr(list->args[i], '='); // Buscar símbolo '=' en el argumento actual

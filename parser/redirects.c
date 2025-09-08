@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/09/08 19:09:06 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/08 21:03:18 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,7 @@ void parser_redirects(t_com *commands, char *redirect)
 
 void find(t_com *commands)
 { // look for < or >
-    
-    while (commands->args[commands->redirects->j])
+    while (commands->args[commands->redirects->j]) // PUEDE DAR SEG F SI NO VERIFICAS SI ARGS EXISTE
     {
         if (ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])))
             parser_redirects(commands, ">>"); //pasa el tipo se redireccion encontrada
