@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/09/07 17:11:02 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/08 19:09:06 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,32 @@ char **copy_redirect_matrix(char **args, int start, int end)
     return(new_arg);
 }
 
-void fill(t_com *commands, int start, int end, char *redirect)
-{ // dejar solo arg en args y rellenar flags
+void fill(t_com *commands, int start, int end, char *redirect, char *file)
+{ // dejar solo arg en args y rellenar flags, poner los archivos
     char **new_arg;
 
     new_arg = copy_redirect_matrix(commands->args, start, end);
     ft_free_free(commands->args);
     commands->args = new_arg;
-
     if (ft_strncmp(redirect, "<", 2) == 0)
+    {
         commands->redirects->redirect_in = 1;
+        commands->redirects->input_file = ft_strdup(file);
+    }
     else if (ft_strncmp(redirect, ">", 2) == 0)
+    {
         commands->redirects->redirect_out = 1;
-    else if (ft_strncmp(redirect, "<<", 2) == 0 || ft_strncmp(redirect, ">>", 2) == 0)
+        commands->redirects->output_file = ft_strdup(file);
+    }
+    else if (ft_strncmp(redirect, "<<", 2) == 0) // falta poner la ultima palabra
+    {
+        commands->redirects->redirect_heredoc = 1;
+    }
+    else if (ft_strncmp(redirect, ">>", 2) == 0)
+    {
         commands->redirects->redirect_append = 1;
+        commands->redirects->append_file = ft_strdup(file);
+    }
 }
 
 void parser_redirects(t_com *commands, char *redirect)
@@ -65,7 +77,7 @@ void parser_redirects(t_com *commands, char *redirect)
     if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect))// si la redireccion esta asi ">adios"
     {
         file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect));
-        fill(commands, commands->redirects->j, commands->redirects->j, redirect);
+        fill(commands, commands->redirects->j, commands->redirects->j, redirect, file);
     }
     else // el archivo esta en la siguiente linea
     {
@@ -80,12 +92,13 @@ void parser_redirects(t_com *commands, char *redirect)
             return;
         }
         file = ft_strdup(commands->args[commands->redirects->j + 1]);
-        fill(commands, commands->redirects->j, commands->redirects->j+1, redirect);
+        fill(commands, commands->redirects->j, commands->redirects->j+1, redirect, file);
     }
 }
 
 void find(t_com *commands)
 { // look for < or >
+    
     while (commands->args[commands->redirects->j])
     {
         if (ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])))
@@ -96,7 +109,6 @@ void find(t_com *commands)
             parser_redirects(commands, ">");
         else if (ft_strnstr(commands->args[commands->redirects->j], "<", ft_strlen(commands->args[commands->redirects->j])))
             parser_redirects(commands, "<");
-
         commands->redirects->j++;
     }
 }

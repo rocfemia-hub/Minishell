@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:51 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 01:22:53 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/08 19:10:41 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
             !ft_strncmp(commands->command, "unset", 5))
         commands->flag_built = 1;
-    ft_strjoin_mini(commands); // join arg and cmd in a char *comands_arg
     redirects(commands); // manage redirects
+    ft_strjoin_mini(commands); // join arg and cmd in a char *comands_arg
 }
-

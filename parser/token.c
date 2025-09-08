@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 01:55:54 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/08 19:12:13 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,12 @@ t_com *token(char *line)
     if (!commands)
         return(NULL);
     init_commands(line, commands);
-    // print_list(commands);
+    printf("\033[34mprint_list:\033[0m\n");
+    print_list(commands);
+    printf("\033[34mprint_redirects:\033[0m\n");
+    printf("append_file: %s, flag: %d\n", commands->redirects->append_file, commands->redirects->redirect_append);
+    printf("input_file: %s, flag: %d\n", commands->redirects->input_file, commands->redirects->redirect_in);
+    printf("output_file: %s, flag: %d\n", commands->redirects->output_file, commands->redirects->redirect_out);
+    printf("\033[34mejecutor\033[0m\n");
     return (commands);
 }

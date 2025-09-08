@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/07 19:49:13 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/07 23:22:51 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,9 @@ int main(int argc, char **argv, char **env)
 			(free(line), free_list(commands));
 			continue;
 		}
-		(init_fds(commands, &vars), setup_pipeline(commands), execute_control(commands, &vars));
+		init_fds(commands, &vars);
+		setup_pipeline(commands);
+		execute_control(commands, &vars);
 		free(line);
 		//free_list(commands);
 		commands = NULL; // reseteamos el puntero
