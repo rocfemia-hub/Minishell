@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/09/09 17:20:54 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/09 17:38:51 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void set_redirections(t_com *list)
         if (list->fd_out == -1)
             return(perror("Error opening append file"));
     }
-	clean_fds(list);
+	//clean_fds(list); NO SE COMO LLAMAR A ESTO SIN RESETEAR AUXILIO
 }
 
 void clean_fds(t_com *list)
@@ -56,6 +56,6 @@ void clean_fds(t_com *list)
         close(list->fd_in);
     if (list->fd_out != 1)
         close(list->fd_out);
-	list->fd_in = 0;
-    list->fd_out = 1;
+	//list->fd_in = 0;
+    //list->fd_out = 1;
 }

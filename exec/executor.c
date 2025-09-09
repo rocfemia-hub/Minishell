@@ -6,15 +6,25 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/09/06 15:21:59 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/09 17:37:00 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+void execute_control(t_com *list, t_vars *vars)
+{
+	set_redirections(list);
+	if(list->next == NULL)
+		commands_control(list, vars); // llama a la funcion del de bultins
+	// si llega aquí significa que hay más de un comando y habría que crear una pipe
+	// dentro de la pipe hay que ir comprobando continuamente si es builting o no
+	clean_fds(list);
+}
+
 void setup_pipeline(t_com *list)
 {
-    t_com *tmp_list = list;
+	t_com *tmp_list = list;
     int pipe_fd[2];
     
     while (tmp_list && tmp_list->next) // Crear pipe entre comando actual y siguiente
@@ -28,16 +38,6 @@ void setup_pipeline(t_com *list)
     }
     if (tmp_list) // Último comando, configura sus redirecciones
         set_redirections(tmp_list);
-}
-
-void execute_control(t_com *list, t_vars *vars)
-{
-	set_redirections(list);
-	if(list->next == NULL)
-		commands_control(list, vars); // llama a la funcion del de bultins
-	// si llega aquí significa que hay más de un comando y habría que crear una pipe
-	// dentro de la pipe hay que ir comprobando continuamente si es builting o no
-	clean_fds(list);
 }
 
 void commands_control(t_com *list, t_vars *vars)
@@ -128,13 +128,13 @@ void execute_two(t_com *list, int fd[2])
 {
 	if (list->fd_in != STDIN_FILENO) // 0
 		{
-			if(dup2(list->fd_in, STDIN_FILENO) == -1); // Esto se usará cuando me redireccionen la entrada o salida
+			if(dup2(list->fd_in, STDIN_FILENO) == -1) // Esto se usará cuando me redireccionen la entrada o salida
 				perror("dup2 stdin");
 			close(list->fd_in);
 		}
 		if (list->fd_out != STDOUT_FILENO) // 1
 		{
-			if(dup2(list->fd_out, STDOUT_FILENO) == -1);
+			if(dup2(list->fd_out, STDOUT_FILENO) == -1)
 				perror("dup2 stdout");
 			close(list->fd_out);
 		}
