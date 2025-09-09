@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/07 20:35:23 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/09 15:19:32 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ typedef struct s_vars
 
 typedef struct s_red
 {
-	char	*input_file; //archivo para redirección con <
-	char	*output_file; // archivo para redirección con >
-	char	*append_file; //archivo para redirección con >>
+	char	**input_file; //archivo para redirección con <
+	char	**output_file; // archivo para redirección con >
+	char	**append_file; //archivo para redirección con >>
 	char	*delimiter; // palabra que delimita el heredoc <<
 	int		redirect_in; // flag 1 si hay <, 0 si no hay
 	int		redirect_out; // flag 1 si hay >, 0 si no hay
@@ -165,8 +165,10 @@ void expander(t_com *commands);
 
 // REDIRECTS
 char **copy_matrix(char **args);
-void fill_struct_redirect(t_com *commands);
-void look_for_redirects(t_com *commands);
+char **realloc_redirect_flags(char **flag);
+void fill(t_com *commands, int start, int end, char *redirect, char *file);
+void parser_redirects(t_com *commands, char *redirect);
+void find(t_com *commands);
 void redirects(t_com *commands);
 
 
