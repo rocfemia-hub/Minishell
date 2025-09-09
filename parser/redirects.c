@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/09/08 21:03:18 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/09 14:37:11 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,25 +33,53 @@ char **copy_redirect_matrix(char **args, int start, int end)
         }
         j++;
     }
+    ft_free_free(args);
     return(new_arg);
+}
+
+char **realloc_redirect_flags(char **flag)
+{ //extender los char ** en caso de haber mas de 1 redireccion
+    int i;
+    int j;
+    char **realloc_matrix;
+
+    i = 0;
+    j = 0;
+    while (flag[j])
+        j++;
+    realloc_matrix = calloc(j + 2, sizeof(char *));
+    j = -1;
+    while (flag[++j])
+        realloc_matrix[j] = ft_strdup(flag[j]);
+    return(realloc_matrix);
 }
 
 void fill(t_com *commands, int start, int end, char *redirect, char *file)
 { // dejar solo arg en args y rellenar flags, poner los archivos
     char **new_arg;
-
+ 
     new_arg = copy_redirect_matrix(commands->args, start, end);
-    ft_free_free(commands->args);
     commands->args = new_arg;
+    printf("file: %s\n", file);
+    printf("%d\n", commands->redirects->redirect_out);
     if (ft_strncmp(redirect, "<", 2) == 0)
     {
-        commands->redirects->redirect_in = 1;
-        commands->redirects->input_file = ft_strdup(file);
+        if (!commands->redirects->input_file)
+            commands->redirects->input_file = ft_calloc(2, sizeof(char *));
+        else
+            commands->redirects->input_file = realloc_redirect_flags(commands->redirects->input_file);
+        commands->redirects->input_file[commands->redirects->redirect_in] = ft_strdup(file);
+        commands->redirects->redirect_in++;
     }
     else if (ft_strncmp(redirect, ">", 2) == 0)
     {
-        commands->redirects->redirect_out = 1;
-        commands->redirects->output_file = ft_strdup(file);
+        if (!commands->redirects->output_file)
+            commands->redirects->output_file = ft_calloc(2, sizeof(char *));
+        else
+            commands->redirects->output_file = realloc_redirect_flags(commands->redirects->output_file);
+        commands->redirects->output_file[commands->redirects->redirect_out] = ft_strdup(file);
+        printf("--> %s\n", commands->redirects->output_file[commands->redirects->redirect_out]);
+        commands->redirects->redirect_out++;
     }
     else if (ft_strncmp(redirect, "<<", 2) == 0) // falta poner la ultima palabra
     {
@@ -59,9 +87,14 @@ void fill(t_com *commands, int start, int end, char *redirect, char *file)
     }
     else if (ft_strncmp(redirect, ">>", 2) == 0)
     {
-        commands->redirects->redirect_append = 1;
-        commands->redirects->append_file = ft_strdup(file);
+        if(!commands->redirects->append_file)
+            commands->redirects->append_file = ft_calloc(2, sizeof(char *));
+        else
+            commands->redirects->append_file = realloc_redirect_flags(commands->redirects->append_file);
+        commands->redirects->append_file[commands->redirects->redirect_append] = ft_strdup(file);
+        commands->redirects->redirect_append++;
     }
+    free(file);
 }
 
 void parser_redirects(t_com *commands, char *redirect)
@@ -101,13 +134,25 @@ void find(t_com *commands)
     while (commands->args[commands->redirects->j]) // PUEDE DAR SEG F SI NO VERIFICAS SI ARGS EXISTE
     {
         if (ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])))
+        {
             parser_redirects(commands, ">>"); //pasa el tipo se redireccion encontrada
+            commands->redirects->j = -1;
+        }
         else if (ft_strnstr(commands->args[commands->redirects->j], "<<", ft_strlen(commands->args[commands->redirects->j])))
+        {
             parser_redirects(commands, "<<");
+            commands->redirects->j = -1;
+        }
         else if (ft_strnstr(commands->args[commands->redirects->j], ">", ft_strlen(commands->args[commands->redirects->j])))
+        {
             parser_redirects(commands, ">");
+            commands->redirects->j = -1;
+        }
         else if (ft_strnstr(commands->args[commands->redirects->j], "<", ft_strlen(commands->args[commands->redirects->j])))
-            parser_redirects(commands, "<");
+        {
+            parser_redirects(commands, "<"); 
+            commands->redirects->j = -1;
+        }
         commands->redirects->j++;
     }
 }
