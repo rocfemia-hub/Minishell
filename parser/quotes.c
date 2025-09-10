@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 01:34:57 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/10 20:20:36 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int pipes_counter(char *line)
         i++;
     }
     if (open_quote != 0)
-        return (-1);
-    // printf("count: %d\n", count); 
+        return (-1); // error
     return (count);
 }

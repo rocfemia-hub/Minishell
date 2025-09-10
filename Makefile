@@ -5,7 +5,7 @@ CCFLAGS = -g3 -fsanitize=address #-Wall -Wextra -Werror
 BLUE = \033[34m
 RESET = \033[0m
 
-SRC = mix/list.c mix/main.c mix/error.c \
+SRC = mix/list.c mix/main.c mix/error.c mix/free.c\
       exec/built_ins1.c exec/built_ins2.c exec/executor.c exec/utils_built_ins1.c exec/utils_built_ins2.c exec/redirections.c\
       parser/token.c parser/split_mini.c parser/quotes.c parser/struct.c parser/expander.c parser/redirects.c\
 

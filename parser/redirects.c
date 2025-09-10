@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/09/09 14:37:11 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/10 20:21:23 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ char **copy_redirect_matrix(char **args, int start, int end)
     j = 0;
     while (args[j])
         j++;
-    new_arg = calloc(j + 1, sizeof(char *));
+    new_arg = ft_calloc(j + 1, sizeof(char *));
+    if (!new_arg)
+        return(NULL);
     j = 0;
     while (args[j])
     {
@@ -47,7 +49,9 @@ char **realloc_redirect_flags(char **flag)
     j = 0;
     while (flag[j])
         j++;
-    realloc_matrix = calloc(j + 2, sizeof(char *));
+    realloc_matrix = ft_calloc(j + 2, sizeof(char *));
+    if(!realloc_matrix)
+        return(NULL);
     j = -1;
     while (flag[++j])
         realloc_matrix[j] = ft_strdup(flag[j]);
@@ -58,27 +62,24 @@ void fill(t_com *commands, int start, int end, char *redirect, char *file)
 { // dejar solo arg en args y rellenar flags, poner los archivos
     char **new_arg;
  
-    new_arg = copy_redirect_matrix(commands->args, start, end);
+    new_arg = copy_redirect_matrix(commands->args, start, end); // copia los args sin las lineas del simbolo y file
     commands->args = new_arg;
-    printf("file: %s\n", file);
-    printf("%d\n", commands->redirects->redirect_out);
-    if (ft_strncmp(redirect, "<", 2) == 0)
+    if (ft_strncmp(redirect, "<", 2) == 0) 
     {
-        if (!commands->redirects->input_file)
+        if (!commands->redirects->input_file) //me crea el char ** de la estructura si no esta creado
             commands->redirects->input_file = ft_calloc(2, sizeof(char *));
-        else
+        else //me realoca la memoria del char ** para poder añadir otra linea de file
             commands->redirects->input_file = realloc_redirect_flags(commands->redirects->input_file);
         commands->redirects->input_file[commands->redirects->redirect_in] = ft_strdup(file);
         commands->redirects->redirect_in++;
     }
     else if (ft_strncmp(redirect, ">", 2) == 0)
     {
-        if (!commands->redirects->output_file)
+        if (!commands->redirects->output_file) //me crea el char ** de la estructura si no esta creado
             commands->redirects->output_file = ft_calloc(2, sizeof(char *));
-        else
+        else //me realoca la memoria del char ** para poder añadir otra linea de file
             commands->redirects->output_file = realloc_redirect_flags(commands->redirects->output_file);
         commands->redirects->output_file[commands->redirects->redirect_out] = ft_strdup(file);
-        printf("--> %s\n", commands->redirects->output_file[commands->redirects->redirect_out]);
         commands->redirects->redirect_out++;
     }
     else if (ft_strncmp(redirect, "<<", 2) == 0) // falta poner la ultima palabra
@@ -87,9 +88,9 @@ void fill(t_com *commands, int start, int end, char *redirect, char *file)
     }
     else if (ft_strncmp(redirect, ">>", 2) == 0)
     {
-        if(!commands->redirects->append_file)
+        if(!commands->redirects->append_file) //me crea el char ** de la estructura si no esta creado
             commands->redirects->append_file = ft_calloc(2, sizeof(char *));
-        else
+        else //me realoca la memoria del char ** para poder añadir otra linea de file
             commands->redirects->append_file = realloc_redirect_flags(commands->redirects->append_file);
         commands->redirects->append_file[commands->redirects->redirect_append] = ft_strdup(file);
         commands->redirects->redirect_append++;
@@ -97,60 +98,72 @@ void fill(t_com *commands, int start, int end, char *redirect, char *file)
     free(file);
 }
 
-void parser_redirects(t_com *commands, char *redirect)
+int parser_redirects(t_com *commands, char *redirect)
 { // chequear si despues de la redireccion hay archivo o antes 
     char *file = NULL; // archivo de salida, no se si es > >> < <<
 
-    if (commands->args[commands->redirects->j][0] != redirect[0] || (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect) &&
-        (commands->args[commands->redirects->j][ft_strlen(redirect)] == '>' || commands->args[commands->redirects->j][ft_strlen(redirect)] == '<'))) // hola< que de error y <<< <> de error
+    if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
     {
-        commands->redirects->sintax_error = 1;
-        return;
+        commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
+        return (0);
     }
-    if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect))// si la redireccion esta asi ">adios"
+    else if (commands->args[commands->redirects->j][0] != redirect[0] || ft_strnstr(commands->args[commands->redirects->j], "<<<", 3)) // error hola< y <<<
+    {
+        commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+        return (0);
+    }
+    else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect))// si la redireccion esta asi ">adios" --> no es error
     {
         file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect));
         fill(commands, commands->redirects->j, commands->redirects->j, redirect, file);
     }
-    else // el archivo esta en la siguiente linea
+    else // el archivo esta separado del simbolo "hola > adios"
     {
-        if (!commands->args[commands->redirects->j + 1]) 
+        if (!commands->args[commands->redirects->j + 1]) // no hay archivo al que redireccionar
         {
-            commands->redirects->error = 1;
-            return;
+            commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+            return(0);
         }
         if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1) || ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1)) // dos operadores juntos > >
         {
-            commands->redirects->sintax_error = 1;
-            return;
+            if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1))
+                commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
+            if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
+                commands->error = ft_strdup("bash: syntax error near unexpected token `<'");
+            return(0);
         }
         file = ft_strdup(commands->args[commands->redirects->j + 1]);
         fill(commands, commands->redirects->j, commands->redirects->j+1, redirect, file);
     }
+    return(1);
 }
 
 void find(t_com *commands)
 { // look for < or >
-    while (commands->args[commands->redirects->j]) // PUEDE DAR SEG F SI NO VERIFICAS SI ARGS EXISTE
+    while (commands->args && commands->args[commands->redirects->j]) // PUEDE DAR SEG F SI NO VERIFICAS SI ARGS EXISTE
     {
         if (ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])))
         {
-            parser_redirects(commands, ">>"); //pasa el tipo se redireccion encontrada
+            if (!parser_redirects(commands, ">>")) //pasa el tipo se redireccion encontrada
+                return ;
             commands->redirects->j = -1;
         }
         else if (ft_strnstr(commands->args[commands->redirects->j], "<<", ft_strlen(commands->args[commands->redirects->j])))
         {
-            parser_redirects(commands, "<<");
+            if(!parser_redirects(commands, "<<"))
+                return ;
             commands->redirects->j = -1;
         }
         else if (ft_strnstr(commands->args[commands->redirects->j], ">", ft_strlen(commands->args[commands->redirects->j])))
         {
-            parser_redirects(commands, ">");
+            if (!parser_redirects(commands, ">"))
+                return ;
             commands->redirects->j = -1;
         }
         else if (ft_strnstr(commands->args[commands->redirects->j], "<", ft_strlen(commands->args[commands->redirects->j])))
         {
-            parser_redirects(commands, "<"); 
+            if (!parser_redirects(commands, "<"))
+                return ;
             commands->redirects->j = -1;
         }
         commands->redirects->j++;

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/07 23:22:51 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/10 20:18:47 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int main(int argc, char **argv, char **env)
 	if (argc < 1 && !argv)
 		return 1;
 	commands = NULL; // la verdad aqui no tengo del todo calro porque no se hace malloc
-	//ft_bzero(&commands, sizeof(commands)); // usa calloc mjr (recomendacion de jainavas)
 	ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
 	init_vars(&vars, argc, argv, env);
 	while (1)
@@ -74,25 +73,18 @@ int main(int argc, char **argv, char **env)
 		}
 		commands = token(line); // llama a la funcion tokeniza
 		if (!commands) // debug para comprobar que el comando sea valido
-        {
-			(printf("Error: failed to parse command\n"), free(line));
             continue;
-        }
-		//commands->vars = &vars; // Estas tres inicializaciones son temporales, hay que hacerlo bien iniciando cada una nodo a nodo, porque ahora solo funcionan una sola vez.
-		//commands->fd_out = 1; // TEMPORAL!!!!  hay que CAMBIAR esto, el 1 es para poder probar que funcione el ejecutor y los builtings
-		//commands->fd_in = 0; // TEMPORAL!!!!  hay que CAMBIAR esto, el 0 es para poder probar que funcione el ejecutor y los builtings
 		//commands = commands->next; //para que funcione con mas de un comando
-		// printf("%s\n", commands->command);
 		if (!commands->command) 
 		{
 			printf("Error: empty command\n");
-    		(free(line), free_list(commands));
+    		(free(line), free_t_com_list(commands));
     		continue;
 		}
 		if (commands && commands->command && ft_strnstr(commands->command, "error", 5))
 		{
 			printf("error\n");
-			(free(line), free_list(commands));
+			(free(line), free_t_com_list(commands));
 			continue;
 		}
 		init_fds(commands, &vars);

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:51 by roo               #+#    #+#             */
-/*   Updated: 2025/09/08 19:10:41 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/10 20:23:16 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,25 +50,29 @@ char *ft_strjoin_mini(t_com *commands)
     return (cmd_arg);
 }
 
-t_com *create_struct(char *line, t_pipes pipes)
+t_com *create_struct(char *line)
 { // create nodes list 
-    int i = 0;
+    int i;
+    int pipes;
     t_com *new;
     t_com *head; 
 
-    pipes.pipes = pipes_counter(line); // counter pipes 
-    if (pipes.pipes < 0)
-        return (NULL);
+    i = 0;
+    pipes = pipes_counter(line); // counter pipes 
+    if (pipes < 0)
+    {
+        head = lstnew(i);
+        head->error = ft_strdup("bash: open quote error");
+        return (head);
+    }
     head = lstnew(i);
-    if (!head)
-        return (NULL);
-    while (++i <= pipes.pipes) // create nodes
+    while (++i <= pipes) // create nodes
     {
         new = lstnew(i);
         if (!new)
             return (NULL);
         lstadd_back(&head, new);
-    }
+    } 
     return (head);
 }
 

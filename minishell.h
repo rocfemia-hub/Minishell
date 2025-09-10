@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/09 15:19:32 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/10 20:27:20 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,6 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <dirent.h>
-
-typedef struct s_pipes
-{
-	int		pipes;
-} t_pipes;
 
 typedef struct s_clean_cmd
 {
@@ -75,6 +70,7 @@ typedef struct s_com
 	int i; // no guarda información util, es para ahorrar lineas, un iterador normal
 	int flag_built; // 1 para built 0 execve
 	int flag_pipe; // 1 si hay pipe 0 si no
+	char *error;
 	struct s_com *next;
 	t_red *redirects; // estructura para > >> < <<
 	t_vars *vars;
@@ -93,10 +89,15 @@ void	init_fds(t_com *list, t_vars *vars);
 t_com	*lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
 void 	print_list(t_com *list);
-void	free_list(t_com *list);
 
 //ERROR
 void	printf_matrix(char **split);
+void error(t_com *commands);
+
+//FREE
+void free_t_com_list(t_com *list);
+void free_t_red_list(t_red *list);
+void free_t_vars_list(t_vars *list);
 
 
 /*EXEC*/ 
@@ -155,7 +156,7 @@ int		pipes_counter(char *line);
 
 // TRUCT
 char 	*ft_strjoin_mini(t_com *commands);
-t_com	*create_struct(char *line, t_pipes pipes);
+t_com	*create_struct(char *line);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 void 	clean_and_fill_arg(t_com *commands, char *line);
 
@@ -167,7 +168,7 @@ void expander(t_com *commands);
 char **copy_matrix(char **args);
 char **realloc_redirect_flags(char **flag);
 void fill(t_com *commands, int start, int end, char *redirect, char *file);
-void parser_redirects(t_com *commands, char *redirect);
+int parser_redirects(t_com *commands, char *redirect);
 void find(t_com *commands);
 void redirects(t_com *commands);
 

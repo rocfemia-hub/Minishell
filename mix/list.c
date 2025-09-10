@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:46 by roo               #+#    #+#             */
-/*   Updated: 2025/07/24 01:56:15 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/10 20:18:09 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,27 +39,6 @@ void lstadd_back(t_com **lst, t_com *new)
 		node = node->next;
 	node->next = new;
 	new->previous = node;
-}
-
-void free_list(t_com *list)
-{
-	t_com *temp;
-
-	while (list)
-	{
-		temp = list;
-		list = list->next;
-		// he añadido muchos más frees para liberar todas las strings de la lista
-		if (temp->command)
-			free(temp->command);
-		if (temp->args)
-			free(temp->args);
-		if (temp->command_arg)
-			free(temp->command_arg);
-		if (temp->path_command)
-			free(temp->path_command);
-		free(temp);
-	}
 }
 
 void print_list(t_com *list)
