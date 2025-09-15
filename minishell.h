@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/10 20:27:20 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/15 21:00:26 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,12 @@ void 	print_list(t_com *list);
 
 //ERROR
 void	printf_matrix(char **split);
-void error(t_com *commands);
+void 	error(t_com *commands);
 
 //FREE
-void free_t_com_list(t_com *list);
-void free_t_red_list(t_red *list);
-void free_t_vars_list(t_vars *list);
+void	free_t_com_list(t_com *list);
+void	free_t_red_list(t_red *list);
+void	free_t_vars_list(t_vars *list);
 
 
 /*EXEC*/ 
@@ -135,6 +135,8 @@ void	export_existing_var(char *var_name, t_vars *vars);
 
 // REDIRECTIONS
 void set_redirections(t_com *list);
+void heredoc_execution(t_com *list);
+void write_heredoc(int write_fd, t_com *list);
 void clean_fds(t_com *list);
 
 
