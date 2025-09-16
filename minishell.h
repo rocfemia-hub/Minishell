@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/15 21:00:26 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/16 18:56:10 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_red
 	char	**output_file; // archivo para redirección con >
 	char	**append_file; //archivo para redirección con >>
 	char	*delimiter; // palabra que delimita el heredoc <<
+	char	*heredoc_file; // NUEVO: archivo oculto para el heredoc <<
 	int		redirect_in; // flag 1 si hay <, 0 si no hay
 	int		redirect_out; // flag 1 si hay >, 0 si no hay
 	int		redirect_append; // flag 1 si hay >>, 0 si no hay
@@ -136,7 +137,6 @@ void	export_existing_var(char *var_name, t_vars *vars);
 // REDIRECTIONS
 void set_redirections(t_com *list);
 void heredoc_execution(t_com *list);
-void write_heredoc(int write_fd, t_com *list);
 void clean_fds(t_com *list);
 
 

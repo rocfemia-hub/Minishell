@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/09/15 21:01:35 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/16 18:55:37 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,33 +57,13 @@ void set_redirections(t_com *list)
 
 void heredoc_execution(t_com *list)
 {
-    int pipe_fd[2];
-    pid_t pid;
-    if (pipe(pipe_fd) == -1) // Crear pipe para el heredoc
-        return(perror("pipe heredoc"));
+    list->fd_in = open(list->redirects->heredoc_file, O_RDONLY);
     
-    pid = fork();
-    if (pid == 0) // PROCESO HIJO: escribir contenido del heredoc
+    if (list->fd_in == -1)
     {
-        close(pipe_fd[0]); // Cerrar lectura
-        write_heredoc(pipe_fd[1], list);
-        close(pipe_fd[1]);
-        exit(0);
+        perror("Error opening heredoc file");
+        return;
     }
-    else if (pid > 0) // PROCESO PADRE: configurar input
-    {
-        close(pipe_fd[1]); // Cerrar escritura
-        list->fd_in = pipe_fd[0]; // El comando leerá del pipe
-        waitpid(pid, NULL, 0);
-    }
-    else
-        perror("fork heredoc");
-}
-
-void write_heredoc(int write_fd, t_com *list)
-{ // ES UNA PRUEBA (Leer el contenido almacenado del heredoc - Escribirlo línea por línea al pipe)
-    char *test_content = "linea1\nlinea2\nlinea3\n";
-    write(write_fd, test_content, strlen(test_content));
 }
 
 void clean_fds(t_com *list)
@@ -94,4 +74,10 @@ void clean_fds(t_com *list)
         close(list->fd_out);
 	//list->fd_in = 0;
     //list->fd_out = 1;
+	if (list->redirects && list->redirects->heredoc_file)
+    {
+        unlink(list->redirects->heredoc_file); // Borrar archivo
+        free(list->redirects->heredoc_file);
+        list->redirects->heredoc_file = NULL;
+    }
 }
