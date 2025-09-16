@@ -84,6 +84,7 @@ void fill(t_com *commands, int start, int end, char *redirect, char *file)
     }
     else if (ft_strncmp(redirect, "<<", 2) == 0) // falta poner la ultima palabra
     {
+        commands->redirects->delimiter = ft_strdup(file);
         commands->redirects->redirect_heredoc = 1;
     }
     else if (ft_strncmp(redirect, ">>", 2) == 0)
@@ -100,7 +101,7 @@ void fill(t_com *commands, int start, int end, char *redirect, char *file)
 
 int parser_redirects(t_com *commands, char *redirect)
 { // chequear si despues de la redireccion hay archivo o antes 
-    char *file = NULL; // archivo de salida, no se si es > >> < <<
+    char *file = NULL; // archivo de salida
 
     if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
     {
@@ -114,8 +115,8 @@ int parser_redirects(t_com *commands, char *redirect)
     }
     else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect))// si la redireccion esta asi ">adios" --> no es error
     {
-        file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect));
-        fill(commands, commands->redirects->j, commands->redirects->j, redirect, file);
+        file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect)); // archivo al que redirecciona
+        fill(commands, commands->redirects->j, commands->redirects->j, redirect, file); // rellena estructura
     }
     else // el archivo esta separado del simbolo "hola > adios"
     {
@@ -132,15 +133,15 @@ int parser_redirects(t_com *commands, char *redirect)
                 commands->error = ft_strdup("bash: syntax error near unexpected token `<'");
             return(0);
         }
-        file = ft_strdup(commands->args[commands->redirects->j + 1]);
-        fill(commands, commands->redirects->j, commands->redirects->j+1, redirect, file);
+        file = ft_strdup(commands->args[commands->redirects->j + 1]); //archivo al que redirecciona
+        fill(commands, commands->redirects->j, commands->redirects->j+1, redirect, file); // rellena estructura
     }
     return(1);
 }
 
 void find(t_com *commands)
 { // look for < or >
-    while (commands->args && commands->args[commands->redirects->j]) // PUEDE DAR SEG F SI NO VERIFICAS SI ARGS EXISTE
+    while (commands->args && commands->args[commands->redirects->j])
     {
         if (ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])))
         {
