@@ -53,8 +53,9 @@ void clean_and_fill_arg(t_com *commands, char *line)
     return ;
 }
 
-char *clean_cmd(char *line, t_clean_cmd *data) 
+char *clean_cmd(char *line, t_clean_cmd *data)
 { // clean quotes of command
+    printf("entra clean_cmd\n");
     while (line[data->i] == ' ')
         data->i++;
     if (line[data->i] == '\'' || line[data->i] == '"')

@@ -163,8 +163,9 @@ void	init_struct(char *line, char *cmd, int end, t_com *commands);
 void 	clean_and_fill_arg(t_com *commands, char *line);
 
 // EXPANDER
-int is_expansor(t_com *commands);
-void expander(t_com *commands);
+void expand_cmd(t_clean_cmd *data);
+char **aux_cmd(t_clean_cmd *data);
+char *only_cmd(char *line, t_clean_cmd *data);
 
 // REDIRECTS
 char **copy_matrix(char **args);

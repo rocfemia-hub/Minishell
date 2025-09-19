@@ -17,7 +17,11 @@ void type_command(char *line, t_com *commands)
     t_clean_cmd data;
 
     ft_bzero(&data, sizeof(t_clean_cmd));
-    data.cmd = clean_cmd(line, &data); // cmd without quotes
+    data.cmd = only_cmd(line, &data);
+    if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
+        expand_cmd(&data);
+    else
+        data.cmd = clean_cmd(data.cmd, &data); // cmd without quotes
     init_struct(line, data.cmd, data.end_index, commands); //fill cmd and arg
     free(data.cmd); // LIBERAR TODO DATA, SOLO HAY UN CHAR * RESTO SON INT
 }
