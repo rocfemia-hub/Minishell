@@ -162,10 +162,18 @@ t_com	*create_struct(char *line);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 void 	clean_and_fill_arg(t_com *commands, char *line);
 
-// EXPANDER
+// EXPANDER_CMD
 void expand_cmd(t_clean_cmd *data);
 char **aux_cmd(t_clean_cmd *data);
 char *only_cmd(char *line, t_clean_cmd *data);
+char *ft_strjoin_cmd(char **cmd);
+
+// EXPANDER_ARGS
+char *get_env_var(const char *var);
+char *str_append(char *dest, const char *src);
+char *expand_args(char *line);
+char **aux_args(char *line);
+
 
 // REDIRECTS
 char **copy_matrix(char **args);

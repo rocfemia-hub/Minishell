@@ -44,37 +44,10 @@ char *only_cmd(char *line, t_clean_cmd *data)
     return (ft_substr(line, data->start, data->end - data->start));
 }
 
-char *get_env_var(const char *var)
-{
-    char *value = getenv(var);
-    if (value != NULL)
-        return value;
-    else
-        return "";
-}
-
-char *str_append(char *dest, const char *src)
-{
-    if (!dest)
-    {
-        dest = strdup(src);
-    }
-    else
-    {
-        char *tmp = malloc(strlen(dest) + strlen(src) + 1);
-        strcpy(tmp, dest);
-        strcat(tmp, src);
-        free(dest);
-        dest = tmp;
-    }
-    return dest;
-}
-
 char **aux_cmd(t_clean_cmd *data)
 {
     char **temp = malloc(sizeof(char *) * 256);
     int i = 0, j = 0, start;
-    char quote = 0;
 
     while (data->cmd[i])
     {
@@ -86,10 +59,8 @@ char **aux_cmd(t_clean_cmd *data)
             while (data->cmd[i] && data->cmd[i] != '\'')
                 i++;
             if (i > start)
-            {
                 token = ft_substr(data->cmd, start, i - start);
-            }
-            if (data->cmd[i] == '\'') 
+            if (data->cmd[i] == '\'')
                 i++;
         }
         else if (data->cmd[i] == '"')
@@ -106,9 +77,16 @@ char **aux_cmd(t_clean_cmd *data)
                 {
                     if (k > start)
                         token = str_append(token, ft_substr(data->cmd, start, k - start));
-
                     int vstart = k + 1;
                     int vlen = 0;
+                    if (!data->cmd[vstart] ||
+                        !(isalnum((unsigned char)data->cmd[vstart]) || data->cmd[vstart] == '_'))
+                    {
+                        token = str_append(token, "$");
+                        k = vstart;
+                        start = k;
+                        continue;
+                    }
                     while (data->cmd[vstart + vlen] &&
                            (isalnum((unsigned char)data->cmd[vstart + vlen]) || data->cmd[vstart + vlen] == '_'))
                         vlen++;
@@ -117,7 +95,6 @@ char **aux_cmd(t_clean_cmd *data)
                     char *value = get_env_var(varname);
                     free(varname);
                     token = str_append(token, value);
-
                     k = vstart + vlen;
                     start = k;
                 }
@@ -126,22 +103,29 @@ char **aux_cmd(t_clean_cmd *data)
             }
             if (start < end)
                 token = str_append(token, ft_substr(data->cmd, start, end - start));
-            if (data->cmd[i] == '"') 
+            if (data->cmd[i] == '"')
                 i++;
         }
         else if (data->cmd[i] == '$')
         {
             start = i + 1;
             int vlen = 0;
-            while (data->cmd[start + vlen] &&
-                   (isalnum((unsigned char)data->cmd[start + vlen]) || data->cmd[start + vlen] == '_'))
-                vlen++;
-
-            char *varname = ft_substr(data->cmd, start, vlen);
-            char *value = get_env_var(varname);
-            free(varname);
-            token = strdup(value);
-            i = start + vlen;
+            if (!data->cmd[start] || !(isalnum((unsigned char)data->cmd[start]) || data->cmd[start] == '_'))
+            {
+                token = strdup("$");
+                i = start;
+            }
+            else
+            {
+                while (data->cmd[start + vlen] &&
+                       (isalnum((unsigned char)data->cmd[start + vlen]) || data->cmd[start + vlen] == '_'))
+                    vlen++;
+                char *varname = ft_substr(data->cmd, start, vlen);
+                char *value = get_env_var(varname);
+                free(varname);
+                token = strdup(value);
+                i = start + vlen;
+            }
         }
         else
         {
@@ -153,9 +137,11 @@ char **aux_cmd(t_clean_cmd *data)
         if (token)
             temp[j++] = token;
     }
+    data->end_index = i;
     temp[j] = NULL;
-    return temp;
+    return (temp);
 }
+
 
 char *ft_strjoin_cmd(char **cmd)
 {
