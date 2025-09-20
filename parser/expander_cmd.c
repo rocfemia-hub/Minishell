@@ -12,164 +12,44 @@
 
 #include "../minishell.h"
 
-char *only_cmd(char *line, t_clean_cmd *data)
-{  // ME SEPARA EL COMANDO DE LA LINEA QUE ENTRA POR TERMINAL
-    int i; 
-
-    i = 0;
-    data->quote = 0;
-    while (line[i] && line[i] == 32)
-        i++;
-    if (!line[i])
-        return NULL;
-    data->start = i;
-    while (line[i])
-    {
-        if (line[i] == '\'' || line[i] == '"')
-        {
-            if (!data->quote)
-                data->quote = line[i];
-            else if (data->quote == line[i])
-                data->quote = 0;
-        }
-        if (line[i] == ' ' && data->quote == 0)
-        {
-            data->end = i;
-            break;
-        }
-        i++;
-    }
-    if (!line[i])
-        data->end = i;
-    return (ft_substr(line, data->start, data->end - data->start));
+char *handle_plain_text(char *cmd, int *i)
+{
+    int start;
+    
+    start = *i;
+    while (cmd[*i] && cmd[*i] != '\'' && cmd[*i] != '"' && cmd[*i] != '$')
+        (*i)++;
+    return(ft_substr(cmd, start, *i - start));
 }
 
 char **aux_cmd(t_clean_cmd *data)
 {
-    char **temp = malloc(sizeof(char *) * 256);
-    int i = 0, j = 0, start;
+    char **temp;
+    int i;
+    int j;
+    char *token;
 
+    i = 0;
+    j = 0;
+    temp = malloc(sizeof(char *) * 256);
     while (data->cmd[i])
     {
-        char *token = NULL;
         if (data->cmd[i] == '\'')
-        {
-            i++;
-            start = i;
-            while (data->cmd[i] && data->cmd[i] != '\'')
-                i++;
-            if (i > start)
-                token = ft_substr(data->cmd, start, i - start);
-            if (data->cmd[i] == '\'')
-                i++;
-        }
+            token = handle_single_quotes(data->cmd, &i);
         else if (data->cmd[i] == '"')
-        {
-            i++;
-            start = i;
-            while (data->cmd[i] && data->cmd[i] != '"')
-                i++;
-            int end = i;
-            int k = start;
-            while (k < end)
-            {
-                if (data->cmd[k] == '$')
-                {
-                    if (k > start)
-                        token = str_append(token, ft_substr(data->cmd, start, k - start));
-                    int vstart = k + 1;
-                    int vlen = 0;
-                    if (!data->cmd[vstart] ||
-                        !(isalnum((unsigned char)data->cmd[vstart]) || data->cmd[vstart] == '_'))
-                    {
-                        token = str_append(token, "$");
-                        k = vstart;
-                        start = k;
-                        continue;
-                    }
-                    while (data->cmd[vstart + vlen] &&
-                           (isalnum((unsigned char)data->cmd[vstart + vlen]) || data->cmd[vstart + vlen] == '_'))
-                        vlen++;
-
-                    char *varname = ft_substr(data->cmd, vstart, vlen);
-                    char *value = get_env_var(varname);
-                    free(varname);
-                    token = str_append(token, value);
-                    k = vstart + vlen;
-                    start = k;
-                }
-                else
-                    k++;
-            }
-            if (start < end)
-                token = str_append(token, ft_substr(data->cmd, start, end - start));
-            if (data->cmd[i] == '"')
-                i++;
-        }
+            token = handle_double_quotes(data->cmd, &i);
         else if (data->cmd[i] == '$')
-        {
-            start = i + 1;
-            int vlen = 0;
-            if (!data->cmd[start] || !(isalnum((unsigned char)data->cmd[start]) || data->cmd[start] == '_'))
-            {
-                token = strdup("$");
-                i = start;
-            }
-            else
-            {
-                while (data->cmd[start + vlen] &&
-                       (isalnum((unsigned char)data->cmd[start + vlen]) || data->cmd[start + vlen] == '_'))
-                    vlen++;
-                char *varname = ft_substr(data->cmd, start, vlen);
-                char *value = get_env_var(varname);
-                free(varname);
-                token = strdup(value);
-                i = start + vlen;
-            }
-        }
+            token = handle_dollar(data->cmd, &i);
         else
-        {
-            start = i;
-            while (data->cmd[i] && data->cmd[i] != '\'' && data->cmd[i] != '"' && data->cmd[i] != '$')
-                i++;
-            token = ft_substr(data->cmd, start, i - start);
-        }
+            token = handle_plain_text(data->cmd, &i);
         if (token)
             temp[j++] = token;
     }
-    data->end_index = i;
     temp[j] = NULL;
-    return (temp);
+    data->end_index = i;
+    return(temp);
 }
 
-
-char *ft_strjoin_cmd(char **cmd)
-{
-    int len = 0;
-    char *result;
-    int i = 0;
-    int k;
-
-    if (!cmd || !cmd[0])
-        return (NULL);
-    while (cmd[i])
-    {
-        len += ft_strlen(cmd[i]);
-        i++;
-    }
-    result = malloc(len + 1);
-    if (!result)
-        return(NULL);
-    result[0] = '\0';
-    i = 0;
-    while (cmd[i])
-    {
-        ft_strlcat(result, cmd[i], ft_strlen(result) + ft_strlen(cmd[i]) + 1);
-        i++;
-    }
-    printf("RESULT %s\n", result);
-    return(result);
-}
 
 void expand_cmd(t_clean_cmd *data)
 {

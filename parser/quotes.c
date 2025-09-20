@@ -55,7 +55,6 @@ void clean_and_fill_arg(t_com *commands, char *line)
 
 char *clean_cmd(char *line, t_clean_cmd *data)
 { // clean quotes of command
-    printf("entra clean_cmd\n");
     while (line[data->i] == ' ')
         data->i++;
     if (line[data->i] == '\'' || line[data->i] == '"')
@@ -103,3 +102,4 @@ int pipes_counter(char *line)
         return (-1); // error
     return (count);
 }
+

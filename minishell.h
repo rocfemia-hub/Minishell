@@ -32,6 +32,7 @@ typedef struct s_clean_cmd
     char	quote;
     char	*cmd;
 	int		end_index;
+	int only_cmd_i;
 } t_clean_cmd;
 
 typedef struct s_vars
@@ -144,6 +145,8 @@ void clean_fds(t_com *list);
 
 
 // TOKEN.C
+int skip_spaces(char *line);
+char *only_cmd(char *line, t_clean_cmd *data);
 void	type_command(char *line, t_com *commands);
 void	init_commands(char *line, t_com *commands);
 t_com	*token(char *line);
@@ -152,28 +155,39 @@ t_com	*token(char *line);
 char	**ft_split_mini(char const *s, char c);
 
 // QUOTES
-void 	*clean_arg(t_com *commands, char *line);
+void 	clean_and_fill_arg(t_com *commands, char *line);
 char	*clean_cmd(char *line, t_clean_cmd *data);
 int		pipes_counter(char *line);
 
-// TRUCT
+// STRUCT
 char 	*ft_strjoin_mini(t_com *commands);
 t_com	*create_struct(char *line);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
-void 	clean_and_fill_arg(t_com *commands, char *line);
 
 // EXPANDER_CMD
-void expand_cmd(t_clean_cmd *data);
+char *handle_plain_text(char *cmd, int *i);
 char **aux_cmd(t_clean_cmd *data);
-char *only_cmd(char *line, t_clean_cmd *data);
-char *ft_strjoin_cmd(char **cmd);
+void expand_cmd(t_clean_cmd *data);
 
 // EXPANDER_ARGS
+char *handle_plain_text_args(char *line, int *i);
+char **process_aux_args(char *line, char **temp);
+char **aux_args(char *line);
+char *expand_args(char *line);
+
+//UTILS_EXPANDER
+char *handle_single_quotes(char *cmd, int *i);
+char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token);
+char *process_inside_double_quotes(char *line, int start, int end);
+char *handle_double_quotes(char *line, int *i);
+char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token);
+
+//AUX_EXPANDER
 char *get_env_var(const char *var);
 char *str_append(char *dest, const char *src);
-char *expand_args(char *line);
-char **aux_args(char *line);
-
+char *ft_strjoin_cmd(char **cmd);
+char *extract_varname(char *line, int start, int *vlen);
+char *handle_dollar(char *line, int *i);
 
 // REDIRECTS
 char **copy_matrix(char **args);
