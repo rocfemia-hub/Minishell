@@ -57,6 +57,7 @@ typedef struct s_red
 	int		i; //posicion en char ** de < ó >
 	int		sintax_error; //sintax error
 	int		error; //falta a donde redireccionar
+	char *file; // archivo de slaida o entrada
 }	t_red;
 
 typedef struct s_com
@@ -190,12 +191,16 @@ char *extract_varname(char *line, int start, int *vlen);
 char *handle_dollar(char *line, int *i);
 
 // REDIRECTS
-char **copy_matrix(char **args);
-char **realloc_redirect_flags(char **flag);
-void fill(t_com *commands, int start, int end, char *redirect, char *file);
+int aux_parser_redirects(t_com *commands, char *redirect);
 int parser_redirects(t_com *commands, char *redirect);
 void find(t_com *commands);
 void redirects(t_com *commands);
+
+//UTILS_REDIRECTS.C
+char **realloc_redirect_flags(char **flag);
+char **copy_redirect_matrix(char **args, int start, int end);
+void handle_redirect_array(char ***arr, int *count, char *file);
+void fill(t_com *commands, int start, int end, char *redirect);
 
 
 #endif
