@@ -13,18 +13,18 @@
 #include "../minishell.h"
 
 char *ft_strjoin_mini(t_com *commands)
-{ //join cmd and arg --> cmd_arg
+{ // join cmd and arg --> cmd_arg
     int i;
     int j;
     int k;
     int len = 0;
     char *cmd_arg;
 
-    len += ft_strlen(commands->command) + 1; 
+    len += ft_strlen(commands->command) + 1;
     k = 0;
-    while (commands->args && commands->args[k]) 
+    while (commands->args && commands->args[k])
     {
-        len += ft_strlen(commands->args[k]) + 1; 
+        len += ft_strlen(commands->args[k]) + 1;
         k++;
     }
     cmd_arg = ft_calloc(len + 1, sizeof(char));
@@ -51,14 +51,14 @@ char *ft_strjoin_mini(t_com *commands)
 }
 
 t_com *create_struct(char *line)
-{ // create nodes list 
+{ // create nodes list
     int i;
     int pipes;
     t_com *new;
-    t_com *head; 
+    t_com *head;
 
     i = 0;
-    pipes = pipes_counter(line); // counter pipes 
+    pipes = pipes_counter(line); // counter pipes
     if (pipes < 0)
     {
         head = lstnew(i);
@@ -72,7 +72,7 @@ t_com *create_struct(char *line)
         if (!new)
             return (NULL);
         lstadd_back(&head, new);
-    } 
+    }
     return (head);
 }
 
@@ -85,17 +85,17 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd) + 1);
     while (line[end] == ' ')
         end++;
-    if (ft_strnstr(line + end, "$", ft_strlen(line+ end)))
+    if (ft_strnstr(line + end, "$", ft_strlen(line + end)))
     {
         new_line = expand_args(line + end);
         commands->args = ft_split_parser(new_line);
     }
-    else 
+    else
         clean_and_fill_arg(commands, line + end); // crea un char **args dentro de commands
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
-            !ft_strncmp(commands->command, "unset", 5))
+        !ft_strncmp(commands->command, "unset", 5))
         commands->flag_built = 1;
-    redirects(commands); // manage redirects
+    redirects(commands);       // manage redirects
     ft_strjoin_mini(commands); // join arg and cmd in a char *comands_arg
 }

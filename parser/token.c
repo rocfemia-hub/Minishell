@@ -23,11 +23,11 @@ int skip_spaces(char *line)
 }
 
 char *only_cmd(char *line, t_clean_cmd *data)
-{  // ME SEPARA EL COMANDO DE LA LINEA QUE ENTRA POR TERMINAL
-    data->i = skip_spaces(line);;
+{ // ME SEPARA EL COMANDO DE LA LINEA QUE ENTRA POR TERMINAL
+    data->only_cmd_i = skip_spaces(line);
     data->quote = 0;
     if (!line[data->only_cmd_i])
-        return NULL;
+        return (NULL);
     data->start = data->only_cmd_i;
     while (line[data->only_cmd_i])
     {
@@ -59,7 +59,7 @@ void type_command(char *line, t_com *commands)
     if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
         expand_cmd(&data); // si hay $ en el comando, lo expande sea valido o no
     else
-        data.cmd = clean_cmd(data.cmd, &data); //  limpia el comando de comillas 
+        data.cmd = clean_cmd(line, &data);             //  limpia el comando de comillas
     init_struct(line, data.cmd, data.end_index, commands); // introduce todo en la estructura
     free(data.cmd); // LIBERAR TODO DATA
 }
@@ -73,14 +73,14 @@ void init_commands(char *line, t_com *commands)
 
     while (line[i])
     {
-        if ((line[i] == '"' || line[i] == '\'')) 
+        if ((line[i] == '"' || line[i] == '\''))
         {
             if (!quote)
                 quote = line[i];
             else if (quote == line[i])
                 quote = 0;
         }
-        if (line[i] == '|' && !quote) 
+        if (line[i] == '|' && !quote)
         {
             line[i] = '\0';
             type_command(line + start, current);
@@ -89,9 +89,9 @@ void init_commands(char *line, t_com *commands)
         }
         i++;
     }
-    if (current) 
+    if (current)
         type_command(line + start, current);
-    // LIBERAR CURRENT 
+    // LIBERAR CURRENT
 }
 
 t_com *token(char *line)
@@ -104,11 +104,11 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
-    if(look_for_backslash(line))
+    if (look_for_backslash(line))
     {
         commands->error = ft_strdup("bash: syntax error backslash");
         error(commands);
-        return(NULL);
+        return (NULL);
     }
     init_commands(line, commands);
     if (commands->error)
@@ -118,12 +118,7 @@ t_com *token(char *line)
     }
     printf("\033[34mprint_list:\033[0m\n");
     print_list(commands);
-    // printf("\033[34mprint_redirects:\033[0m\n");
-    // printf("append_file: %s, flag: %d\n", commands->redirects->append_file[0], commands->redirects->redirect_append);
-    // printf("input_file: %s, flag: %d\n", commands->redirects->input_file[0], commands->redirects->redirect_in);
-    // printf("output_file: %s, flag: %d\n", commands->redirects->output_file[0], commands->redirects->redirect_out);
-    // printf("output_file: %s, flag: %d\n", commands->redirects->output_file[1], commands->redirects->redirect_out);
+
     printf("\033[34mejecutor\033[0m\n");
     return (commands);
 }
-
