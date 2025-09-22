@@ -1,21 +1,20 @@
 #include "../minishell.h"
 
-char *handle_single_quotes(char *cmd, int *i)
+char *handle_single_quotes(char *line, int *i)
 { //MANEJO DE COMILLAS SIMPLES
     int start;
     char *token;
 
-    token = NULL;
     (*i)++;
     start = *i;
-    while (cmd[*i] && cmd[*i] != '\'')
+    while (line[*i] && line[*i] != '\'')
         (*i)++;
-    if (*i > start)
-        token = ft_substr(cmd, start, *i - start);
-    if (cmd[*i] == '\'')
+    token = ft_substr(line, start, *i - start);
+    if (line[*i] == '\'')
         (*i)++;
-    return(token);
+    return (token);
 }
+
 
 char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token)
 { // VARIABLES DENTRO DE COMILLAS DOBLES

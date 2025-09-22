@@ -13,27 +13,37 @@ char *get_env_var(const char *var)
 
 char *str_append(char *dest, const char *src)
 {
+    size_t ldest;
+    size_t lsrc;
     char *tmp;
+
+    if (!src)
+        return(dest);
     if (!dest)
-        dest = strdup(src);
-    else
+        return strdup(src); /* strdup devuelve NULL si falla */
+    ldest = ft_strlen(dest);
+    lsrc  = ft_strlen(src);
+    tmp = malloc(ldest + lsrc + 1);
+    if (!tmp)
     {
-        tmp = malloc(ft_strlen(dest) + ft_strlen(src) + 1);
-        ft_strlcpy(tmp, dest, ft_strlen(tmp) + ft_strlen(dest) + 1);
-        ft_strlcat(tmp, src, ft_strlen(tmp) + ft_strlen(src) + 1);
         free(dest);
-        dest = tmp;
+        return NULL;
     }
-    return(dest);
+    ft_memcpy(tmp, dest, ldest);
+    ft_memcpy(tmp + ldest, src, lsrc);
+    tmp[ldest + lsrc] = '\0';
+    free(dest);
+    return tmp;
 }
 
 char *ft_strjoin_cmd(char **cmd)
 {
-    int len = 0;
+    int len;
     char *result;
-    int i = 0;
-    int k;
+    int i;
 
+    len = 0;
+    i = 0;
     if (!cmd || !cmd[0])
         return (NULL);
     while (cmd[i])
@@ -43,16 +53,17 @@ char *ft_strjoin_cmd(char **cmd)
     }
     result = malloc(len + 1);
     if (!result)
-        return(NULL);
+        return (NULL);
     result[0] = '\0';
     i = 0;
     while (cmd[i])
     {
-        ft_strlcat(result, cmd[i], ft_strlen(result) + ft_strlen(cmd[i]) + 1);
+        ft_strlcat(result, cmd[i], len + 1);
         i++;
     }
-    return(result);
+    return (result);
 }
+
 
 char *extract_varname(char *line, int start, int *vlen)
 { //GESTION DE VARIABLES FUERA DE COMILLAS FUNCION AUXILIAR

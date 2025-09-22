@@ -175,7 +175,7 @@ void expand_cmd(t_clean_cmd *data);
 char *handle_plain_text_args(char *line, int *i);
 char **process_aux_args(char *line, char **temp);
 char **aux_args(char *line);
-char *expand_args(char *line);
+char **expand_args(char *line);
 
 //UTILS_EXPANDER
 char *handle_single_quotes(char *cmd, int *i);

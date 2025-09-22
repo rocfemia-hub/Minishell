@@ -50,12 +50,11 @@ char **aux_args(char *line)
 }
 
 
-char *expand_args(char *line)
+char **expand_args(char *line)
 {
     char **token_args;
     char *new_line;
 
     token_args = aux_args(line);
-    new_line = ft_strjoin_cmd(token_args);
-    return(new_line);
+    return(token_args);
 }
