@@ -79,14 +79,17 @@ t_com *create_struct(char *line)
 void init_struct(char *line, char *cmd, int end, t_com *commands)
 { // init commands and arg
     int len;
-
+    char *new_line;
     if (!cmd || !line)
         return;
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd) + 1);
     while (line[end] == ' ')
         end++;
     if (ft_strnstr(line + end, "$", ft_strlen(line+ end)))
-        commands->args = expand_args(line + end);
+    {
+        new_line = expand_args(line + end);
+        commands->args = ft_split_parser(new_line);
+    }
     else 
         clean_and_fill_arg(commands, line + end); // crea un char **args dentro de commands
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||

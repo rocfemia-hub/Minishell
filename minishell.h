@@ -102,6 +102,9 @@ void	free_t_com_list(t_com *list);
 void	free_t_red_list(t_red *list);
 void	free_t_vars_list(t_vars *list);
 
+// SPLIT_MINI.C
+char	**ft_split_mini(char const *s, char c);
+
 
 /*EXEC*/ 
 
@@ -152,8 +155,8 @@ void	type_command(char *line, t_com *commands);
 void	init_commands(char *line, t_com *commands);
 t_com	*token(char *line);
 
-// SPLIT_MINI.C
-char	**ft_split_mini(char const *s, char c);
+//FT_SPLIT_PARSER
+char **ft_split_parser(char const *s);
 
 // QUOTES
 void 	clean_and_fill_arg(t_com *commands, char *line);
@@ -175,7 +178,7 @@ void expand_cmd(t_clean_cmd *data);
 char *handle_plain_text_args(char *line, int *i);
 char **process_aux_args(char *line, char **temp);
 char **aux_args(char *line);
-char **expand_args(char *line);
+char *expand_args(char *line);
 
 //UTILS_EXPANDER
 char *handle_single_quotes(char *cmd, int *i);

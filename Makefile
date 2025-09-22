@@ -5,9 +5,9 @@ CCFLAGS = -g3 -fsanitize=address #-Wall -Wextra -Werror
 BLUE = \033[34m
 RESET = \033[0m
 
-SRC = mix/list.c mix/main.c mix/error.c mix/free.c\
+SRC = mix/list.c mix/main.c mix/error.c mix/free.c mix/split_mini.c\
       exec/built_ins1.c exec/built_ins2.c exec/executor.c exec/utils_built_ins1.c exec/utils_built_ins2.c exec/redirections.c\
-      parser/token.c parser/split_mini.c parser/quotes.c parser/struct.c parser/expander_cmd.c parser/expander_args.c parser/aux_expander.c parser/utils_expander.c parser/redirects.c parser/utils_redirects.c\
+      parser/token.c parser/quotes.c parser/struct.c parser/expander_cmd.c parser/expander_args.c parser/aux_expander.c parser/utils_expander.c parser/redirects.c parser/utils_redirects.c parser/ft_split_parser.c\
 
 OBJS = ${SRC:.c=.o}
 
