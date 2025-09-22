@@ -27,13 +27,13 @@ int aux_parser_redirects(t_com *commands, char *redirect)
             commands->error = ft_strdup("bash: syntax error near unexpected token `<'");
         return (0);
     }
-    commands->redirects->file = ft_strdup(commands->args[commands->redirects->j + 1]);                       // archivo al que redirecciona
-    fill(commands, commands->redirects->j, commands->redirects->j + 1, redirect); // rellena estructura
-    return(1);
+    commands->redirects->file = ft_strdup(commands->args[commands->redirects->j + 1]); // archivo al que redirecciona
+    fill(commands, commands->redirects->j, commands->redirects->j + 1, redirect);      // rellena estructura
+    return (1);
 }
 
 int parser_redirects(t_com *commands, char *redirect)
-{  // chequear si despues de la redireccion hay archivo o antes                    
+{                                                                     // chequear si despues de la redireccion hay archivo o antes
     if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
@@ -47,40 +47,61 @@ int parser_redirects(t_com *commands, char *redirect)
     else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect)) // si la redireccion esta asi ">adios" --> no es error
     {
         commands->redirects->file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect)); // archivo al que redirecciona
-        fill(commands, commands->redirects->j, commands->redirects->j, redirect); // rellena estructura
+        fill(commands, commands->redirects->j, commands->redirects->j, redirect);                            // rellena estructura
     }
     else // el archivo esta separado del simbolo "hola > adios"
         if (!aux_parser_redirects(commands, redirect))
-            return(0);
+            return (0);
     return (1);
+}
+
+int is_redirect_token(char *arg, char *redirect)
+{
+    int i = 0;
+    int in_quote = 0;
+
+    while (arg[i])
+    {
+        if (arg[i] == '\'' || arg[i] == '"')
+        {
+            if (in_quote == 0)
+                in_quote = arg[i];
+            else if (in_quote == arg[i])
+                in_quote = 0;
+        }
+        else if (!in_quote && ft_strncmp(arg + i, redirect, ft_strlen(redirect)) == 0)
+            return (1);
+        i++;
+    }
+    return (0);
 }
 
 void find(t_com *commands)
 { // look for < or >
     while (commands->args && commands->args[commands->redirects->j])
     {
-        if (ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])))
+        if (is_redirect_token(commands->args[commands->redirects->j], ">>"))
         {
-            if (!parser_redirects(commands, ">>")) //pasa el tipo se redireccion encontrada
-                return ;
+            if (!parser_redirects(commands, ">>"))
+                return;
             commands->redirects->j = -1;
         }
-        else if (ft_strnstr(commands->args[commands->redirects->j], "<<", ft_strlen(commands->args[commands->redirects->j])))
+        else if (is_redirect_token(commands->args[commands->redirects->j], "<<"))
         {
-            if(!parser_redirects(commands, "<<"))
-                return ;
+            if (!parser_redirects(commands, "<<"))
+                return;
             commands->redirects->j = -1;
         }
-        else if (ft_strnstr(commands->args[commands->redirects->j], ">", ft_strlen(commands->args[commands->redirects->j])))
+        else if (is_redirect_token(commands->args[commands->redirects->j], ">"))
         {
             if (!parser_redirects(commands, ">"))
-                return ;
+                return;
             commands->redirects->j = -1;
         }
-        else if (ft_strnstr(commands->args[commands->redirects->j], "<", ft_strlen(commands->args[commands->redirects->j])))
+        else if (is_redirect_token(commands->args[commands->redirects->j], "<"))
         {
             if (!parser_redirects(commands, "<"))
-                return ;
+                return;
             commands->redirects->j = -1;
         }
         commands->redirects->j++;

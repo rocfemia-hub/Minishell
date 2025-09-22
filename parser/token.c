@@ -104,7 +104,7 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
-    if (look_for_backslash(line))
+    if (look_for_char(line, 92))
     {
         commands->error = ft_strdup("bash: syntax error backslash");
         error(commands);

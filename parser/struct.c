@@ -89,13 +89,17 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     {
         new_line = expand_args(line + end);
         commands->args = ft_split_parser(new_line);
+        redirects(commands); // manage redirects
     }
     else
-        clean_and_fill_arg(commands, line + end); // crea un char **args dentro de commands
+    {
+        keep_quotes_args(commands, line + end);
+        redirects(commands);     // manage redirects
+        clean_quotes_in_args(commands); // crea un char **args dentro de commands
+    }
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
         !ft_strncmp(commands->command, "unset", 5))
         commands->flag_built = 1;
-    redirects(commands);       // manage redirects
     ft_strjoin_mini(commands); // join arg and cmd in a char *comands_arg
 }
