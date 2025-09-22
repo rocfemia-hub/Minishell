@@ -103,3 +103,29 @@ int pipes_counter(char *line)
     return (count);
 }
 
+int look_for_backslash(char *line)
+{  // buscar si hay \ y dar error de encontarla fuera de comillas
+    int i;
+    int count;
+    char open_quote;
+
+    i = 0;
+    count = 0;
+    open_quote = 0;
+    while (line[i])
+    {
+        if (line[i] == '\'' || line[i] == '"')
+        {
+            if (!open_quote) //open
+                open_quote = line[i]; 
+            else if (line[i] == open_quote) //close
+                open_quote = 0; 
+        }
+        else if (line[i] == 92 && !open_quote)
+            count++; 
+        i++;
+    }
+    if (open_quote != 0)
+        return (-1); // error
+    return (count);
+}

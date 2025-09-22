@@ -94,7 +94,7 @@ void init_commands(char *line, t_com *commands)
     // LIBERAR CURRENT 
 }
 
-t_com *token(char *line) 
+t_com *token(char *line)
 {
     t_com *commands;
 
@@ -103,6 +103,12 @@ t_com *token(char *line)
     {
         error(commands);
         return (NULL);
+    }
+    if(look_for_backslash(line))
+    {
+        commands->error = ft_strdup("bash: syntax error backslash");
+        error(commands);
+        return(NULL);
     }
     init_commands(line, commands);
     if (commands->error)
@@ -120,3 +126,4 @@ t_com *token(char *line)
     printf("\033[34mejecutor\033[0m\n");
     return (commands);
 }
+

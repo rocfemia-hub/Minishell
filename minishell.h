@@ -159,6 +159,7 @@ char	**ft_split_mini(char const *s, char c);
 void 	clean_and_fill_arg(t_com *commands, char *line);
 char	*clean_cmd(char *line, t_clean_cmd *data);
 int		pipes_counter(char *line);
+int look_for_backslash(char *line);
 
 // STRUCT
 char 	*ft_strjoin_mini(t_com *commands);
