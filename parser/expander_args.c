@@ -43,7 +43,7 @@ char **aux_args(char *line)
 { 
     char **temp;
 
-    temp = malloc(sizeof(char *) * 256);
+    temp = ft_calloc((256 + 1), sizeof(char *));
     if (!temp)
         return(NULL);
     return(process_aux_args(line, temp));

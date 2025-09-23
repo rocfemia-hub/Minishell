@@ -81,12 +81,6 @@ int main(int argc, char **argv, char **env)
     		(free(line), free_t_com_list(commands));
     		continue;
 		}
-		if (commands && commands->command && ft_strnstr(commands->command, "error", 5))
-		{
-			printf("error\n");
-			(free(line), free_t_com_list(commands));
-			continue;
-		}
 		init_fds(commands, &vars);
 		setup_pipeline(commands);
 		execute_control(commands, &vars);

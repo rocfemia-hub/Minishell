@@ -12,22 +12,28 @@
 
 #include "../minishell.h"
 
+int aux_ft_strjoin_mini(t_com *commands)
+{
+    char *cmd_arg;
+    int len;
+    int k;
+
+    len = 0;
+    len += ft_strlen(commands->command) + 1;
+    k = -1;
+    while (commands->args && commands->args[++k])
+        len += ft_strlen(commands->args[k]) + 1;
+    return(len);
+}
+
 char *ft_strjoin_mini(t_com *commands)
-{ // join cmd and arg --> cmd_arg
+{
     int i;
     int j;
     int k;
-    int len = 0;
     char *cmd_arg;
 
-    len += ft_strlen(commands->command) + 1;
-    k = 0;
-    while (commands->args && commands->args[k])
-    {
-        len += ft_strlen(commands->args[k]) + 1;
-        k++;
-    }
-    cmd_arg = ft_calloc(len + 1, sizeof(char));
+    cmd_arg = ft_calloc(aux_ft_strjoin_mini(commands) + 1, sizeof(char));
     if (!cmd_arg)
         return (NULL);
     i = 0;
@@ -35,14 +41,13 @@ char *ft_strjoin_mini(t_com *commands)
     while (commands->command[i])
         cmd_arg[j++] = commands->command[i++];
     cmd_arg[j++] = ' ';
-    k = 0;
-    while (commands->args && commands->args[k])
+    k = -1;
+    while (commands->args && commands->args[++k])
     {
         i = 0;
         while (commands->args[k][i])
             cmd_arg[j++] = commands->args[k][i++];
         cmd_arg[j++] = ' ';
-        k++;
     }
     if (j > 0 && cmd_arg[j - 1] == ' ')
         j--;
@@ -58,7 +63,7 @@ t_com *create_struct(char *line)
     t_com *head;
 
     i = 0;
-    pipes = pipes_counter(line); // counter pipes
+    pipes = look_for_char(line, 124); // counter pipes
     if (pipes < 0)
     {
         head = lstnew(i);
@@ -87,7 +92,7 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
         end++;
     if (ft_strnstr(line + end, "$", ft_strlen(line + end)))
     {
-        new_line = expand_args(line + end);
+        new_line = expand_args(line);
         commands->args = ft_split_parser(new_line);
         redirects(commands); // manage redirects
     }

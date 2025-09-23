@@ -28,7 +28,7 @@ char *str_append(char *dest, const char *src)
 }
 
 char *ft_strjoin_cmd(char **cmd)
-{
+{ // ME CONVIERTE DE CHAR ** A CHAR *
     int len = 0;
     char *result;
     int i = 0;

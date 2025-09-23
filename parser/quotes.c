@@ -111,33 +111,6 @@ char *clean_cmd(char *line, t_clean_cmd *data)
     return (ft_substr(line, data->start, data->end - data->start));
 }
 
-int pipes_counter(char *line)
-{  // pipes counter
-    int i;
-    int count;
-    char open_quote;
-
-    i = 0;
-    count = 0;
-    open_quote = 0;
-    while (line[i])
-    {
-        if (line[i] == '\'' || line[i] == '"')
-        {
-            if (!open_quote) //open
-                open_quote = line[i]; 
-            else if (line[i] == open_quote) //close
-                open_quote = 0; 
-        }
-        else if (line[i] == '|' && !open_quote)
-            count++; 
-        i++;
-    }
-    if (open_quote != 0)
-        return (-1); // error
-    return (count);
-}
-
 int look_for_char(char *line, char c)
 {  // buscar un caracter que no este dentro de comillas y devuelve las veces encontrado
     int i;

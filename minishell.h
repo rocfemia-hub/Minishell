@@ -105,6 +105,8 @@ void	free_t_vars_list(t_vars *list);
 // SPLIT_MINI.C
 char	**ft_split_mini(char const *s, char c);
 
+//SIGNALS
+
 
 /*EXEC*/ 
 
@@ -166,6 +168,7 @@ int		pipes_counter(char *line);
 int look_for_char(char *line, char c);
 
 // STRUCT
+int aux_ft_strjoin_mini(t_com *commands);
 char 	*ft_strjoin_mini(t_com *commands);
 t_com	*create_struct(char *line);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);

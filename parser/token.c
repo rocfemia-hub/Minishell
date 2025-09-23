@@ -110,6 +110,12 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
+    if (look_for_char(line, 59))
+    {
+        commands->error = ft_strdup("bash: syntax error semicolon");
+        error(commands);
+        return (NULL);
+    }
     init_commands(line, commands);
     if (commands->error)
     {
