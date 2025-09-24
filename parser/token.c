@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:04 by roo               #+#    #+#             */
-/*   Updated: 2025/09/10 20:23:40 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/24 16:45:11 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,9 +122,9 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
-    printf("\033[34mprint_list:\033[0m\n");
-    print_list(commands);
+    //printf("\033[34mprint_list:\033[0m\n");
+    //print_list(commands);
 
-    printf("\033[34mejecutor\033[0m\n");
+    //printf("\033[34mejecutor\033[0m\n");
     return (commands);
 }
