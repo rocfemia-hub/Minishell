@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/09/09 17:37:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/25 16:52:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,11 @@ char	*get_path(char *cmd, char **envp, t_com *pipex)
 
 int	execute(t_com *list)
 { // recibir estructura de comando y hacer execve en funcion del contenido de la estructura
-	char **command; // resultado de split de command_arg xq execve recibe un (char **)
 	int	fd[2];
 	int	pid1;
 	
 	if (pipe(fd) == -1)
 		return (ft_printf("Error de creación de pipe\n"), -1);
-	command = ft_split_mini(list->command_arg, ' '); // se hace split porque execve recibe un char **
 	list->path_command = get_path(list->command, list->vars->env, list);
 	if (list->path_command == NULL)
 		return (ft_printf("Command not found\n"), -1);
@@ -112,13 +110,13 @@ int	execute(t_com *list)
 	if (pid1 == 0)
 	{
 		execute_two(list, fd);
-		if (execve(list->path_command, command, list->vars->env) == -1)
+		if (execve(list->path_command, list->command_arg, list->vars->env) == -1)
 			return (ft_printf("Error de ejecución\n"), -1); // hay que echar un ojo a las salidad de error
 	}
 	close(fd[READ_FD]);
     close(fd[WRITE_FD]);
 	waitpid(pid1, NULL, 0);
-	ft_free_free(command);
+	ft_free_free(list->command_arg);
 	if (list->path_command)
 		free(list->path_command);
 	return (0); //dprintf(1, "--->%s<---", list->command);

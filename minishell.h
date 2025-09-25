@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/16 18:56:10 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/25 17:55:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,22 @@ typedef struct s_clean_cmd
     char	quote;
     char	*cmd;
 	int		end_index;
-	int only_cmd_i;
+	int		only_cmd_i;
 } t_clean_cmd;
+
+typedef struct s_env
+{
+	char	*env_name;
+	char	*env_inf;
+	struct s_env *next;
+}	t_env;
 
 typedef struct s_vars
 {
 	int		argc; //añadiendo argc y argv para tenerlos siempre a mano.
 	char	**argv;
 	char	**env;
+	t_env	*env_list; // para cambios de variables, es más facil gestionar liberación de memoria con una lista que con una matriz
 }	t_vars;
 
 typedef struct s_red
@@ -57,7 +65,7 @@ typedef struct s_red
 	int		i; //posicion en char ** de < ó >
 	int		sintax_error; //sintax error
 	int		error; //falta a donde redireccionar
-	char *file; // archivo de slaida o entrada
+	char	*file; // archivo de slaida o entrada
 }	t_red;
 
 typedef struct s_com
@@ -141,10 +149,13 @@ int		find_env_var(char *var_name, t_vars *vars);
 char	*get_var_name(char *var_assignment);
 void	export_existing_var(char *var_name, t_vars *vars);
 
+void	env_to_list(t_vars *vars, char **env);
+t_env	*create_env_list(char *env_string);
+
 // REDIRECTIONS
-void set_redirections(t_com *list);
-void heredoc_execution(t_com *list);
-void clean_fds(t_com *list);
+void	set_redirections(t_com *list);
+void	heredoc_execution(t_com *list);
+void	clean_fds(t_com *list);
 
 
 /*PARSER*/ 
