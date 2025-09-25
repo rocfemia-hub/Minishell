@@ -12,47 +12,40 @@
 
 #include "../minishell.h"
 
-int aux_ft_strjoin_mini(t_com *commands)
+char **ft_strjoin_cmd_arg(t_com *commands)
 {
-    char *cmd_arg;
-    int len;
-    int k;
-
-    len = 0;
-    len += ft_strlen(commands->command) + 1;
-    k = -1;
-    while (commands->args && commands->args[++k])
-        len += ft_strlen(commands->args[k]) + 1;
-    return(len);
-}
-
-char *ft_strjoin_mini(t_com *commands)
-{
-    int i;
     int j;
-    int k;
-    char *cmd_arg;
+    int len;
+    char **aux;
+    int i;
 
-    cmd_arg = ft_calloc(aux_ft_strjoin_mini(commands) + 1, sizeof(char));
-    if (!cmd_arg)
-        return (NULL);
-    i = 0;
-    j = 0;
-    while (commands->command[i])
-        cmd_arg[j++] = commands->command[i++];
-    cmd_arg[j++] = ' ';
-    k = -1;
-    while (commands->args && commands->args[++k])
+    j = -1;
+    if (commands->command)
+        len = 1;
+    while(commands->args[++j])
+        len++;
+    aux = ft_calloc(len + 1, sizeof(char *));
+    j = -1;
+    if(commands->command)
+    {
+        i = 1;
+        aux[0] = ft_strdup(commands->command);
+        while(commands->args[++j])
+        {
+            aux[i] = ft_strdup(commands->args[j]);
+            i++;
+        }
+    }
+    else
     {
         i = 0;
-        while (commands->args[k][i])
-            cmd_arg[j++] = commands->args[k][i++];
-        cmd_arg[j++] = ' ';
+        while(commands->args[++j])
+        {
+            aux[i] = ft_strdup(commands->args[j]);
+            i++;
+        }
     }
-    if (j > 0 && cmd_arg[j - 1] == ' ')
-        j--;
-    commands->command_arg = cmd_arg;
-    return (cmd_arg);
+    return(aux);
 }
 
 t_com *create_struct(char *line)
@@ -106,5 +99,5 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
         !ft_strncmp(commands->command, "unset", 5))
         commands->flag_built = 1;
-    ft_strjoin_mini(commands); // join arg and cmd in a char *comands_arg
+    commands->command_arg = ft_strjoin_cmd_arg(commands);
 }

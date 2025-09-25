@@ -64,7 +64,7 @@ typedef struct s_com
 {
 	struct s_com *previous;
 	char *command; // ej: "ls"
-	char *command_arg; // ej: "ls -la"
+	char **command_arg; // ej: "ls -la"
 	char **args; // ej: "-la" ---> 
 	char *path_command; // ej: "/usr/bin/ls"
 	int fd_in; // cada comando tiene su propio input y output
@@ -168,8 +168,7 @@ int		pipes_counter(char *line);
 int look_for_char(char *line, char c);
 
 // STRUCT
-int aux_ft_strjoin_mini(t_com *commands);
-char 	*ft_strjoin_mini(t_com *commands);
+char **ft_join_cmd_args(t_com *commands);
 t_com	*create_struct(char *line);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 

@@ -62,14 +62,17 @@ void print_list(t_com *list)
 		else
 			printf("argumentos: (null)\n");
 		if (list->command_arg)
-			printf("command_arg: %s\n", list->command_arg);
+		{
+			printf("command_arg\n");
+			printf_matrix (list->command_arg);
+		}
 		else
 			printf("command_arg: (null)\n");
 		// if (list->flag_built)
 		// 	printf("flag_built: %d\n", list->flag_built);
 		// else
 		// 	printf("flag_built: (null)\n");
-		printf("\033[34mprint_redirects:\033[0m\n");
+		// printf("\033[34mprint_redirects:\033[0m\n");
 		// printf("append_file: %s, flag: %d\n", commands->redirects->append_file[0], commands->redirects->redirect_append);
 		// printf("input_file: %s, flag: %d\n", commands->redirects->input_file[0], commands->redirects->redirect_in);
 		// printf("output_file: %s, flag: %d\n", list->redirects->output_file[0], list->redirects->redirect_out);
