@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:34 by roo               #+#    #+#             */
-/*   Updated: 2025/09/25 17:54:12 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/26 18:20:00 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,36 @@ t_env *create_env_list(char *env_string)
 	return (new_var);
 }
 
+void add_env_var_to_list(t_vars *vars, char *name, char *value)
+{
+    t_env *new_var;
+    t_env *env_list;
+
+    new_var = malloc(sizeof(t_env));
+    new_var->env_name = name;
+    new_var->env_inf = value;
+    new_var->next = NULL;
+
+    if (!vars->env_list)
+        vars->env_list = new_var;
+    else
+    {
+        env_list = vars->env_list;
+        while (env_list->next)
+            env_list = env_list->next;
+        env_list->next = new_var;
+    }
+}
+
 /*t_env *find_env_var(t_vars *vars, char *env_name)
 {
-    t_env *current = vars->env_list;
+    t_env *env_list = vars->env_list;
     
-    while (current)
+    while (env_list)
     {
-        if (ft_strcmp(current->env_name, env_name) == 0)
-            return (current);
-        current = current->next;
+        if (ft_strcmp(env_list->env_name, env_name) == 0)
+            return (env_list);
+        env_list = env_list->next;
     }
     return (NULL);
 }

@@ -6,27 +6,39 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/07/19 20:53:01 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/26 18:12:40 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void add_env_var(char *new_var, t_vars *vars)
+void add_update_env_var(t_vars *vars, char *var_str)
 {
-    char *var_name;
-    int existing_index;
-    
-    var_name = get_var_name(new_var); // Extraer nombre de variable
-    existing_index = find_env_var(var_name, vars); // Buscar si ya existe
-    if (existing_index >= 0) // Reemplazar variable existente
+    char *equals_pos;
+    char *name;
+    char *value;
+    t_env *env_list;
+
+    equals_pos = ft_strchr(var_str, '=');
+    if (equals_pos)
     {
-        free(vars->env[existing_index]);
-        vars->env[existing_index] = ft_strdup(new_var);
+        name = ft_substr(var_str, 0, equals_pos - var_str);
+        value = ft_strdup(equals_pos + 1);
     }
-    else // Añadir nueva variable
-        add_new_env_vars(new_var, vars);
-    free(var_name);
+    else
+    {
+        name = ft_strdup(var_str);
+        value = ft_strdup("");
+    }
+    env_list = find_env_var(vars, name); // Buscar si ya existe
+    if (env_list) // Actualizar valor existente
+    {
+        free(env_list->env_inf);
+        env_list->env_inf = value;
+        free(name);
+    }
+    else
+        add_env_var_to_list(vars, name, value); // Añadir nueva variable
 }
 
 void add_new_env_vars(char *new_var, t_vars *vars)
@@ -52,7 +64,7 @@ void add_new_env_vars(char *new_var, t_vars *vars)
     vars->env = new_env; // Reemplazar el array antiguo con el nuevo
 }
 
-int find_env_var(char *var_name, t_vars *vars)
+int find_env_var(t_vars *vars, char *var_name)
 {
     int i;
     int name_len;
@@ -78,15 +90,4 @@ char *get_var_name(char *var_assignment)
     if (!equals_pos)
         return (ft_strdup(var_assignment));  // Sin '=', todo es el nombre
     return (ft_substr(var_assignment, 0, equals_pos - var_assignment)); // Extraer solo la parte antes de '='
-}
-
-void export_existing_var(char *var_name, t_vars *vars)
-{
-    char *empty_var;
-    
-    empty_var = ft_strjoin(var_name, "="); // Crear variable con valor vacío
-    if (!empty_var)
-        return;
-    add_env_var(empty_var, vars); // Exportar la variable
-    free(empty_var);
 }

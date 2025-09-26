@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/07/20 00:09:41 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/26 18:29:11 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,30 +52,42 @@ int valid_number(char *str)
 
 void print_export_vars(t_com *list, t_vars *vars)
 {
-    int i;
-    
-    i = 0;
-    while (vars->env[i])
+    t_env *env_list;
+    char *line;
+
+    env_list = vars->env_list;
+    while (env_list)
     {
-        write(list->fd_out, "declare -x ", 11); // Escribir prefijo estándar de bash para variables exportadas
-        write(list->fd_out, vars->env[i], ft_strlen(vars->env[i])); // Escribir la variable completa (formato: VAR=valor)
-        write(list->fd_out, "\n", 1); // Añadir salto de línea después de cada variable
-        i++;
+        write(list->fd_out, "declare -x ", 11);
+        line = ft_strjoin(env_list->env_name, "="); // Crear línea "NOMBRE=valor"
+        line = ft_strjoin_gnl(line, env_list->env_inf);
+        write(list->fd_out, line, ft_strlen(line));
+        write(list->fd_out, "\n", 1);
+        free(line);
+        env_list = env_list->next;
     }
 }
 
-void remove_env_var(char **env, int index)
+void remove_env_var(t_vars *vars, char *name)
 {
-    int i;
+    t_env *env_list = vars->env_list;
+    t_env *prev = NULL;
 
-	i = index; // Mover todas las entradas una posición hacia atrás
-    if (!env || index < 0)
-        return;
-    free(env[index]);
-    while (env[i + 1])
+    while (env_list)
     {
-        env[i] = env[i + 1];
-        i++;
+        if (ft_strncmp(env_list->env_name, name, ft_strlen(env_list->env_name)) == 0)
+        {
+            if (prev)
+                prev->next = env_list->next;
+            else
+                vars->env_list = env_list->next;
+                
+            free(env_list->env_name);
+            free(env_list->env_inf);
+            free(env_list);
+            return;
+        }
+        prev = env_list;
+        env_list = env_list->next;
     }
-    env[i] = NULL;
 }
