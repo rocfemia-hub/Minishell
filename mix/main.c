@@ -52,15 +52,17 @@ int main(int argc, char **argv, char **env)
 {
 	char *line;
 	t_com *commands;
-	t_vars vars; //nueva struct
+	t_vars vars; // nueva struct
 
 	if (argc < 1 && !argv)
 		return 1;
-	commands = NULL; // la verdad aqui no tengo del todo calro porque no se hace malloc
-	ft_bzero(&vars, sizeof(vars)); //malloc d la nueva struct
+	commands = NULL;			   // la verdad aqui no tengo del todo calro porque no se hace malloc
+	ft_bzero(&vars, sizeof(vars)); // malloc d la nueva struct
 	init_vars(&vars, argc, argv, env);
+	signal(SIGINT, handle_c);
 	while (1)
 	{
+		signal(SIGQUIT, SIG_IGN); // SIGQUITE control 4, SIG_ING es que ingnore
 		line = readline("minishell-> ");
 		if (!line) // Ctrl+D
 			break;
@@ -73,21 +75,21 @@ int main(int argc, char **argv, char **env)
 			continue;
 		}
 		commands = token(line); // llama a la funcion tokeniza
-		if (!commands) // debug para comprobar que el comando sea valido
-            continue;
-		//commands = commands->next; //para que funcione con mas de un comando
-		if (!commands->command) 
+		if (!commands)			// debug para comprobar que el comando sea valido
+			continue;
+		// commands = commands->next; //para que funcione con mas de un comando
+		if (!commands->command)
 		{
 			printf("Error: empty command\n");
-    		(free(line), free_t_com_list(commands));
-    		continue;
+			(free(line), free_t_com_list(commands));
+			continue;
 		}
 		init_fds(commands, &vars);
 		setup_pipeline(commands);
 		execute_control(commands, &vars);
 		free(line);
-		//free_list(commands);
+		// free_list(commands);
 		commands = NULL; // reseteamos el puntero
 	}
-	return(0);
+	return (0);
 }

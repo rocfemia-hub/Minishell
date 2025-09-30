@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/30 19:14:09 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/26 18:21:52 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <dirent.h>
+#include <signal.h>
 
 typedef struct s_clean_cmd
 {
@@ -114,7 +115,8 @@ void	free_t_vars_list(t_vars *list);
 char	**ft_split_mini(char const *s, char c);
 
 //SIGNALS
-
+void handle_c();
+void handle_backslash();
 
 /*EXEC*/ 
 

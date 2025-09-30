@@ -14,6 +14,7 @@
 
 void execute_control(t_com *list, t_vars *vars)
 {
+	signal(SIGQUIT, handle_backslash);
 	set_redirections(list);
 	if(list->next == NULL)
 		commands_control(list, vars); // llama a la funcion del de bultins

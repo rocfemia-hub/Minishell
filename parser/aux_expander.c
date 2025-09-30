@@ -27,7 +27,7 @@ char *str_append(char *dest, const char *src)
 {
     char *tmp;
     if (!dest)
-        dest = strdup(src);
+        dest = ft_strdup(src);
     else
     {
         tmp = malloc(ft_strlen(dest) + ft_strlen(src) + 1);
@@ -93,12 +93,12 @@ char *handle_dollar(char *line, int *i)
         varname = extract_varname(line, start, &vlen);
         value = get_env_var(varname);
         free(varname);
-        token = strdup(value);
+        token = ft_strdup(value);
         *i = start + vlen;
     }
     else
     {
-        token = strdup("");
+        token = ft_strdup("");
         *i = start;
     }
     return (token);
