@@ -28,6 +28,8 @@ char *only_cmd(char *line, t_clean_cmd *data)
     data->quote = 0;
     if (!line[data->only_cmd_i])
         return (NULL);
+    while (line[data->only_cmd_i] == 32 || line[data->only_cmd_i] == '\n')
+        data->only_cmd_i++;
     data->start = data->only_cmd_i;
     while (line[data->only_cmd_i])
     {
@@ -59,9 +61,9 @@ void type_command(char *line, t_com *commands)
     if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
         expand_cmd(&data); // si hay $ en el comando, lo expande sea valido o no
     else
-        data.cmd = clean_cmd(line, &data);             //  limpia el comando de comillas
+        data.cmd = clean_cmd(line, &data); //  limpia el comando de comillas
     init_struct(line, data.cmd, data.end_index, commands); // introduce todo en la estructura
-    free(data.cmd); // LIBERAR TODO DATA
+    free(data.cmd);                                        // LIBERAR TODO DATA
 }
 
 void init_commands(char *line, t_com *commands)
@@ -122,8 +124,8 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
-    //printf("\033[34mprint_list:\033[0m\n");
-    //print_list(commands);
-    //printf("\033[34mejecutor\033[0m\n");
+    // printf("\033[34mprint_list:\033[0m\n");
+    // print_list(commands);
+    // printf("\033[34mejecutor\033[0m\n");
     return (commands);
 }

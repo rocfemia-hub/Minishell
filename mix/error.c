@@ -25,7 +25,7 @@ void printf_matrix(char **split) // debugueo de la matrix, escribiendola
 
     while (split[i])
     {
-        printf("%s\n", split[i]);
+        printf("->%s\n", split[i]);
         i++;
     }
 }

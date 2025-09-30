@@ -90,7 +90,7 @@ void clean_quotes_in_args(t_com *commands)
 
 char *clean_cmd(char *line, t_clean_cmd *data)
 { // clean quotes of command
-    while (line[data->i] == ' ')
+    while (line[data->i] == ' ' || line[data->i] == '\n')
         data->i++;
     if (line[data->i] == '\'' || line[data->i] == '"')
     {

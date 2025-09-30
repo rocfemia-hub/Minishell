@@ -22,15 +22,15 @@ char **ft_strjoin_cmd_arg(t_com *commands)
     j = -1;
     if (commands->command)
         len = 1;
-    while(commands->args[++j])
+    while (commands->args[++j])
         len++;
     aux = ft_calloc(len + 1, sizeof(char *));
     j = -1;
-    if(commands->command)
+    if (commands->command)
     {
         i = 1;
         aux[0] = ft_strdup(commands->command);
-        while(commands->args[++j])
+        while (commands->args[++j])
         {
             aux[i] = ft_strdup(commands->args[j]);
             i++;
@@ -39,13 +39,13 @@ char **ft_strjoin_cmd_arg(t_com *commands)
     else
     {
         i = 0;
-        while(commands->args[++j])
+        while (commands->args[++j])
         {
             aux[i] = ft_strdup(commands->args[j]);
             i++;
         }
     }
-    return(aux);
+    return (aux);
 }
 
 t_com *create_struct(char *line)
@@ -85,14 +85,14 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
         end++;
     if (ft_strnstr(line + end, "$", ft_strlen(line + end)))
     {
-        new_line = expand_args(line);
+        new_line = expand_args(line + end);
         commands->args = ft_split_parser(new_line);
         redirects(commands); // manage redirects
     }
     else
     {
         keep_quotes_args(commands, line + end);
-        redirects(commands);     // manage redirects
+        redirects(commands);            // manage redirects
         clean_quotes_in_args(commands); // crea un char **args dentro de commands
     }
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
