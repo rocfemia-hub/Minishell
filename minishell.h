@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/26 18:21:52 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/30 19:14:09 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,12 +145,12 @@ void	remove_env_var(t_vars *vars, char *name);
 
 void	add_update_env_var(t_vars *vars, char *var_str);
 void	add_new_env_vars(char *new_var, t_vars *vars);
-int		find_env_var(t_vars *vars, char *var_name);
 char	*get_var_name(char *var_assignment);
 
 void	env_to_list(t_vars *vars, char **env);
 t_env	*create_env_list(char *env_string);
 void	add_env_var_to_list(t_vars *vars, char *name, char *value);
+t_env	*find_env_var(t_vars *vars, char *env_name);
 
 // REDIRECTIONS
 void	set_redirections(t_com *list);

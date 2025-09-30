@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/09/26 18:22:36 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/30 16:02:21 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void env_function(t_com *list, t_vars *vars)
 
 	if (!vars->env)
 		return;
+	env_list = vars->env_list;
 	while (env_list)
 	{
 		line = ft_strjoin(env_list->env_name, "=");

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:34 by roo               #+#    #+#             */
-/*   Updated: 2025/09/26 18:20:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/30 19:16:06 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void env_to_list(t_vars *vars, char **env)
 {
 	int i;
     t_env *new_var;
-    t_env *current;
+    t_env *env_list;
     
     i = 0;
     vars->env_list = NULL;
@@ -27,10 +27,10 @@ void env_to_list(t_vars *vars, char **env)
 		vars->env_list = new_var;
         else
         {
-			current = vars->env_list;
-            while (current->next)
-			current = current->next;
-            current->next = new_var;
+			env_list = vars->env_list;
+            while (env_list->next)
+			env_list = env_list->next;
+            env_list->next = new_var;
         }
         i++;
     }
@@ -81,20 +81,20 @@ void add_env_var_to_list(t_vars *vars, char *name, char *value)
     }
 }
 
-/*t_env *find_env_var(t_vars *vars, char *env_name)
+t_env *find_env_var(t_vars *vars, char *env_name)
 {
     t_env *env_list = vars->env_list;
     
     while (env_list)
     {
-        if (ft_strcmp(env_list->env_name, env_name) == 0)
+        if (ft_strncmp(env_list->env_name, env_name, ft_strlen(env_list->env_name)) == 0)
             return (env_list);
         env_list = env_list->next;
     }
     return (NULL);
 }
 
-char *get_env_value(t_vars *vars, char *env_name)
+/*char *get_env_value(t_vars *vars, char *env_name)
 {
     t_env *var = find_env_var(vars, env_name);
     

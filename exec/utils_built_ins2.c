@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/09/26 18:12:40 by roo              ###   ########.fr       */
+/*   Updated: 2025/09/30 19:13:28 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,24 +62,6 @@ void add_new_env_vars(char *new_var, t_vars *vars)
     new_env[i] = ft_strdup(new_var); // Añadir nueva variable
     new_env[i + 1] = NULL; // Terminar el array con NULL
     vars->env = new_env; // Reemplazar el array antiguo con el nuevo
-}
-
-int find_env_var(t_vars *vars, char *var_name)
-{
-    int i;
-    int name_len;
-    
-    if (!var_name)
-        return (-1);
-    name_len = ft_strlen(var_name);
-    i = 0;
-    while (vars->env[i])
-    {
-        if (ft_strncmp(vars->env[i], var_name, name_len) == 0 && vars->env[i][name_len] == '=') // Comparar nombre y verificar que sigue '='
-            return (i);  // Encontrada en posición i
-        i++;
-    }
-    return (-1);  // No encontrada
 }
 
 char *get_var_name(char *var_assignment)
