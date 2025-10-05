@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/09/03 19:51:16 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/05 19:50:22 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,27 @@ void exit_function(t_com *list, t_vars *vars)
 
 void cd_function(t_com *list, t_vars *vars)
 { // Ya funciona correctamente :)))
+	char *target_dir;
+    char *current_dir;
+    char *old_pwd;
+	
+	current_dir = getcwd(NULL, 0);
 	if (!list->args || !list->args[0]) // cd debe tener SOLO un argumento
 	{
-		ft_free_free(list->args );
-		list->args = NULL;
-		write(2, "cd: missing argument\n", 21);
-		return;
+		target_dir = getenv("HOME");
+		if (!target_dir) 
+            return(write(2, "cd: HOME not set\n", 17), free(current_dir));
 	}
-	if (list->args [1]) // Verifica que solo hay un argumento
+	else if (list->args [1]) // Verifica que solo hay un argumento
 		return (write(2, "cd: too many arguments\n", 23), ft_free_free(list->args));
-	if (chdir(list->args [0]) == -1) // chdir cambia el directorio actual desde donde se ha ejecutado tu programa y pude recibir una ruta absoluta o relativa
+    else 
+        target_dir = list->args[0];
+	if (chdir(target_dir) == -1) // chdir cambia el directorio actual desde donde se ha ejecutado tu programa y pude recibir una ruta absoluta o relativa
 	{
 		write(2, "cd: ", 4);
-		write(2, list->args [0], ft_strlen(list->args [0]));
+		write(2, target_dir, ft_strlen(target_dir));
 		write(2, ": No such file or directory\n", 28);
-		ft_free_free(list->args);
-		list->args = NULL;
-		return;
+		return(free(target_dir));
 	}
+	cd_aux_funcion(list, vars, old_pwd, current_dir);
 }

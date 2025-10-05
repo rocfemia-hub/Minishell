@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/09/26 18:29:11 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/05 19:53:58 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,11 @@ void print_export_vars(t_com *list, t_vars *vars)
 
 void remove_env_var(t_vars *vars, char *name)
 {
-    t_env *env_list = vars->env_list;
-    t_env *prev = NULL;
+    t_env *env_list;
+    t_env *prev;
 
+	env_list = vars->env_list;
+	prev = NULL;
     while (env_list)
     {
         if (ft_strncmp(env_list->env_name, name, ft_strlen(env_list->env_name)) == 0)
@@ -89,5 +91,29 @@ void remove_env_var(t_vars *vars, char *name)
         }
         prev = env_list;
         env_list = env_list->next;
+    }
+}
+
+void cd_aux_funcion(t_com *list, t_vars *vars, char *old_pwd, char *current_dir)
+{ // Actualizar PWD y OLDPWD en el entorno
+	char *new_dir;
+	char *new_pwd;
+	
+    old_pwd = ft_strjoin("OLDPWD=", current_dir);
+    add_update_env_var(vars, old_pwd);
+    free(old_pwd);
+
+    new_dir = getcwd(NULL, 0); // Obtener y actualizar el PWD
+    new_pwd = ft_strjoin("PWD=", new_dir);
+    add_update_env_var(vars, new_pwd);
+
+    free(current_dir);
+    free(new_dir);
+    free(new_pwd);
+
+    if (list->args) 
+	{
+        ft_free_free(list->args);
+        list->args = NULL;
     }
 }

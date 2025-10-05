@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/09/26 18:21:52 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/05 20:00:30 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ void	free_t_vars_list(t_vars *list);
 char	**ft_split_mini(char const *s, char c);
 
 //SIGNALS
-void handle_c();
-void handle_backslash();
+void	handle_c();
+void	handle_backslash();
 
 /*EXEC*/ 
 
@@ -144,15 +144,19 @@ int		valid_n_option(char *str);
 int		valid_number(char *str);
 void	print_export_vars(t_com *list, t_vars *vars);
 void	remove_env_var(t_vars *vars, char *name);
+void	cd_aux_funcion(t_com *list, t_vars *vars, char *old_pwd, char *current_dir);
 
 void	add_update_env_var(t_vars *vars, char *var_str);
+void	update_env(t_vars *vars, char *name, char *value);
 void	add_new_env_vars(char *new_var, t_vars *vars);
 char	*get_var_name(char *var_assignment);
+int		valid_var_name(char *var);
 
 void	env_to_list(t_vars *vars, char **env);
 t_env	*create_env_list(char *env_string);
 void	add_env_var_to_list(t_vars *vars, char *name, char *value);
 t_env	*find_env_var(t_vars *vars, char *env_name);
+void	remove_in_env_array(t_vars *vars, char *name);
 
 // REDIRECTIONS
 void	set_redirections(t_com *list);

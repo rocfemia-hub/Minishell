@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:34 by roo               #+#    #+#             */
-/*   Updated: 2025/09/30 19:16:06 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/05 20:01:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,37 @@ t_env *find_env_var(t_vars *vars, char *env_name)
         env_list = env_list->next;
     }
     return (NULL);
+}
+
+void remove_in_env_array(t_vars *vars, char *name)
+{// Elimina del array de entorno
+    int i;
+    int j;
+    char *var_name;
+	char *equals_pos;
+    
+	i = 0;
+    while (vars->env[i])
+    {
+        equals_pos = ft_strchr(vars->env[i], '='); // Extraer el nombre de variable de "NOMBRE=VALOR"
+        if (equals_pos)
+            var_name = ft_substr(vars->env[i], 0, equals_pos - vars->env[i]);
+        else
+            var_name = ft_strdup(vars->env[i]);
+        if (ft_strncmp(var_name, name, ft_strlen(var_name)) == 0) // Si encontramos la variable, se elimina
+        {
+            free(vars->env[i]);
+            j = i; // Mover todas las entradas siguientes una posición hacia arriba
+            while (vars->env[j + 1])
+            {
+                vars->env[j] = vars->env[j + 1];
+                j++;
+            }
+            return(vars->env[j] = NULL, free(var_name));
+        }
+        free(var_name);
+        i++;
+    }
 }
 
 /*char *get_env_value(t_vars *vars, char *env_name)

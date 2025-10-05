@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/09/30 16:02:21 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/05 20:00:57 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,16 @@ void export_function(t_com *list, t_vars *vars)
     i = 0;
     if (!list->args || !*list->args) // Verificar si no hay argumentos: solo "export"
         return(free(list->args), print_export_vars(list, vars));
-    while (list->args && list->args[i]) // Procesar cada argumento individualmente
+    while (list->args && list->args[i]) // Procesar cada argumento por separado
     {
-		add_update_env_var(vars, list->args[i]);
+		if (!valid_var_name(list->args[i])) 
+        {
+            ft_putstr_fd("export: '", 2);
+            ft_putstr_fd(list->args[i], 2);
+            ft_putstr_fd("': not a valid identifier\n", 2);
+        }
+		else
+			add_update_env_var(vars, list->args[i]);
         i++;
     }
     ft_free_free(list->args);
@@ -50,14 +57,24 @@ void export_function(t_com *list, t_vars *vars)
 
 void unset_function(t_com *list, t_vars *vars)
 {
-    int i = 0;
+    int i;
     
+	i = 0;
     if (!list->args || !*list->args)
         return;
-        
     while (list->args[i])
     {
-        remove_env_var(vars, list->args[i]);
+        if (valid_var_name(list->args[i])) 
+        {
+            remove_env_var(vars, list->args[i]); // Eliminar de la lista de entorno
+            remove_in_env_array(vars, list->args[i]); // También eliminar del array de entorno
+        }
+        else 
+        {
+            ft_putstr_fd("unset: '", 2);
+            ft_putstr_fd(list->args[i], 2);
+            ft_putstr_fd("': not a valid identifier\n", 2);
+        }
         i++;
     }
     ft_free_free(list->args); // Liberar memoria de los argumentos

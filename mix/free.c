@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 20:17:12 by roo               #+#    #+#             */
-/*   Updated: 2025/09/10 20:17:15 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/05 19:37:21 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ void free_t_vars_list(t_vars *list)
 {
     if (list->argv)
         ft_free_free(list->argv);
-    if (list->env)
-        ft_free_free(list->env);
     free(list);
 }
 
