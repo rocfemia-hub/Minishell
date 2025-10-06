@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/09/16 18:55:37 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/06 18:07:01 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,57 +23,108 @@ void set_redirections(t_com *list)
 	k = 0;
 	if (list->redirects == NULL)
 		return;
-	if (list->redirects->redirect_heredoc) //el heredoc toma prioridad sobre otras redirecciones de input
+	if (list->redirects->redirect_heredoc) // Heredoc toma prioridad sobre otras redirecciones de input
+    	return(heredoc_execution(list));
+	else if (list->redirects->redirect_in && list->redirects->input_file)
 	{
-		heredoc_execution(list);
-    	return;
+		while(list->redirects->redirect_in && list->redirects->input_file[i + 1]) //list->redirects->redirect_in Esto se comprueba antes?
+			i++; // esto es para recorrer la matriz de cada redirección
+		list->fd_in = open(list->redirects->input_file[i], O_RDONLY);
+		if (list->fd_in == -1)
+			return(perror(list->redirects->input_file[i]));
 	}
-	while(list->redirects->redirect_in && list->redirects->input_file[i + 1]) //list->redirects->redirect_in Esto se comprueba antes?
-		i++; // esto es para recorrer la matriz de cada redirección
-	while(list->redirects->redirect_out && list->redirects->output_file[j + 1]) // ... igual q arriba
-		j++;
-	while(list->redirects->redirect_append && list->redirects->append_file[k + 1]) // ...
-		k++;
-    if (list->redirects->redirect_out && list->redirects->output_file[j]) // Redirección de salida > "¿Hay un archivo para escribir?"
-    {
-        list->fd_out = open(list->redirects->output_file[j], O_CREAT | O_WRONLY | O_TRUNC, 0644); //Crear archivo si no existe, solo escritura, sobreescribir, permisos: propietario lee/escribe, otros solo leen
-        if (list->fd_out == -1)
-            return(perror("Error opening output file"));
-    }
-    if (list->redirects->redirect_in && list->redirects->input_file[i]) // Redirección de entrada "¿Hay un archivo para leer?"
-    {
-        list->fd_in = open(list->redirects->input_file[i], O_RDONLY); // archivo d solo lectura
-        if (list->fd_in == -1)
-            return(perror("Error opening input file"));
-    }
-    if (list->redirects->redirect_append && list->redirects->append_file[k]) // Append >> "¿Hay archivo para añadir?"
-    {
-        list->fd_out = open(list->redirects->append_file[k], O_CREAT | O_WRONLY | O_APPEND, 0644); // la diferencia entre O_APPEND con O_TRUNC es q no borra contenido existente, slo escribe al final del archivo
-        if (list->fd_out == -1)
-            return(perror("Error opening append file"));
-    }
+	if (list->redirects->redirect_out && list->redirects->output_file)
+	{
+		while (list->redirects->redirect_out && list->redirects->output_file[j + 1]) // Encontrar el ultimo archivo de output
+			j++;
+		if (list->fd_out != STDOUT_FILENO) // > sobrescribe >> si hay ambos
+			close(list->fd_out);
+		if (list->fd_out == -1)
+            return(perror(list->redirects->output_file[j]));
+		list->fd_out = open(list->redirects->output_file[j], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	}
+	if (list->redirects->redirect_append && list->redirects->append_file)
+	{
+		while(list->redirects->redirect_append && list->redirects->append_file[k + 1]) // Encontrar el ultimo archivo de append
+			k++;
+		list->fd_out = open(list->redirects->append_file[k], O_CREAT | O_WRONLY | O_APPEND, 0644);
+		if (list->fd_out == -1)
+			return(perror(list->redirects->append_file[k]));
+	}
 	//clean_fds(list); NO SE COMO LLAMAR A ESTO SIN RESETEAR AUXILIO
 }
 
 void heredoc_execution(t_com *list)
 {
-    list->fd_in = open(list->redirects->heredoc_file, O_RDONLY);
-    
-    if (list->fd_in == -1)
-    {
-        perror("Error opening heredoc file");
-        return;
-    }
+	char *line;
+	char *temp_file;
+	int fd;
+	char *num_str;
+	static int heredoc_count = 0;
+	
+	num_str = ft_itoa(heredoc_count++); // Crear nombre único para archivo temporal
+	temp_file = ft_strjoin("/tmp/.heredoc_", num_str);
+	free(num_str);
+	fd = open(temp_file, O_CREAT | O_WRONLY | O_TRUNC, 0600); // Crear archivo temporal
+	if (fd == -1)
+	{
+		perror("heredoc");
+		free(temp_file);
+		return;
+	}
+	while (1) // Leer líneas hasta encontrar delimiter
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
+			ft_putstr_fd(list->redirects->delimiter, 2);
+			ft_putstr_fd("')\n", 2);
+			break;
+		}
+		if (ft_strncmp(line, list->redirects->delimiter, ft_strlen(list->redirects->delimiter) + 1) == 0) // Comparar con delimiter
+		{
+			free(line);
+			break;
+		}
+		write(fd, line, ft_strlen(line)); // Escribir al archivo temporal
+		write(fd, "\n", 1);
+		free(line);
+	}
+	close(fd);
+	list->redirects->heredoc_file = temp_file;
+}
+
+void apply_redirections(t_com *list)
+{
+	if (list->fd_in != STDIN_FILENO) // Aplicar redirección de entrada
+	{
+		if (dup2(list->fd_in, STDIN_FILENO) == -1)
+		{
+			perror("dup2 stdin");
+			exit(1);
+		}
+		close(list->fd_in);
+	}
+	if (list->fd_out != STDOUT_FILENO) // Aplicar redirección de SALIDA
+	{
+		if (dup2(list->fd_out, STDOUT_FILENO) == -1)
+		{
+			perror("dup2 stdout");
+			exit(1);
+		}
+		close(list->fd_out);
+	}
 }
 
 void clean_fds(t_com *list)
 {
-    if (list->fd_in != 0)
+    if (list->fd_in != STDIN_FILENO)
         close(list->fd_in);
-    if (list->fd_out != 1)
+    if (list->fd_out != STDOUT_FILENO)
         close(list->fd_out);
-	//list->fd_in = 0;
-    //list->fd_out = 1;
+	list->fd_in = STDIN_FILENO;
+	list->fd_out = STDOUT_FILENO;
 	if (list->redirects && list->redirects->heredoc_file)
     {
         unlink(list->redirects->heredoc_file); // Borrar archivo
