@@ -57,19 +57,21 @@ int parser_redirects(t_com *commands, char *redirect)
 
 int is_redirect_token(char *arg, char *redirect)
 {
-    int i = 0;
-    int in_quote = 0;
+    int i;
+    int quote;
 
+    i = 0;
+    quote = 0;
     while (arg[i])
     {
         if (arg[i] == '\'' || arg[i] == '"')
         {
-            if (in_quote == 0)
-                in_quote = arg[i];
-            else if (in_quote == arg[i])
-                in_quote = 0;
+            if (quote == 0)
+                quote = arg[i];
+            else if (quote == arg[i])
+                quote = 0;
         }
-        else if (!in_quote && ft_strncmp(arg + i, redirect, ft_strlen(redirect)) == 0)
+        else if (!quote && ft_strncmp(arg + i, redirect, ft_strlen(redirect)) == 0)
             return (1);
         i++;
     }
@@ -111,5 +113,7 @@ void find(t_com *commands)
 void redirects(t_com *commands)
 {
     commands->redirects = ft_calloc(2, sizeof(t_red)); // redirect struct
+    if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">") || is_redirect_token(commands->command, ">>"))
+        redirects_cmd(commands);
     find(commands);
 }
