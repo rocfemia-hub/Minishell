@@ -114,6 +114,7 @@ void redirects(t_com *commands)
 {
     commands->redirects = ft_calloc(2, sizeof(t_red)); // redirect struct
     if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">") || is_redirect_token(commands->command, ">>"))
-        redirects_cmd(commands);
+        if(!redirects_cmd(commands))
+            return ;
     find(commands);
 }

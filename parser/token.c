@@ -124,8 +124,8 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
-    printf("\033[34mprint_list:\033[0m\n");
-    print_list(commands);
+    // printf("\033[34mprint_list:\033[0m\n");
+    // print_list(commands);
     // printf("\033[34mejecutor\033[0m\n");
     return (commands);
 }

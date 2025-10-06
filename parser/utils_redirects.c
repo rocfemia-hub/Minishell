@@ -14,11 +14,9 @@
 
 char **realloc_redirect_flags(char **flag)
 { // extender los char ** en caso de haber mas de 1 redireccion
-    int i;
     int j;
     char **realloc_matrix;
 
-    i = 0;
     j = 0;
     while (flag[j])
         j++;
@@ -28,6 +26,7 @@ char **realloc_redirect_flags(char **flag)
     j = -1;
     while (flag[++j])
         realloc_matrix[j] = ft_strdup(flag[j]);
+    ft_free_free(flag);
     return (realloc_matrix);
 }
 
@@ -58,14 +57,14 @@ char **copy_redirect_matrix(char **args, int start, int end)
     return (new_arg);
 }
 
-void handle_redirect_array(char ***arr, int *count, char *file)
-{
+void handle_redirect_array(char ***arr, int *flag, char *file)
+{ // triple puntero para modificar el valor fuera de la funcion local
     if (!*arr)
         *arr = ft_calloc(2, sizeof(char *));
     else
-        *arr = realloc_redirect_flags(*arr);
-    (*arr)[*count] = ft_strdup(file);
-    (*count)++;
+        *arr = realloc_redirect_flags(*arr); // me hace un espacio de memoria mas para añadir la nuvea redireccion
+    (*arr)[*flag] = ft_strdup(file);         // me mete en el ultimo la redireccion
+    (*flag)++;                               // flag que si es mayor a 1 es que hay ese tipo de redireccion
 }
 
 void fill(t_com *commands, int start, int end, char *redirect)

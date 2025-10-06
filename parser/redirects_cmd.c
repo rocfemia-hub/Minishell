@@ -1,7 +1,42 @@
 #include "../minishell.h"
+
+char **realloc_redirect_args(char **flag)
+{ // acortar los char **
+    int i;
+    int j;
+    char **realloc_matrix;
+
+    j = 0;
+    while (flag[j])
+        j++;
+    realloc_matrix = ft_calloc(j, sizeof(char *)); // no añado el NULL porque stoy quitando una linea, viene ya en la j
+    if (!realloc_matrix)
+        return (NULL);
+    i = 1;
+    j = -1;
+    while (flag[++j])
+    {
+        realloc_matrix[j] = ft_strdup(flag[i]);
+        i++;
+    }
+    ft_free_free(flag);
+    return (realloc_matrix);
+}
+
 void fill_cmd(t_com *commands, char *redirect)
 {
-
+    if (ft_strncmp(redirect, "<", 2) == 0)
+        handle_redirect_array(&commands->redirects->input_file, &commands->redirects->redirect_in, commands->redirects->file);
+    else if (ft_strncmp(redirect, ">", 2) == 0)
+        handle_redirect_array(&commands->redirects->output_file, &commands->redirects->redirect_out, commands->redirects->file);
+    else if (ft_strncmp(redirect, ">>", 3) == 0)
+        handle_redirect_array(&commands->redirects->append_file, &commands->redirects->redirect_append, commands->redirects->file);
+    else if (ft_strncmp(redirect, "<<", 3) == 0)
+    {
+        commands->redirects->delimiter = ft_strdup(commands->redirects->file);
+        commands->redirects->redirect_heredoc = 1;
+    }
+    free(commands->redirects->file);
 }
 int clean_redirects_cmd(t_com *commands, char *redirect)
 {
@@ -18,48 +53,57 @@ int clean_redirects_cmd(t_com *commands, char *redirect)
     else if (ft_strlen(commands->command) > ft_strlen(redirect)) // si la redireccion esta asi ">adios" --> no es error
     {
         commands->redirects->file = ft_strdup(commands->command + ft_strlen(redirect)); // archivo al que redirecciona
-        fill_cmd(commands, redirect);                            // rellena estructura
+        fill_cmd(commands, redirect);  // rellena estructura
+        free(commands->command);
+        commands->command = ft_strdup("");
     }
-    // else // el archivo esta separado del simbolo "hola > adios"
-    //     if (!aux_parser_redirects(commands, redirect))
-    //         return (0);
+    else if(commands->args[0])
+    {
+        commands->redirects->file = ft_strdup(commands->args[0]);
+        fill_cmd(commands, redirect);
+        free(commands->command);    
+        commands->command = ft_strdup("");
+        commands->args = realloc_redirect_args(commands->args);    
+    }
     return (1);
 }
 
-void redirects_cmd(t_com *commands)
+int redirects_cmd(t_com *commands)
 {
     if (is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">>"))
     {
-        printf("entra << o >> \n");
+        // printf("entra << o >> \n");
         if (commands->args[0] || ft_strlen(commands->command) > 2)
         {
             if (is_redirect_token(commands->command, "<<"))
-                clean_redirects_cmd(commands, "<<");
+                if(!clean_redirects_cmd(commands, "<<"))
+                    return(0);
             if (is_redirect_token(commands->command, ">>"))
-                clean_redirects_cmd(commands, ">>");
-            return;
+                if(!clean_redirects_cmd(commands, ">>"))
+                    return(0);
+            return(1);
         }
         else
+        {
             commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+            return(0);
+        }
     }
     if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, ">"))
     {
-        printf("entra < o > \n");
+        // printf("entra < o > \n");
         if (commands->args[0] || ft_strlen(commands->command) > 1)
         {
             if (is_redirect_token(commands->command, "<"))
                 clean_redirects_cmd(commands, "<");
             if (is_redirect_token(commands->command, ">"))
                 clean_redirects_cmd(commands, ">");
-            return;
+            return(1);
         }
         else
+        {
             commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+            return(0);
+        }
     }
 }
-
-// < - salto de linea
-// < < - falta el tocken <
-// < hola - no da error
-// <hola - no da error
-// <<hola - abre el heardock

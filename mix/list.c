@@ -73,8 +73,8 @@ void print_list(t_com *list)
 		// else
 		// 	printf("flag_built: (null)\n");
 		// printf("\033[34mprint_redirects:\033[0m\n");
-		// printf("append_file: %s, flag: %d\n", commands->redirects->append_file[0], commands->redirects->redirect_append);
-		// printf("input_file: %s, flag: %d\n", commands->redirects->input_file[0], commands->redirects->redirect_in);
+		// printf("append_file: %s, flag: %d\n", list->redirects->append_file[0], list->redirects->redirect_append);
+		// printf("input_file: %s, flag: %d\n", list->redirects->input_file[0], list->redirects->redirect_in);
 		// printf("output_file: %s, flag: %d\n", list->redirects->output_file[0], list->redirects->redirect_out);
 		// printf("output_file: %s, flag: %d\n", commands->redirects->output_file[1], commands->redirects->redirect_out);
 		list = list->next;
