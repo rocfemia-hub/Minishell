@@ -12,6 +12,35 @@
 
 #include "../minishell.h"
 
+char **realloc_quotes_arg(char **args, int i)
+{
+    int j;
+    char **aux;
+    int k;
+
+    j = 0;
+    k = 0;
+    while(args[j])
+        j++;
+    aux = ft_calloc(j, sizeof(char *));
+    j = 0;
+    while(args[j])
+    {
+        if (j == i)
+            j++;
+        else
+        {
+            aux[k] = ft_strdup(args[j]);
+            k++;
+            j++;
+        }
+    }
+    aux[k] = '\0';
+    ft_free_free(args);
+    return(aux);
+}
+
+
 void keep_quotes_args(t_com *commands, char *line)
 { // split args but KEEP quotes
     int i = 0;
@@ -47,6 +76,7 @@ void keep_quotes_args(t_com *commands, char *line)
     commands->args = args;
     if (!commands->args)
         ft_free_free(commands->args);
+    printf_matrix(args);
 }
 
 void clean_quotes_in_args(t_com *commands)
