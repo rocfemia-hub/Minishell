@@ -55,6 +55,38 @@ int parser_redirects(t_com *commands, char *redirect)
     return (1);
 }
 
+char *clean_quotes_in_line(char *arg)
+{
+    int j = 0;
+    int k = 0;
+    char *new_arg;
+    char quote = 0;
+
+    if (!arg)
+        return (NULL);
+
+    new_arg = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
+    if (!new_arg)
+        return (NULL);
+
+    while (arg[j])
+    {
+        if (arg[j] == '\'' || arg[j] == '"')
+        {
+            if (quote == 0)
+                quote = arg[j];
+            else if (quote == arg[j])
+                quote = 0;
+        }
+        else
+            new_arg[k++] = arg[j];
+        j++;
+    }
+    new_arg[k] = '\0';
+    free(arg);
+    return (new_arg);
+}
+
 int is_redirect_token(char *arg, char *redirect)
 {
     int i;
@@ -77,6 +109,7 @@ int is_redirect_token(char *arg, char *redirect)
     }
     return (0);
 }
+
 
 void find(t_com *commands)
 { // look for < or >
@@ -106,6 +139,8 @@ void find(t_com *commands)
                 return;
             commands->redirects->j = -1;
         }
+        else
+            commands->args[commands->redirects->j] = clean_quotes_in_line(commands->args[commands->redirects->j]);
         commands->redirects->j++;
     }
 }

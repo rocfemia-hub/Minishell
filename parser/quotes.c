@@ -12,72 +12,64 @@
 
 #include "../minishell.h"
 
-char **realloc_quotes_arg(char **args, int i)
-{
-    int j;
-    char **aux;
-    int k;
-
-    j = 0;
-    k = 0;
-    while(args[j])
-        j++;
-    aux = ft_calloc(j, sizeof(char *));
-    j = 0;
-    while(args[j])
-    {
-        if (j == i)
-            j++;
-        else
-        {
-            aux[k] = ft_strdup(args[j]);
-            k++;
-            j++;
-        }
-    }
-    aux[k] = '\0';
-    ft_free_free(args);
-    return(aux);
-}
-
-
 void keep_quotes_args(t_com *commands, char *line)
-{ // split args but KEEP quotes
-    int i = 0;
-    int j = 0;
-    int start;
-    char **args = ft_calloc(sizeof(char *), (ft_strlen(line) + 1));
+{
+    int i;
+    int j;
+    int k;
+    char **args;
+    char *arg;
 
+    i = 0;
+    j = 0;
+    args = ft_calloc(sizeof(char *), ft_strlen(line) + 1);
     if (!args)
-        return ;
+        return;
     while (line[i])
     {
-        while (line[i] == ' ')
+        while (line[i] == 32)
             i++;
         if (!line[i])
             break;
-        start = i;
-        if (line[i] == '\'' || line[i] == '"')
+        arg = ft_calloc(ft_strlen(line) + 3, sizeof(char));
+        if (!arg)
+            return;
+        k = 0;
+        while (line[i] && line[i] != ' ')
         {
-            char quote = line[i++];
-            while (line[i] && line[i] != quote)
-                i++;
-            if (line[i] == quote)
-                i++;
+            if (line[i] == '\'' || line[i] == '"')
+            {
+                int start = k;
+                char q = line[i++];
+                while (line[i] && line[i] != q)
+                    arg[k++] = line[i++];
+                if (line[i] == q)
+                    i++;
+                if (ft_strchr(arg + start, '>') || ft_strchr(arg + start, '<'))
+                {
+                    int m = k;
+                    while (m > start)
+                    {
+                        arg[m] = arg[m - 1];
+                        m--;
+                    }
+                    arg[start] = q;
+                    arg[k + 1] = q;
+                    k += 2;
+                }
+            }
+            else
+                arg[k++] = line[i++];
         }
-        else
-        {
-            while (line[i] && line[i] != ' ' && line[i] != '\'' && line[i] != '"')
-                i++;
-        }
-        args[j++] = ft_substr(line, start, i - start); // <-- incluye las comillas
+        arg[k] = '\0';
+        args[j++] = arg;
     }
     args[j] = NULL;
     commands->args = args;
-    if (!commands->args)
-        ft_free_free(commands->args);
-    printf_matrix(args);
+    printf_matrix(commands->args);
 }
+
+
 
 void clean_quotes_in_args(t_com *commands)
 { //clean quotes of char **args
