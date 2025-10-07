@@ -6,14 +6,14 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/03 18:42:39 by roo               #+#    #+#             */
-/*   Updated: 2025/03/16 15:02:01 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/07 14:28:57 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "../minishell.h"
 
-t_list *ft_lstnew(void *content)
+t_list	*ft_lstnew(void *content)
 {
 	t_list	*new;
 

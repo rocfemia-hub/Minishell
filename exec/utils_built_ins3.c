@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:34 by roo               #+#    #+#             */
-/*   Updated: 2025/10/05 20:01:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/07 14:23:24 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,3 @@ void remove_in_env_array(t_vars *vars, char *name)
         i++;
     }
 }
-
-/*char *get_env_value(t_vars *vars, char *env_name)
-{
-    t_env *var = find_env_var(vars, env_name);
-    
-    if (var)
-        return (var->env_inf);
-    return (NULL);
-}*/

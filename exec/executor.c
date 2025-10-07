@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/07 13:15:02 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/07 14:15:13 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void execute_control(t_com *list, t_vars *vars)
 	{
 		while (tmp_list)
 		{
-			set_redirections(tmp_list);
+			//set_redirections(tmp_list);
 			commands_control(tmp_list, vars);	
 			clean_fds(tmp_list);
 			tmp_list = tmp_list->next;
@@ -37,9 +37,9 @@ void commands_control(t_com *list, t_vars *vars)
 { //printf("list->command = '%s' \n", list->command); //dprintf(1, "--->%s<---\n", list->command); //dprintf(1, "--->%s<---\n", list->command_arg); //dprintf(1, "--->%s<---\n", list->args[1]);
 	if (!list || !list->command)
 		return;
+	set_redirections(list);
 	if(list->flag_built == 1)
 	{
-		set_redirections(list);
 		if (list->command && ft_strnstr(list->command, "echo", 5)) // 5 para incluir '\0'
 			echo_function(list, vars);
 		else if (list->command && ft_strnstr(list->command, "pwd", 4)) // 4 para incluir '\0'
