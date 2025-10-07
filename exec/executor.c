@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/09/25 16:52:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/06 18:43:21 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,25 @@ void execute_control(t_com *list, t_vars *vars)
 {
 	signal(SIGQUIT, handle_backslash);
 	set_redirections(list);
-	if(list->next == NULL)
+	if(list->next == NULL) // un solo comando
 		commands_control(list, vars); // llama a la funcion del de bultins
-	// si llega aquí significa que hay más de un comando y habría que crear una pipe
-	// dentro de la pipe hay que ir comprobando continuamente si es builting o no
+	else
+	{
+		// si llega aquí significa que hay más de un comando y habría que crear una pipe
+		// dentro de la pipe hay que ir comprobando continuamente si es builting o no
+		commands_control(list, vars);	
+	}
 	clean_fds(list);
-}
-
-void setup_pipeline(t_com *list)
-{
-	t_com *tmp_list = list;
-    int pipe_fd[2];
-    
-    while (tmp_list && tmp_list->next) // Crear pipe entre comando actual y siguiente
-    {
-        if (pipe(pipe_fd) == -1) // Crea una conexión para comunicación entre procesos, es un canal unidireccional donde la salida de un proceso se convierte en la entrada de otro
-            return(perror("pipe"));
-        tmp_list->fd_out = pipe_fd[WRITE_FD]; // El comando actual escribirá al pipe
-        tmp_list->next->fd_in = pipe_fd[READ_FD]; // El siguiente comando leerá del pipe
-        set_redirections(tmp_list); // Configurar redirecciones individuales (pueden sobrescribir pipes)
-        tmp_list = tmp_list->next;
-    }
-    if (tmp_list) // Último comando, configura sus redirecciones
-        set_redirections(tmp_list);
 }
 
 void commands_control(t_com *list, t_vars *vars)
 { //printf("list->command = '%s' \n", list->command); //dprintf(1, "--->%s<---\n", list->command); //dprintf(1, "--->%s<---\n", list->command_arg); //dprintf(1, "--->%s<---\n", list->args[1]);
+	if (!list || !list->command)
+		return;
 	if(list->flag_built == 1)
 	{
-		if (!list || !list->command)
-			return;
-		else if (list->command && ft_strnstr(list->command, "echo", 5)) // 5 para incluir '\0'
+		set_redirections(list);
+		if (list->command && ft_strnstr(list->command, "echo", 5)) // 5 para incluir '\0'
 			echo_function(list, vars);
 		else if (list->command && ft_strnstr(list->command, "pwd", 4)) // 4 para incluir '\0'
 			pwd_function(list, vars);
@@ -63,6 +50,7 @@ void commands_control(t_com *list, t_vars *vars)
 			unset_function(list, vars);
 		else
 			printf("Command '%s' not found\n", list->command); // no se si hace algo ahora mismo o se puede borrar
+		clean_fds(list);
 	}
 	else
 		execute(list);
@@ -106,37 +94,47 @@ int	execute(t_com *list)
 		return (ft_printf("Error de creación de pipe\n"), -1);
 	list->path_command = get_path(list->command, list->vars->env, list);
 	if (list->path_command == NULL)
-		return (ft_printf("Command not found\n"), -1);
+		return (ft_printf("minishell: %s: command not found\n", list->command), -1);
 	pid1 = fork();
+	if (pid1 == -1)
+		return (perror("fork"), -1);
 	if (pid1 == 0)
 	{
-		execute_two(list, fd);
-		if (execve(list->path_command, list->command_arg, list->vars->env) == -1)
-			return (ft_printf("Error de ejecución\n"), -1); // hay que echar un ojo a las salidad de error
+		set_redirections(list);
+		apply_redirections(list);
+		if (execve(list->path_command, list->command_arg, list->vars->env) == -1) // CUIDADO CON ENV
+		{
+			perror("execve");
+			exit(127);
+		}
 	}
-	close(fd[READ_FD]);
-    close(fd[WRITE_FD]);
 	waitpid(pid1, NULL, 0);
+	/*if (WIFEXITED(status))
+		list->vars->exit_status = WEXITSTATUS(status);*/
 	ft_free_free(list->command_arg);
 	if (list->path_command)
 		free(list->path_command);
 	return (0); //dprintf(1, "--->%s<---", list->command);
 }
 
-void execute_two(t_com *list, int fd[2])
+void setup_pipeline(t_com *list)
 {
-	if (list->fd_in != STDIN_FILENO) // 0
-		{
-			if(dup2(list->fd_in, STDIN_FILENO) == -1) // Esto se usará cuando me redireccionen la entrada o salida
-				perror("dup2 stdin");
-			close(list->fd_in);
-		}
-		if (list->fd_out != STDOUT_FILENO) // 1
-		{
-			if(dup2(list->fd_out, STDOUT_FILENO) == -1)
-				perror("dup2 stdout");
-			close(list->fd_out);
-		}
-	close(fd[READ_FD]);
-    close(fd[WRITE_FD]);
+	t_com *tmp_list;
+	int pipe_fd[2];
+	
+	tmp_list = list;
+	while (tmp_list && tmp_list->next) // Crear pipe entre comando actual y siguiente
+	{
+		if (pipe(pipe_fd) == -1) // Crea una conexión para comunicación entre procesos, es un canal unidireccional donde la salida de un proceso se convierte en la entrada de otro
+			return(perror("pipe"));
+		if (tmp_list->fd_out == STDOUT_FILENO)
+			tmp_list->fd_out = pipe_fd[WRITE_FD];
+		else
+			close(pipe_fd[WRITE_FD]); // No necesitamos el pipe de salida
+		if (tmp_list->next->fd_in == STDIN_FILENO)
+			tmp_list->next->fd_in = pipe_fd[READ_FD];
+		else
+			close(pipe_fd[READ_FD]); // No necesitamos el pipe de entrada
+		tmp_list = tmp_list->next;
+	}
 }

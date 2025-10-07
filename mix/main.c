@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/05 19:38:59 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/06 18:46:02 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void init_vars(t_vars *vars, int argc, char **argv,  char **env)
 	vars->argc = argc;
 	vars->argv = argv;
 	vars->env = env;
+	vars->exit_status = 0;
     env_to_list(vars, env);
 }
 

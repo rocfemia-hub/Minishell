@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/06 18:07:15 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/06 18:45:06 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_vars
 	char	**argv;
 	char	**env;
 	t_env	*env_list; // para cambios de variables, es más facil gestionar liberación de memoria con una lista que con una matriz
+	int		exit_status;
 }	t_vars;
 
 typedef struct s_red
@@ -122,12 +123,11 @@ void	handle_backslash();
 
 
 // EXECUTOR
-void	setup_pipeline(t_com *list);
 void	execute_control(t_com *list, t_vars *vars);
 void	commands_control(t_com *list, t_vars *vars);
 char	*get_path(char *cmd, char **envp, t_com *pipex);
 int		execute(t_com *list);
-void	execute_two(t_com *list, int fd[2]);
+void	setup_pipeline(t_com *list);
 
 // BUILT-INS
 void	echo_function(t_com *list, t_vars *vars);
