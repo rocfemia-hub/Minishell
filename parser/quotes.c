@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
-/*   Updated: 2025/09/10 20:20:36 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/08 13:19:51 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void keep_quotes_args(t_com *commands, char *line)
     }
     args[j] = NULL;
     commands->args = args;
-    printf_matrix(commands->args);
+    //printf_matrix(commands->args);
 }
 
 

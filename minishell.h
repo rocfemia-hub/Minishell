@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/08 12:59:32 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/08 13:19:14 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	lstadd_back(t_com **lst, t_com *new);
 void 	print_list(t_com *list);
 
 //ERROR
-void	printf_matrix(char **split);
+//void	printf_matrix(char **split);
 void 	error(t_com *commands);
 
 //FREE

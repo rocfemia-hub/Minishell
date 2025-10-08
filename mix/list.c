@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:46 by roo               #+#    #+#             */
-/*   Updated: 2025/09/24 16:44:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/08 13:19:45 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void print_list(t_com *list)
 		if (list->command_arg)
 		{
 			printf("command_arg\n");
-			printf_matrix (list->command_arg);
+			//printf_matrix (list->command_arg);
 		}
 		else
 			printf("command_arg: (null)\n");
