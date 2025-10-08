@@ -84,6 +84,7 @@ typedef struct s_com
 	int flag_built; // 1 para built 0 execve
 	int flag_pipe; // 1 si hay pipe 0 si no
 	char *error;
+	int n_args; //se utiliza en keep_quotes_args en quotes.c
 	struct s_com *next;
 	t_red *redirects; // estructura para > >> < <<
 	t_vars *vars;
@@ -223,6 +224,7 @@ char *handle_dollar(char *line, int *i);
 // REDIRECTS
 int aux_parser_redirects(t_com *commands, char *redirect);
 int parser_redirects(t_com *commands, char *redirect);
+char *clean_quotes_in_line(char *arg);
 int is_redirect_token(char *arg, char *redirect);
 void find(t_com *commands);
 void redirects(t_com *commands);

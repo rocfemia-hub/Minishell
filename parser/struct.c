@@ -92,8 +92,7 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     else
     {
         keep_quotes_args(commands, line + end);
-        redirects(commands);            // manage redirects
-        clean_quotes_in_args(commands); // crea un char **args dentro de commands
+        redirects(commands); // manage redirects
     }
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
