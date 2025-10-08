@@ -24,7 +24,7 @@ int skip_spaces(char *line)
 
 char *only_cmd(char *line, t_clean_cmd *data)
 { // ME SEPARA EL COMANDO DE LA LINEA QUE ENTRA POR TERMINAL
-    data->only_cmd_i = skip_spaces(line);
+    data->only_cmd_i += skip_spaces(&line[data->only_cmd_i]);
     data->quote = 0;
     if (!line[data->only_cmd_i])
         return (NULL);
@@ -55,14 +55,26 @@ char *only_cmd(char *line, t_clean_cmd *data)
 void type_command(char *line, t_com *commands)
 {
     t_clean_cmd data;
+    int len_cmd;
 
     ft_bzero(&data, sizeof(t_clean_cmd));
     data.cmd = only_cmd(line, &data);
+    len_cmd = ft_strlen(data.cmd) + 1;
     if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
+    {
         expand_cmd(&data); // si hay $ en el comando, lo expande sea valido o no
+        if (data.cmd)      // si la expansion del comando es vacio, como lo siguiente como comando
+        {
+            data.cmd = only_cmd(line, &data);
+            data.cmd = clean_cmd(data.cmd, &data);                 //  limpia el comando de comillas
+            init_struct(line, data.cmd, data.end_index + len_cmd, commands); // introduce todo en la estructura
+        }
+    }
     else
-        data.cmd = clean_cmd(line, &data); //  limpia el comando de comillas
-    init_struct(line, data.cmd, data.end_index, commands); // introduce todo en la estructura
+    {
+        data.cmd = clean_cmd(line, &data);                 //  limpia el comando de comillas
+        init_struct(line, data.cmd, data.end_index, commands); // introduce todo en la estructura
+    }
     free(data.cmd);                                        // LIBERAR TODO DATA
 }
 
@@ -93,7 +105,6 @@ void init_commands(char *line, t_com *commands)
     }
     if (current)
         type_command(line + start, current);
-    // LIBERAR CURRENT
 }
 
 t_com *token(char *line)
@@ -106,15 +117,12 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
-    if (look_for_char(line, 92))
+    if (look_for_char(line, 92) || look_for_char(line, 59))
     {
-        commands->error = ft_strdup("bash: syntax error backslash");
-        error(commands);
-        return (NULL);
-    }
-    if (look_for_char(line, 59))
-    {
-        commands->error = ft_strdup("bash: syntax error semicolon");
+        if (look_for_char(line, 92))
+            commands->error = ft_strdup("bash: syntax error backslash");
+        if (look_for_char(line, 59))
+            commands->error = ft_strdup("bash: syntax error semicolon");
         error(commands);
         return (NULL);
     }
@@ -124,8 +132,5 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
-    // printf("\033[34mprint_list:\033[0m\n");
-    // print_list(commands);
-    // printf("\033[34mejecutor\033[0m\n");
     return (commands);
 }

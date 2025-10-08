@@ -57,5 +57,5 @@ void expand_cmd(t_clean_cmd *data)
 
     token_cmd = aux_cmd(data);
     free(data->cmd);
-    data->cmd= ft_strjoin_cmd(token_cmd);
+    data->cmd= ft_strjoin_cmd(token_cmd); 
 }
