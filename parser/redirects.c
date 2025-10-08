@@ -140,7 +140,8 @@ void find(t_com *commands)
             commands->redirects->j = -1;
         }
         else
-            commands->args[commands->redirects->j] = clean_quotes_in_line(commands->args[commands->redirects->j]);
+            if(ft_strnstr(commands->args[commands->redirects->j], "<", 1) || ft_strnstr(commands->args[commands->redirects->j], "<<", 2) || ft_strnstr(commands->args[commands->redirects->j], ">", 1) || ft_strnstr(commands->args[commands->redirects->j], ">>", 2))
+                commands->args[commands->redirects->j] = clean_quotes_in_line(commands->args[commands->redirects->j]);
         commands->redirects->j++;
     }
 }
