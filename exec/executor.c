@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/07 14:15:13 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/08 12:57:45 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,21 @@ void execute_control(t_com *list, t_vars *vars)
 	t_com *tmp_list;
 
 	signal(SIGQUIT, handle_backslash);
-	setup_pipeline(list);
 	tmp_list = list; 	
-	if(tmp_list->next == NULL) // un solo comando
-		commands_control(tmp_list, vars); // llama a la funcion del de bultins
-	else
-	{
-		while (tmp_list)
-		{
-			//set_redirections(tmp_list);
-			commands_control(tmp_list, vars);	
-			clean_fds(tmp_list);
-			tmp_list = tmp_list->next;
-		}
-	}
+	if (tmp_list->next == NULL) // si solo hay un comando
+    {
+        set_redirections(tmp_list);
+        if (tmp_list->flag_built == 1)
+            commands_control(tmp_list, vars);
+        else
+            execute(tmp_list);
+        clean_fds(tmp_list);
+    }
+    else // mas de un comando (con pipes)
+    {
+        setup_pipeline(list);
+        execute_pipeline(list); // Nueva función
+    }
 }
 
 void commands_control(t_com *list, t_vars *vars)
@@ -93,20 +94,18 @@ char	*get_path(char *cmd, char **envp, t_com *pipex)
 
 int	execute(t_com *list)
 { // recibir estructura de comando y hacer execve en funcion del contenido de la estructura
-	int	fd[2];
-	int	pid1;
+	int pid;
+    int status;
 	
-	if (pipe(fd) == -1)
-		return (ft_printf("Error de creación de pipe\n"), -1);
 	list->path_command = get_path(list->command, list->vars->env, list);
 	if (list->path_command == NULL)
 		return (ft_printf("minishell: %s: command not found\n", list->command), -1);
-	pid1 = fork();
-	if (pid1 == -1)
+	pid = fork();
+	if (pid == -1)
 		return (perror("fork"), -1);
-	if (pid1 == 0)
+	if (pid == 0)
 	{
-		set_redirections(list);
+		//set_redirections(list);
 		apply_redirections(list);
 		if (execve(list->path_command, list->command_arg, list->vars->env) == -1) // CUIDADO CON ENV
 		{
@@ -114,33 +113,11 @@ int	execute(t_com *list)
 			exit(127);
 		}
 	}
-	waitpid(pid1, NULL, 0);
-	/*if (WIFEXITED(status))
-		list->vars->exit_status = WEXITSTATUS(status);*/
+	waitpid(pid, NULL, 0);
+	if (WIFEXITED(status))
+		list->vars->exit_status = WEXITSTATUS(status); // investigar bienn que es el WEXITSTATUS
 	ft_free_free(list->command_arg);
 	if (list->path_command)
 		free(list->path_command);
 	return (0); //dprintf(1, "--->%s<---", list->command);
-}
-
-void setup_pipeline(t_com *list)
-{
-	t_com *tmp_list;
-	int pipe_fd[2];
-	
-	tmp_list = list;
-	while (tmp_list && tmp_list->next) // Crear pipe entre comando actual y siguiente
-	{
-		if (pipe(pipe_fd) == -1) // Crea una conexión para comunicación entre procesos, es un canal unidireccional donde la salida de un proceso se convierte en la entrada de otro
-			return(perror("pipe"));
-		if (tmp_list->fd_out == STDOUT_FILENO)
-			tmp_list->fd_out = pipe_fd[WRITE_FD];
-		else
-			close(pipe_fd[WRITE_FD]); // No necesitamos el pipe de salida
-		if (tmp_list->next->fd_in == STDIN_FILENO)
-			tmp_list->next->fd_in = pipe_fd[READ_FD];
-		else
-			close(pipe_fd[READ_FD]); // No necesitamos el pipe de entrada
-		tmp_list = tmp_list->next;
-	}
 }

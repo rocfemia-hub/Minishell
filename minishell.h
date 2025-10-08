@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/06 18:45:06 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/08 12:59:32 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,12 @@ void	execute_control(t_com *list, t_vars *vars);
 void	commands_control(t_com *list, t_vars *vars);
 char	*get_path(char *cmd, char **envp, t_com *pipex);
 int		execute(t_com *list);
+
+// PIPELINES
 void	setup_pipeline(t_com *list);
+void	execute_pipeline(t_com *list);
+void	execute_pipelines2(t_com *list, pid_t *pids);
+void	close_pipes(t_com *list, t_com *current_cmd);
 
 // BUILT-INS
 void	echo_function(t_com *list, t_vars *vars);
