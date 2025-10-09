@@ -6,13 +6,51 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/06 18:07:01 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/09 13:07:44 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 void set_redirections(t_com *list)
+{
+	int i;
+    int tmp_fd;
+	
+    if (list->redirects->output_file) // abrir archivos de output (aunque no escribas en ellos)
+    {
+        i = 0;
+        while (list->redirects->output_file[i])
+        {
+            tmp_fd = open(list->redirects->output_file[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+            if (tmp_fd == -1)
+                return(perror(list->redirects->output_file[i]));
+            if (list->redirects->output_file[i + 1] != NULL) // Si NO es el último, cierra
+                close(tmp_fd);
+            else
+                list->fd_out = tmp_fd; // Solo el último se usa para escribir
+            i++;
+        }
+    }
+    if (list->redirects->append_file)
+    {
+        i = 0;
+        while (list->redirects->append_file[i])
+        {
+            tmp_fd = open(list->redirects->append_file[i], O_CREAT | O_WRONLY | O_APPEND, 0644);
+            if (tmp_fd == -1)
+                return(perror(list->redirects->append_file[i]));
+            if (list->redirects->append_file[i + 1] != NULL)
+                close(tmp_fd);
+            else
+                list->fd_out = tmp_fd;
+            i++;
+        }
+    }
+	set_redirections_two(list);
+}
+
+void set_redirections_two(t_com *list)
 {
 	int i;
 	int j;

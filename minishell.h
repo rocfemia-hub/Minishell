@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/08 12:59:32 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/09 13:06:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ void	remove_in_env_array(t_vars *vars, char *name);
 
 // REDIRECTIONS
 void	set_redirections(t_com *list);
+void	set_redirections_two(t_com *list);
 void	heredoc_execution(t_com *list);
 void	apply_redirections(t_com *list);
 void	clean_fds(t_com *list);
