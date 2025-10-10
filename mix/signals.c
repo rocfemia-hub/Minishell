@@ -12,12 +12,13 @@
 
 #include "../minishell.h"
 
-void handle_c()
+void handle_c(int sig)
 {
-	rl_on_new_line(); //limpia la linea
-	write(1, "\r\n", 2); // escribe salto de linea
-	rl_on_new_line(); // limpia la linea
-	rl_redisplay(); // me escribe minishell ->
+    (void)sig;
+    rl_on_new_line();
+    write(1, "\n", 1);
+    rl_replace_line("", 0); // limpia la línea que se estaba escribiendo
+    rl_redisplay();
 }
 
 void handle_backslash(int sig)

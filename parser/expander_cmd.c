@@ -22,16 +22,15 @@ char *handle_plain_text(char *cmd, int *i)
     return(ft_substr(cmd, start, *i - start));
 }
 
-char **aux_cmd(t_clean_cmd *data)
+char *aux_cmd(t_clean_cmd *data)
 {
-    char **temp;
     int i;
-    int j;
     char *token;
+    char *result;
+    char *temp;
 
     i = 0;
-    j = 0;
-    temp = malloc(sizeof(char *) * 256);
+    result = ft_calloc(1, 1); 
     while (data->cmd[i])
     {
         if (data->cmd[i] == '\'')
@@ -42,20 +41,28 @@ char **aux_cmd(t_clean_cmd *data)
             token = handle_dollar(data->cmd, &i);
         else
             token = handle_plain_text(data->cmd, &i);
+        
         if (token)
-            temp[j++] = token;
+        {
+            temp = ft_strjoin(result, token);
+            free(result);
+            free(token);
+            result = temp;
+        }
     }
-    temp[j] = NULL;
     data->end_index = i;
-    return(temp);
+    return (result);
 }
 
-
-void expand_cmd(t_clean_cmd *data)
+int expand_cmd(t_clean_cmd *data)
 {
-    char **token_cmd;
+    char *expanded;
 
-    token_cmd = aux_cmd(data);
+    expanded = aux_cmd(data);
+    if (ft_strlen(expanded) < 1) //SI LA EXPANSION NO EXISTE DEVUELVE 0 PARA QUE FUERA COJA EL SIGUIENTE COMANDO
+        return (0);
     free(data->cmd);
-    data->cmd= ft_strjoin_cmd(token_cmd); 
+    data->cmd = expanded;
+    return (1);
 }
+

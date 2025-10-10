@@ -18,8 +18,9 @@ char **ft_strjoin_cmd_arg(t_com *commands)
     int len;
     char **aux;
     int i;
-
+ 
     j = -1;
+    i = 0;
     if (commands->command)
         len = 1;
     while (commands->args[++j])
@@ -28,23 +29,13 @@ char **ft_strjoin_cmd_arg(t_com *commands)
     j = -1;
     if (commands->command)
     {
-        i = 1;
         aux[0] = ft_strdup(commands->command);
         while (commands->args[++j])
-        {
-            aux[i] = ft_strdup(commands->args[j]);
-            i++;
-        }
+            aux[++i] = ft_strdup(commands->args[j]);
     }
     else
-    {
-        i = 0;
         while (commands->args[++j])
-        {
-            aux[i] = ft_strdup(commands->args[j]);
-            i++;
-        }
-    }
+            aux[i++] = ft_strdup(commands->args[j]);
     return (aux);
 }
 

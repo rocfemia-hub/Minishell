@@ -62,8 +62,9 @@ void type_command(char *line, t_com *commands)
     len_cmd = ft_strlen(data.cmd) + 1;
     if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
     {
-        expand_cmd(&data); // si hay $ en el comando, lo expande sea valido o no
-        if (data.cmd)      // si la expansion del comando es vacio, como lo siguiente como comando
+        if (expand_cmd(&data)) // si hay $ en el comando, no lo expande
+            init_struct(line, data.cmd, data.end_index, commands); // introduce todo en la estructura
+        else // si la expansion del comando es vacio, cojo lo siguiente como comando
         {
             data.cmd = only_cmd(line, &data);
             data.cmd = clean_cmd(data.cmd, &data);                 //  limpia el comando de comillas

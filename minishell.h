@@ -200,8 +200,8 @@ void	init_struct(char *line, char *cmd, int end, t_com *commands);
 
 // EXPANDER_CMD
 char *handle_plain_text(char *cmd, int *i);
-char **aux_cmd(t_clean_cmd *data);
-void expand_cmd(t_clean_cmd *data);
+char *aux_cmd(t_clean_cmd *data);
+int expand_cmd(t_clean_cmd *data);
 
 // EXPANDER_ARGS
 char *handle_plain_text_args(char *line, int *i);
