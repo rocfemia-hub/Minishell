@@ -68,6 +68,7 @@ void keep_quotes_args(t_com *commands, char *line)
     commands->args = args;
 }
 
+
 void clean_quotes_in_args(t_com *commands)
 { //clean quotes of char **args
     int i = 0;

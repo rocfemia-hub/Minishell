@@ -12,22 +12,26 @@
 
 #include "../minishell.h"
 
-char *handle_single_quotes(char *cmd, int *i)
+char *handle_single_quotes(char *line, int *i)
 { //MANEJO DE COMILLAS SIMPLES
     int start;
     char *token;
+    int len;
 
-    token = NULL;
-    (*i)++;
-    start = *i;
-    while (cmd[*i] && cmd[*i] != '\'')
+    start = *i; // incluye la comilla de apertura
+    (*i)++; // saltamos la comilla de apertura
+
+    while (line[*i] && line[*i] != '\'')
         (*i)++;
-    if (*i > start)
-        token = ft_substr(cmd, start, *i - start);
-    if (cmd[*i] == '\'')
-        (*i)++;
-    return(token);
+
+    if (line[*i] == '\'')
+        (*i)++; // saltamos la de cierre
+
+    len = *i - start;
+    token = ft_substr(line, start, len); // incluye ambas comillas
+    return (token);
 }
+
 
 char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token)
 { // VARIABLES DENTRO DE COMILLAS DOBLES
@@ -80,22 +84,36 @@ char *process_inside_double_quotes(char *line, int start, int end)
 }
 
 char *handle_double_quotes(char *line, int *i)
-{ //GESTION DE COMILLAS DOBLES
+{ //GESTION COMILLAS DOBLES
     int start;
     int end;
     char *token;
+    char *inner;
 
-    token = NULL;
-    (*i)++;
-    start = *i;
-    while (line[*i] && line[*i] != '"')
-        (*i)++;
+    start = *i;     // posición de la comilla de apertura
+    (*i)++;         // saltamos la comilla inicial
+
     end = *i;
-    token = process_inside_double_quotes(line, start, end);
-    if (line[*i] == '"')
-        (*i)++;
-    return(token);
+    while (line[end] && line[end] != '"')
+        end++;
+
+    // procesamos lo que hay dentro de las comillas dobles
+    inner = process_inside_double_quotes(line, *i, end);
+
+    // avanzamos i hasta después de la comilla de cierre (si existe)
+    if (line[end] == '"')
+        end++;
+
+    *i = end;
+
+    // reconstruimos incluyendo las comillas
+    token = ft_strjoin("\"", inner);
+    token = str_append(token, "\"");
+
+    free(inner);
+    return (token);
 }
+
 
 char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token)
 {
