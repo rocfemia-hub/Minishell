@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/08 12:57:45 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/13 22:58:42 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ void commands_control(t_com *list, t_vars *vars)
 { //printf("list->command = '%s' \n", list->command); //dprintf(1, "--->%s<---\n", list->command); //dprintf(1, "--->%s<---\n", list->command_arg); //dprintf(1, "--->%s<---\n", list->args[1]);
 	if (!list || !list->command)
 		return;
-	set_redirections(list);
+	if(!set_redirections(list))
+		return;
 	if(list->flag_built == 1)
 	{
 		if (list->command && ft_strnstr(list->command, "echo", 5)) // 5 para incluir '\0'
@@ -105,7 +106,6 @@ int	execute(t_com *list)
 		return (perror("fork"), -1);
 	if (pid == 0)
 	{
-		//set_redirections(list);
 		apply_redirections(list);
 		if (execve(list->path_command, list->command_arg, list->vars->env) == -1) // CUIDADO CON ENV
 		{
