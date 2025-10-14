@@ -198,11 +198,9 @@ bash exit code = 1
 [0;33mTest  57: ✅[38;5;244m grep hi <./test_files/infile 
 [0mmini exit code = ?
 bash exit code = 0
-[0;33mTest  58: ✅⚠️ [38;5;244m grep hi "<infile" <         ./test_files/infile 
+[0;33mTest  58: ✅[38;5;244m grep hi "<infile" <         ./test_files/infile 
 [0mmini exit code = ?
 bash exit code = 2
-mini error = ( No such file or directory Bad file descriptor)
-bash error = ( No such file or directory)
 [0;33mTest  59: ✅[38;5;244m echo hi < ./test_files/infile bye bye 
 [0mmini exit code = ?
 bash exit code = 0
@@ -218,21 +216,17 @@ bash exit code = 0
 [0;33mTest  63: ✅[38;5;244m cat <./test_files/infile_big ./test_files/infile 
 [0mmini exit code = ?
 bash exit code = 0
-[0;33mTest  64: ✅⚠️ [38;5;244m cat <"1""2""3""4""5" 
+[0;33mTest  64: ✅[38;5;244m cat <"1""2""3""4""5" 
 [0mmini exit code = ?
 bash exit code = 1
-mini error = ( No such file or directory Bad file descriptor)
-bash error = ( No such file or directory)
 [0;33mTest  65: ✅⚠️ [38;5;244m echo <"./test_files/infile" <missing <"./test_files/infile" 
 [0mmini exit code = ?
 bash exit code = 1
 mini error = ()
 bash error = ( No such file or directory)
-[0;33mTest  66: ✅⚠️ [38;5;244m echo <missing <"./test_files/infile" <missing 
+[0;33mTest  66: ✅[38;5;244m echo <missing <"./test_files/infile" <missing 
 [0mmini exit code = ?
 bash exit code = 1
-mini error = ( No such file or directory No such file or directory)
-bash error = ( No such file or directory)
 [0;33mTest  67: ✅[38;5;244m cat <"./test_files/infile" 
 [0mmini exit code = ?
 bash exit code = 0
@@ -260,11 +254,9 @@ bash exit code = 0
 [0;33mTest  75: ✅[38;5;244m cat <"./test_files/infile_big" | echo hi 
 [0mmini exit code = ?
 bash exit code = 0
-[0;33mTest  76: ✅⚠️ [38;5;244m cat <missing 
+[0;33mTest  76: ✅[38;5;244m cat <missing 
 [0mmini exit code = ?
 bash exit code = 1
-mini error = ( No such file or directory Bad file descriptor)
-bash error = ( No such file or directory)
 [0;33mTest  77: ✅⚠️ [38;5;244m cat <missing | cat 
 [0mmini exit code = ?
 bash exit code = 0
@@ -297,10 +289,8 @@ bash exit code = 0
 [0;33mTest  84: ✅[38;5;244m ls >./outfiles/outfile01 >./outfiles/outfile02 
 [0mmini exit code = ?
 bash exit code = 0
-[0;33mTest  85: ❌[38;5;244m ls >./outfiles/outfile01 >./test_files/invalid_permission 
-[0mmini output = (README.md bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes redirects syntax test_files tester wildcards)
-bash output = ()
-mini exit code = ?
+[0;33mTest  85: ✅[38;5;244m ls >./outfiles/outfile01 >./test_files/invalid_permission 
+[0mmini exit code = ?
 bash exit code = 1
 [0;33mTest  86: ✅[38;5;244m ls >"./outfiles/outfile with spaces" 
 [0mmini exit code = ?
@@ -308,15 +298,11 @@ bash exit code = 0
 [0;33mTest  87: ✅[38;5;244m ls >"./outfiles/outfile""1""2""3""4""5" 
 [0mmini exit code = ?
 bash exit code = 0
-[0;33mTest  88: ❌[38;5;244m ls >"./outfiles/outfile01" >./test_files/invalid_permission >"./outfiles/outfile02" 
-[0mmini output = (README.md bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes redirects syntax test_files tester wildcards)
-bash output = ()
-mini exit code = ?
+[0;33mTest  88: ✅[38;5;244m ls >"./outfiles/outfile01" >./test_files/invalid_permission >"./outfiles/outfile02" 
+[0mmini exit code = ?
 bash exit code = 1
-[0;33mTest  89: ❌[38;5;244m ls >./test_files/invalid_permission >"./outfiles/outfile01" >./test_files/invalid_permission 
-[0mmini output = (README.md bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes redirects syntax test_files tester wildcards)
-bash output = ()
-mini exit code = ?
+[0;33mTest  89: ✅[38;5;244m ls >./test_files/invalid_permission >"./outfiles/outfile01" >./test_files/invalid_permission 
+[0mmini exit code = ?
 bash exit code = 1
 [0;33mTest  90: ✅[38;5;244m cat <"./test_files/infile" >"./outfiles/outfile01" 
 [0mmini exit code = ?
@@ -367,10 +353,10 @@ bash exit code = 1
 mini error = ( Permission denied Permission denied)
 bash error = ( Permission denied)
 [0;33mTest 102: ✅[38;5;244m cat <"./test_files/infile" >./test_files/invalid_permission 
-[0mmini exit code =
+[0mmini exit code = ?
 bash exit code = 1
 [0;33mTest 103: ✅[38;5;244m cat >./test_files/invalid_permission <"./test_files/infile" 
-[0mmini exit code =
+[0mmini exit code = ?
 bash exit code = 1
 [0;33mTest 104: ❌[38;5;244m cat <missing >./outfiles/outfile01 
 [0mOnly in ./mini_outfiles: outfile01
@@ -378,23 +364,19 @@ mini outfiles:
 bash outfiles:
 mini exit code = ?
 bash exit code = 1
-mini error = ( No such file or directory Bad file descriptor)
-bash error = ( No such file or directory)
-[0;33mTest 105: ✅⚠️ [38;5;244m cat >./outfiles/outfile01 <missing 
+[0;33mTest 105: ✅[38;5;244m cat >./outfiles/outfile01 <missing 
 [0mmini exit code = ?
 bash exit code = 1
-mini error = ( No such file or directory Bad file descriptor)
-bash error = ( No such file or directory)
 [0;33mTest 106: ✅⚠️ [38;5;244m cat <missing >./test_files/invalid_permission 
-[0mmini exit code =
+[0mmini exit code = ?
 bash exit code = 1
 mini error = ( Permission denied)
 bash error = ( No such file or directory)
 [0;33mTest 107: ✅[38;5;244m cat >./test_files/invalid_permission <missing 
-[0mmini exit code =
+[0mmini exit code = ?
 bash exit code = 1
 [0;33mTest 108: ✅⚠️ [38;5;244m cat >./outfiles/outfile01 <missing >./test_files/invalid_permission 
-[0mmini exit code =
+[0mmini exit code = ?
 bash exit code = 1
 mini error = ( Permission denied)
 bash error = ( No such file or directory)
@@ -458,57 +440,25 @@ bash exit code = 0
 [0;33mTest 114: ✅[38;5;244m ls >>./outfiles/outfile01 >>./outfiles/outfile02 
 [0mmini exit code = ?
 bash exit code = 0
-[0;33mTest 115: ❌[38;5;244m ls >>./test_files/invalid_permission 
-[0mmini output = (README.md bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes redirects syntax test_files tester wildcards)
-bash output = ()
-mini exit code = ?
+[0;33mTest 115: ✅[38;5;244m ls >>./test_files/invalid_permission 
+[0mmini exit code = ?
 bash exit code = 1
-[0;33mTest 116: ❌[38;5;244m ls >>./test_files/invalid_permission >>./outfiles/outfile01 
-[0mmini output = (README.md bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes redirects syntax test_files tester wildcards)
-bash output = ()
-mini exit code = ?
+[0;33mTest 116: ✅[38;5;244m ls >>./test_files/invalid_permission >>./outfiles/outfile01 
+[0mmini exit code = ?
 bash exit code = 1
-[0;33mTest 117: ❌[38;5;244m ls >>./outfiles/outfile01 >>./test_files/invalid_permission 
-[0mmini output = (README.md bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes redirects syntax test_files tester wildcards)
-bash output = ()
-mini exit code = ?
+[0;33mTest 117: ✅[38;5;244m ls >>./outfiles/outfile01 >>./test_files/invalid_permission 
+[0mmini exit code = ?
 bash exit code = 1
-[0;33mTest 118: ❌[38;5;244m ls >./outfiles/outfile01 >>./test_files/invalid_permission >>./outfiles/outfile02 
-[0mFiles ./mini_outfiles/outfile01 and ./bash_outfiles/outfile01 differ
-mini outfiles:
-README.md
-bash.supp
-bash_outfiles
-bonus
-bonus_bonus
-builtins
-extras
-local.supp
-loop.out
-manual_tests
-mini_outfiles
-os_specific
-outfiles
-pipes
-redirects
-syntax
-test_files
-tester
-wildcards
-bash outfiles:
-mini exit code = ?
+[0;33mTest 118: ✅[38;5;244m ls >./outfiles/outfile01 >>./test_files/invalid_permission >>./outfiles/outfile02 
+[0mmini exit code = ?
 bash exit code = 1
-[0;33mTest 119: ❌[38;5;244m ls <missing >>./test_files/invalid_permission >>./outfiles/outfile02 
-[0mmini output = (README.md bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes redirects syntax test_files tester wildcards)
-bash output = ()
-mini exit code = ?
+[0;33mTest 119: ✅⚠️ [38;5;244m ls <missing >>./test_files/invalid_permission >>./outfiles/outfile02 
+[0mmini exit code = ?
 bash exit code = 1
 mini error = ( Permission denied)
 bash error = ( No such file or directory)
-[0;33mTest 120: ❌[38;5;244m ls >>./test_files/invalid_permission >>./outfiles/outfile02 <missing 
-[0mmini output = (README.md bash.supp bash_outfiles bonus bonus_bonus builtins extras local.supp loop.out manual_tests mini_outfiles os_specific outfiles pipes redirects syntax test_files tester wildcards)
-bash output = ()
-mini exit code = ?
+[0;33mTest 120: ✅[38;5;244m ls >>./test_files/invalid_permission >>./outfiles/outfile02 <missing 
+[0mmini exit code = ?
 bash exit code = 1
 [0;33mTest 121: ✅[38;5;244m echo hi >>./outfiles/outfile01 | echo bye 
 [0mmini exit code = ?
@@ -649,5 +599,5 @@ mini exit code = ?
 bash exit code = 127
 mini error = ()
 bash error = ( command not found)
-[0;35m[1m120/146
+[0;35m[1m129/146
 [0m😭 😭 😭

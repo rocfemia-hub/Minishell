@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/14 17:25:45 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/14 17:33:57 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void execute_control(t_com *list, t_vars *vars)
 	tmp_list = list; 	
 	if (tmp_list->next == NULL) // si solo hay un comando
     {
-        set_redirections(tmp_list);
+		if (!set_redirections(tmp_list))  // Si falla, no ejecutar
+    	    return(clean_fds(tmp_list));
         if (tmp_list->flag_built == 1)
             commands_control(tmp_list, vars);
         else
