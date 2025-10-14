@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/13 22:58:42 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/14 17:25:45 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,17 +97,28 @@ int	execute(t_com *list)
 { // recibir estructura de comando y hacer execve en funcion del contenido de la estructura
 	int pid;
     int status;
+	DIR *dir; // esto es necesario para opendir, esa función devuele un dir *, esto es una variable que representa un directorio abrierto, como un puntero hacia el
 	
 	list->path_command = get_path(list->command, list->vars->env, list);
 	if (list->path_command == NULL)
-		return (ft_printf("minishell: %s: command not found\n", list->command), -1);
+	{
+		if (access(list->command, F_OK) == -1) // Verificar si existe
+		{
+			if (access(list->command, X_OK) == -1) // Verificar si tiene permisos de ejecución
+            	return (printf("minishell: %s: Permission denied\n", list->command), 0);
+			dir = opendir(list->command);
+			if (dir != NULL)
+            	return (closedir(dir), printf("minishell: %s: Is a directory\n", list->command), 0);
+		}
+		return (printf("minishell: %s: command not found\n", list->command), 0);
+	}
 	pid = fork();
 	if (pid == -1)
-		return (perror("fork"), -1);
+		return (perror("fork"), 0);
 	if (pid == 0)
 	{
 		apply_redirections(list);
-		if (execve(list->path_command, list->command_arg, list->vars->env) == -1) // CUIDADO CON ENV
+		if (execve(list->path_command, list->command_arg, list->vars->env) == 0) // CUIDADO CON ENV
 		{
 			perror("execve");
 			exit(127);
