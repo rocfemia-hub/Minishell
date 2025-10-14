@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/14 17:33:57 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/14 18:53:30 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void commands_control(t_com *list, t_vars *vars)
 			echo_function(list, vars);
 		else if (list->command && ft_strnstr(list->command, "pwd", 4)) // 4 para incluir '\0'
 			pwd_function(list, vars);
-		else if (list->command && ft_strnstr(list->command, "exit", 5)) // 5 para incluir '\0'
+		else if (list->command && ft_strnstr(list->command, "exit", 5)) // 5 para incluir '\0' PONER BYE
 			exit_function(list, vars);
 		else if (list->command && ft_strnstr(list->command, "env", 4)) // 4 para incluir '\0'
 			env_function(list, vars);

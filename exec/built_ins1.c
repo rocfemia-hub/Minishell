@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/10/13 22:53:28 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/14 19:22:02 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,6 @@ void cd_function(t_com *list, t_vars *vars)
 		write(2, ": No such file or directory\n", 28);
 		return(free(target_dir));
 	}
-	cd_aux_funcion(list, vars, old_pwd, current_dir);
+    old_pwd = ft_strjoin("OLDPWD=", current_dir);
+	cd_aux_funcion(list, vars, old_pwd);
 }
