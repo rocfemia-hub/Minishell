@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/05 19:33:25 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/14 19:53:22 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void update_env(t_vars *vars, char *name, char *value)
         var_entry = ft_substr(vars->env[i], 0, ft_strchr(vars->env[i], '=') - vars->env[i]);
         if (ft_strncmp(var_entry, name, ft_strlen(var_entry)) == 0) // Reemplazar la entrada existente
         {
-            free(vars->env[i]);
+            //free(vars->env[i]);
             vars->env[i] = ft_strdup(new_entry);
             return(free(var_entry), free(new_entry));
         }
