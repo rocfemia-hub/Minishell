@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:46 by roo               #+#    #+#             */
-/*   Updated: 2025/10/08 13:19:45 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/15 16:10:16 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ t_com *lstnew(int index) // he borrado el new->fd_out = 1; porque lo he declarad
 	new = (t_com *)ft_calloc(sizeof(t_com), 1);
 	if (!new)
 		return (NULL);
+	new->vars = ft_calloc(1, sizeof(t_vars));  // INICIALIZAR VARS
+    if (!new->vars)
+        return (free(new), (NULL));
 	new->index = index;
 	return (new);
 }

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:51 by roo               #+#    #+#             */
-/*   Updated: 2025/09/10 20:23:16 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/15 14:26:02 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,14 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
 
     if (!cmd || !line)
         return;
-    commands->command = ft_substr(cmd, 0, ft_strlen(cmd) + 1);
+    commands->command = ft_substr(cmd, 0, ft_strlen(cmd)); // PROBANDO A ARREGLARLO
     while (line[end] == ' ')
         end++;
     if (ft_strnstr(line + end, "$", ft_strlen(line + end))) //posible expansion en los argumentos
     {
         new_line = expand_args(line + end, commands->vars);
-        commands->args = ft_split_parser(new_line); 
+        commands->args = ft_split_parser(new_line);
+		free(new_line); // PROBANDO A ARREGLARLO
         redirects(commands);
     }
     else

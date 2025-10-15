@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 13:10:42 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/15 16:04:11 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ int	execute(t_com *list)
 	DIR *dir; // esto es necesario para opendir, esa función devuele un dir *, esto es una variable que representa un directorio abrierto, como un puntero hacia el
 	
 	list->path_command = get_path(list->command, list->vars->env, list);
-	if(ft_strncmp(list->command, ";", ft_strlen(list->command)) || ft_strncmp(list->command, ";", ft_strlen(list->command)))
-		return (printf("minishell: %s: command not found\n", list->command), 0);
+	/*if(ft_strncmp(list->command, ";", ft_strlen(list->command)) || ft_strncmp(list->command, ";", ft_strlen(list->command)))
+		return (printf("minishell: %s: command not found\n", list->command), 0);*/
 	if (list->path_command == NULL)
 	{
 		if (access(list->command, F_OK) == -1) // Verificar si existe

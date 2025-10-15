@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/09/10 20:21:23 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/15 15:23:28 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ int aux_parser_redirects(t_com *commands, char *redirect)
     }
     if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1) || ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1)) // dos operadores juntos > >
     {
-        printf("entra\n");
+        //printf("entra\n");
         if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1))
             commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
-        if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
+        else if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1)) // ELSE IF
             commands->error = ft_strdup("bash: syntax error near unexpected token `<'");
         commands->vars->exit_error = 2;
         return (0);
@@ -119,7 +119,11 @@ int is_redirect_token(char *arg, char *redirect)
 
 void find(t_com *commands)
 { // look for < or >
-    while (commands->args && commands->args[commands->redirects->j])
+	char *temp;
+	
+	if (!commands->args || !commands->redirects) //COMPROBAR Q EXISTE
+        return;
+    while (commands->args[commands->redirects->j])
     {
         if (is_redirect_token(commands->args[commands->redirects->j], ">>"))
         {
@@ -145,15 +149,20 @@ void find(t_com *commands)
                 return;
             commands->redirects->j = -1;
         }
-        else if (ft_strncmp(commands->args[commands->redirects->j], "<", 1) || ft_strncmp(commands->args[commands->redirects->j], "<<", 2) || ft_strncmp(commands->args[commands->redirects->j], ">", 1) || ft_strncmp(commands->args[commands->redirects->j], ">>", 2))
-            commands->args[commands->redirects->j] = clean_quotes_in_line(commands->args[commands->redirects->j]);
+        else
+        {
+            temp = commands->args[commands->redirects->j];
+            commands->args[commands->redirects->j] = clean_quotes_in_line(temp);
+        }
         commands->redirects->j++;
     }
 }
 
 void redirects(t_com *commands)
 {
-    commands->redirects = ft_calloc(2, sizeof(t_red)); // redirect struct
+    commands->redirects = ft_calloc(1, sizeof(t_red)); // redirect struct
+	if(!commands->redirects)
+		return;
     if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">") || is_redirect_token(commands->command, ">>"))
         if (!redirects_cmd(commands))
             return;

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
-/*   Updated: 2025/09/10 20:20:36 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/15 14:48:46 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ void keep_quotes_args(t_com *commands, char *line)
         return;
     while (line[i])
     {
-        i += skip_spaces(line);
+        i += skip_spaces(line + i); //PROBANDO A SOLUCIONARLO
         if (!line[i])
             break;
         arg = ft_calloc(ft_strlen(line) + 3, sizeof(char));
         if (!arg)
-            return;
+            return(ft_free_free(args));
         k = 0;
         while (line[i] && line[i] != ' ')
         {
@@ -64,7 +64,7 @@ void keep_quotes_args(t_com *commands, char *line)
         args[j++] = arg;
     }
     args[j] = NULL;
-    free(line);
+    //free(line);  PROBANDO A SOLUCIONARLO
     commands->args = args;
 }
 
