@@ -14,8 +14,6 @@
 
 void init_vars(t_vars *vars, int argc, char **argv,  char **env)
 {
-	vars->argc = argc;
-	vars->argv = argv;
 	vars->env = env;
 	vars->exit_status = 0;
     env_to_list(vars, env);
@@ -75,7 +73,7 @@ int main(int argc, char **argv, char **env)
 			free(line);
 			continue;
 		}
-		commands = token(line); // llama a la funcion tokeniza
+		commands = token(line, &vars); // llama a la funcion tokeniza
 		if (!commands)			// debug para comprobar que el comando sea valido
 			continue;
 		// commands = commands->next; //para que funcione con mas de un comando
@@ -89,7 +87,6 @@ int main(int argc, char **argv, char **env)
 		setup_pipeline(commands);
 		execute_control(commands, &vars);
 		free(line);
-		// free_list(commands);
 		commands = NULL; // reseteamos el puntero
 	}
 	return (0);

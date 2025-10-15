@@ -45,8 +45,6 @@ typedef struct s_env
 
 typedef struct s_vars
 {
-	int		argc; //añadiendo argc y argv para tenerlos siempre a mano.
-	char	**argv;
 	char	**env;
 	t_env	*env_list; // para cambios de variables, es más facil gestionar liberación de memoria con una lista que con una matriz
 	int		exit_status;
@@ -181,7 +179,7 @@ int skip_spaces(char *line);
 char *only_cmd(char *line, t_clean_cmd *data);
 void	type_command(char *line, t_com *commands);
 void	init_commands(char *line, t_com *commands);
-t_com	*token(char *line);
+t_com *token(char *line, t_vars *vars);
 
 //FT_SPLIT_PARSER
 char **ft_split_parser(char const *s);
@@ -217,6 +215,7 @@ char *handle_double_quotes(char *line, int *i, t_vars *vars);
 char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token);
 
 //AUX_EXPANDER
+char *handle_inter(t_vars *vars);
 char *get_env_var(const char *var);
 char *str_append(char *dest, const char *src);
 char *ft_strjoin_cmd(char **cmd);

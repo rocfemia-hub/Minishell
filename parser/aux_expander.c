@@ -12,6 +12,13 @@
 
 #include "../minishell.h"
 
+char *handle_inter(t_vars *vars)
+{
+    char *nbr;
+
+    nbr = ft_itoa(vars->exit_error);
+    return (nbr);
+}
 char *get_env_var(const char *var)
 {
     char *value;
@@ -85,7 +92,12 @@ char *handle_dollar(char *line, int *i, t_vars *vars)
 
     token = NULL;
     start = *i + 1; // posición después del $
-    if (ft_isalnum((unsigned char)line[start]) || line[start] == '_')
+    if (line[start] == '?')
+    {
+        token = handle_inter(vars);  // convierte exit_error a string
+        *i = start + 1;
+    }
+    else if (ft_isalnum((unsigned char)line[start]) || line[start] == '_')
     {
         varname = extract_varname(line, start, &vlen);
         value = get_env_var(varname);
@@ -100,3 +112,4 @@ char *handle_dollar(char *line, int *i, t_vars *vars)
     }
     return (token);
 }
+

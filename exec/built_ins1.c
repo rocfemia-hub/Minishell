@@ -51,12 +51,12 @@ void pwd_function(t_com *list, t_vars *vars)
 
 void exit_function(t_com *list, t_vars *vars)
 {  // Ya funciona correctamente :)))
-	if (vars->argc == 1) // argc = 1: solo "exit"
+	if (!list->args[0]) // argc = 1: solo "exit"
 		exit(0);
-	if (vars->argc == 2) // argc = 2: "exit" + un argumento
+	if (list->args[0] && !list->args[1]) // argc = 2: "exit" + un argumento
 	{
-		if (valid_number(vars->argv[1])) // verifica si protege tu programa de numeros inválidos
-			exit(ft_atoi(vars->argv[1]));
+		if (valid_number(list->args[0])) // verifica si protege tu programa de numeros inválidos
+			exit(ft_atoi(list->args[0]));
 		else
 		{
 			write(2, "exit: numeric argument required\n", 32);
@@ -64,7 +64,6 @@ void exit_function(t_com *list, t_vars *vars)
 		}
 	}
 	write(2, "exit: too many arguments\n", 25);
-	exit(1);
 }
 
 void cd_function(t_com *list, t_vars *vars)

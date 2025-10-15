@@ -49,8 +49,7 @@ char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *t
         *start = *k;
         return (token);
     }
-    while (line[vstart + vlen] &&
-           (ft_isalnum((unsigned char)line[vstart + vlen]) || line[vstart + vlen] == '_'))
+    while (line[vstart + vlen] && (ft_isalnum((unsigned char)line[vstart + vlen]) || line[vstart + vlen] == '_'))
         vlen++;
     varname = ft_substr(line, vstart, vlen);
     value = get_env_var(varname);

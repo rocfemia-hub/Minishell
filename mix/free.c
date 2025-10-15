@@ -23,10 +23,6 @@ void free_t_env_list(t_env *list)
 }
 void free_t_vars_list(t_vars *list)
 {
-    if (list->argv)
-        ft_free_free(list->argv);
-    if (list->env)
-        ft_free_free(list->argv);
     if (list->env_list)
         free_t_env_list(list->env_list);
 }

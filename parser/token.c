@@ -114,11 +114,12 @@ void init_commands(char *line, t_com *commands)
         type_command(line + start, current);
 }
 
-t_com *token(char *line)
+t_com *token(char *line, t_vars *vars)
 {
     t_com *commands;
 
     commands = create_struct(line);
+    commands->vars = vars;
     if (commands->error)
     {
         error(commands);
