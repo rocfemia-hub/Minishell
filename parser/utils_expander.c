@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char *handle_single_quotes(char *line, int *i)
+char *handle_single_quotes(char *line, int *i, t_vars *vars)
 { //MANEJO DE COMILLAS SIMPLES
     int start;
     char *token;
@@ -83,7 +83,7 @@ char *process_inside_double_quotes(char *line, int start, int end)
     return(token);
 }
 
-char *handle_double_quotes(char *line, int *i)
+char *handle_double_quotes(char *line, int *i, t_vars *vars)
 { //GESTION COMILLAS DOBLES
     int start;
     int end;

@@ -28,7 +28,7 @@ char *only_cmd(char *line, t_clean_cmd *data)
     data->quote = 0;
     if (!line[data->only_cmd_i])
         return (NULL);
-    while (line[data->only_cmd_i] == 32 || line[data->only_cmd_i] == '\n')
+    while (line[data->only_cmd_i] == ' ' || line[data->only_cmd_i] == '\n')
         data->only_cmd_i++;
     data->start = data->only_cmd_i;
     while (line[data->only_cmd_i])
@@ -59,33 +59,37 @@ void type_command(char *line, t_com *commands)
 
     ft_bzero(&data, sizeof(t_clean_cmd));
     data.cmd = only_cmd(line, &data);
-    len_cmd = ft_strlen(data.cmd) + 1;
-    if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
+    len_cmd = ft_strlen(data.cmd) + 1; //por si luego tengo que coger el siguiente comando, por perder la referencia
+    if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))) //hay posible expansion en el comando
     {
-        if (expand_cmd(&data)) // si hay $ en el comando, no lo expande
-            init_struct(line, data.cmd, data.end_index, commands); // introduce todo en la estructura
+        if (expand_cmd(&data, commands->vars)) // si hay $ en el comando
+            init_struct(line, data.cmd, data.end_index, commands);
         else // si la expansion del comando es vacio, cojo lo siguiente como comando
         {
-            data.cmd = only_cmd(line, &data);
-            data.cmd = clean_cmd(data.cmd, &data);                 //  limpia el comando de comillas
-            init_struct(line, data.cmd, data.end_index + len_cmd, commands); // introduce todo en la estructura
+            data.cmd = only_cmd(line, &data); 
+            data.cmd = clean_cmd(data.cmd, &data);
+            init_struct(line, data.cmd, data.end_index + len_cmd, commands); 
         }
     }
-    else
+    else //cuando no hay expansion
     {
-        data.cmd = clean_cmd(line, &data);                 //  limpia el comando de comillas
-        init_struct(line, data.cmd, data.end_index, commands); // introduce todo en la estructura
+        data.cmd = clean_cmd(line, &data);
+        init_struct(line, data.cmd, data.end_index, commands);
     }
-    free(data.cmd);                                        // LIBERAR TODO DATA
+    free(data.cmd);
 }
 
 void init_commands(char *line, t_com *commands)
 {
-    int i = 0;
-    int start = 0;
-    char quote = 0;
-    t_com *current = commands;
+    int i;
+    int start;
+    char quote;
+    t_com *current;
 
+    i = 0;
+    start = 0;
+    quote = 0;
+    current = commands;
     while (line[i])
     {
         if ((line[i] == '"' || line[i] == '\''))
@@ -115,15 +119,6 @@ t_com *token(char *line)
     commands = create_struct(line);
     if (commands->error)
     {
-        error(commands);
-        return (NULL);
-    }
-    if (look_for_char(line, 92) || look_for_char(line, 59))
-    {
-        if (look_for_char(line, 92))
-            commands->error = ft_strdup("bash: syntax error backslash");
-        if (look_for_char(line, 59))
-            commands->error = ft_strdup("bash: syntax error semicolon");
         error(commands);
         return (NULL);
     }

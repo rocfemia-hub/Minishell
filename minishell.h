@@ -199,21 +199,21 @@ t_com	*create_struct(char *line);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 
 // EXPANDER_CMD
-char *handle_plain_text(char *cmd, int *i);
-char *aux_cmd(t_clean_cmd *data);
-int expand_cmd(t_clean_cmd *data);
+char *handle_plain_text(char *cmd, int *i, t_vars *vars);
+char *aux_cmd(t_clean_cmd *data, t_vars *vars);
+int expand_cmd(t_clean_cmd *data, t_vars *vars);
 
 // EXPANDER_ARGS
-char *handle_plain_text_args(char *line, int *i);
-char **process_aux_args(char *line, char **temp);
-char **aux_args(char *line);
-char *expand_args(char *line);
+char *handle_plain_text_args(char *line, int *i, t_vars *vars);
+char **process_aux_args(char *line, char **temp, t_vars *vars);
+char **aux_args(char *line, t_vars *vars);
+char *expand_args(char *line, t_vars *vars);
 
 //UTILS_EXPANDER
-char *handle_single_quotes(char *cmd, int *i);
+char *handle_single_quotes(char *line, int *i, t_vars *vars);
 char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token);
 char *process_inside_double_quotes(char *line, int start, int end);
-char *handle_double_quotes(char *line, int *i);
+char *handle_double_quotes(char *line, int *i, t_vars *vars);
 char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token);
 
 //AUX_EXPANDER
@@ -221,7 +221,7 @@ char *get_env_var(const char *var);
 char *str_append(char *dest, const char *src);
 char *ft_strjoin_cmd(char **cmd);
 char *extract_varname(char *line, int start, int *vlen);
-char *handle_dollar(char *line, int *i);
+char *handle_dollar(char *line, int *i, t_vars *vars);
 
 // REDIRECTS
 int aux_parser_redirects(t_com *commands, char *redirect);
@@ -241,6 +241,5 @@ void fill(t_com *commands, int start, int end, char *redirect);
 void fill_cmd(t_com *commands, char *redirect);
 int clean_redirects_cmd(t_com *commands, char *redirect);
 int redirects_cmd(t_com *commands);
-
 
 #endif

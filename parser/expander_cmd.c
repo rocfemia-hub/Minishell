@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char *handle_plain_text(char *cmd, int *i)
+char *handle_plain_text(char *cmd, int *i, t_vars *vars)
 {
     int start;
     
@@ -22,7 +22,7 @@ char *handle_plain_text(char *cmd, int *i)
     return(ft_substr(cmd, start, *i - start));
 }
 
-char *aux_cmd(t_clean_cmd *data)
+char *aux_cmd(t_clean_cmd *data, t_vars *vars)
 {
     int i;
     char *token;
@@ -34,14 +34,13 @@ char *aux_cmd(t_clean_cmd *data)
     while (data->cmd[i])
     {
         if (data->cmd[i] == '\'')
-            token = handle_single_quotes(data->cmd, &i);
+            token = handle_single_quotes(data->cmd, &i, vars);
         else if (data->cmd[i] == '"')
-            token = handle_double_quotes(data->cmd, &i);
+            token = handle_double_quotes(data->cmd, &i, vars); 
         else if (data->cmd[i] == '$')
-            token = handle_dollar(data->cmd, &i);
+            token = handle_dollar(data->cmd, &i, vars); 
         else
-            token = handle_plain_text(data->cmd, &i);
-        
+            token = handle_plain_text(data->cmd, &i, vars);
         if (token)
         {
             temp = ft_strjoin(result, token);
@@ -54,11 +53,11 @@ char *aux_cmd(t_clean_cmd *data)
     return (result);
 }
 
-int expand_cmd(t_clean_cmd *data)
+int expand_cmd(t_clean_cmd *data, t_vars *vars)
 {
     char *expanded;
 
-    expanded = aux_cmd(data);
+    expanded = aux_cmd(data, vars);
     if (ft_strlen(expanded) < 1) //SI LA EXPANSION NO EXISTE DEVUELVE 0 PARA QUE FUERA COJA EL SIGUIENTE COMANDO
         return (0);
     free(data->cmd);

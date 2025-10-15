@@ -52,6 +52,7 @@ t_com *create_struct(char *line)
     {
         head = lstnew(i);
         head->error = ft_strdup("bash: open quote error");
+        head->vars->exit_error = 1;
         return (head);
     }
     head = lstnew(i);
@@ -66,24 +67,25 @@ t_com *create_struct(char *line)
 }
 
 void init_struct(char *line, char *cmd, int end, t_com *commands)
-{ // init commands and arg
+{ 
     int len;
     char *new_line;
+
     if (!cmd || !line)
         return;
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd) + 1);
     while (line[end] == ' ')
         end++;
-    if (ft_strnstr(line + end, "$", ft_strlen(line + end)))
+    if (ft_strnstr(line + end, "$", ft_strlen(line + end))) //posible expansion en los argumentos
     {
-        new_line = expand_args(line + end);
-        commands->args = ft_split_parser(new_line);
-        redirects(commands); // manage redirects
+        new_line = expand_args(line + end, commands->vars);
+        commands->args = ft_split_parser(new_line); 
+        redirects(commands);
     }
     else
     {
-        keep_quotes_args(commands, line + end);
-        redirects(commands); // manage redirects
+        keep_quotes_args(commands, line + end); //me quita comillas excepto si hay redirecciones
+        redirects(commands); 
     }
     if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
         !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||

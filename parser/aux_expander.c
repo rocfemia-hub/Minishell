@@ -26,6 +26,7 @@ char *get_env_var(const char *var)
 char *str_append(char *dest, const char *src)
 {
     char *tmp;
+
     if (!dest)
         dest = ft_strdup(src);
     else
@@ -41,28 +42,24 @@ char *str_append(char *dest, const char *src)
 
 char *ft_strjoin_cmd(char **cmd)
 { // ME CONVIERTE DE CHAR ** A CHAR *
-    int len = 0;
+    int len;
     char *result;
-    int i = 0;
+    int i;
     int k;
 
+    len = 0;
+    i = -1;
     if (!cmd || !cmd[0])
         return (NULL);
-    while (cmd[i])
-    {
+    while (cmd[++i])
         len += ft_strlen(cmd[i]);
-        i++;
-    }
     result = malloc(len + 1);
     if (!result)
         return(NULL);
     result[0] = '\0';
-    i = 0;
-    while (cmd[i])
-    {
+    i = -1;
+    while (cmd[++i])
         ft_strlcat(result, cmd[i], ft_strlen(result) + ft_strlen(cmd[i]) + 1);
-        i++;
-    }
     return(result);
 }
 
@@ -78,8 +75,8 @@ char *extract_varname(char *line, int start, int *vlen)
     return (varname);
 }
 
-char *handle_dollar(char *line, int *i)
-{  //GESTION DE VARIABLES FUERA DE COMILLAS
+char *handle_dollar(char *line, int *i, t_vars *vars)
+{ //GESTION DE VARIABLES FUERA DE COMILLAS
     int start;
     int vlen;
     char *token;
@@ -87,7 +84,7 @@ char *handle_dollar(char *line, int *i)
     char *value;
 
     token = NULL;
-    start = *i + 1;
+    start = *i + 1; // posición después del $
     if (ft_isalnum((unsigned char)line[start]) || line[start] == '_')
     {
         varname = extract_varname(line, start, &vlen);
@@ -98,7 +95,7 @@ char *handle_dollar(char *line, int *i)
     }
     else
     {
-        token = ft_strdup("");
+        token = ft_strdup("$");
         *i = start;
     }
     return (token);

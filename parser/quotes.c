@@ -27,8 +27,7 @@ void keep_quotes_args(t_com *commands, char *line)
         return;
     while (line[i])
     {
-        while (line[i] == 32)
-            i++;
+        i =+ skip_spaces(line);
         if (!line[i])
             break;
         arg = ft_calloc(ft_strlen(line) + 3, sizeof(char));

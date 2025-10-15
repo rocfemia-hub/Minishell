@@ -14,7 +14,7 @@
 
 void error(t_com *commands)
 {
-    printf("%s\n", commands->error);
+    printf("%d: %s\n",commands->vars->exit_error, commands->error);
     free_t_com_list(commands);
     return;
 }

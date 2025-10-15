@@ -12,8 +12,6 @@
 
 #include "../minishell.h"
 
-#include "../minishell.h"
-
 void free_array_parser(char **p)
 {
     int i;
@@ -54,10 +52,8 @@ int count_words_with_quotes(char *s)
                 i++;
         }
         else
-        {
             while (s[i] && s[i] != ' ' && s[i] != '\'' && s[i] != '"')
                 i++;
-        }
     }
     return (words);
 }

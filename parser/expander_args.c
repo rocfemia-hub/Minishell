@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char *handle_plain_text_args(char *line, int *i)
+char *handle_plain_text_args(char *line, int *i, t_vars *vars)
 {
     int start;
     char *token;
@@ -25,7 +25,7 @@ char *handle_plain_text_args(char *line, int *i)
     return(token);
 }
 
-char **process_aux_args(char *line, char **temp)
+char **process_aux_args(char *line, char **temp, t_vars *vars)
 {
     int i;
     int j;
@@ -37,13 +37,13 @@ char **process_aux_args(char *line, char **temp)
     {
         token = NULL;
         if (line[i] == '\'')
-            token = handle_single_quotes(line, &i);
+            token = handle_single_quotes(line, &i, vars);
         else if (line[i] == '"')
-            token = handle_double_quotes(line, &i);
+            token = handle_double_quotes(line, &i, vars);
         else if (line[i] == '$')
-            token = handle_dollar(line, &i);
+            token = handle_dollar(line, &i, vars);
         else
-            token = handle_plain_text_args(line, &i);
+            token = handle_plain_text_args(line, &i, vars);
         if (token)
             temp[j++] = token;
     }
@@ -51,23 +51,23 @@ char **process_aux_args(char *line, char **temp)
     return(temp);
 }
 
-char **aux_args(char *line)
+char **aux_args(char *line, t_vars *vars)
 { 
     char **temp;
 
     temp = ft_calloc((256 + 1), sizeof(char *));
     if (!temp)
         return(NULL);
-    return(process_aux_args(line, temp));
+    return(process_aux_args(line, temp, vars));
 }
 
 
-char *expand_args(char *line)
+char *expand_args(char *line, t_vars *vars)
 {
     char **token_args;
     char *new_line;
 
-    token_args = aux_args(line);
+    token_args = aux_args(line, vars);
     new_line = ft_strjoin_cmd(token_args);
     return(new_line);
 }
