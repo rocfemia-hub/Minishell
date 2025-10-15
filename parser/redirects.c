@@ -17,14 +17,17 @@ int aux_parser_redirects(t_com *commands, char *redirect)
     if (!commands->args[commands->redirects->j + 1]) // no hay archivo al que redireccionar
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+        commands->vars->exit_error = 2;
         return (0);
     }
     if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1) || ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1)) // dos operadores juntos > >
     {
+        printf("entra\n");
         if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1))
             commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
         if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
             commands->error = ft_strdup("bash: syntax error near unexpected token `<'");
+        commands->vars->exit_error = 2;
         return (0);
     }
     commands->redirects->file = ft_strdup(commands->args[commands->redirects->j + 1]); // archivo al que redirecciona
@@ -37,11 +40,13 @@ int parser_redirects(t_com *commands, char *redirect)
     if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
+        commands->vars->exit_error = 2;
         return (0);
     }
     else if (commands->args[commands->redirects->j][0] != redirect[0] || ft_strnstr(commands->args[commands->redirects->j], "<<<", 3)) // error hola< y <<<
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+        commands->vars->exit_error = 2;
         return (0);
     }
     else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect)) // si la redireccion esta asi ">adios" --> no es error

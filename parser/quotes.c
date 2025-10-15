@@ -27,7 +27,7 @@ void keep_quotes_args(t_com *commands, char *line)
         return;
     while (line[i])
     {
-        i =+ skip_spaces(line);
+        i += skip_spaces(line);
         if (!line[i])
             break;
         arg = ft_calloc(ft_strlen(line) + 3, sizeof(char));
@@ -64,6 +64,7 @@ void keep_quotes_args(t_com *commands, char *line)
         args[j++] = arg;
     }
     args[j] = NULL;
+    free(line);
     commands->args = args;
 }
 
