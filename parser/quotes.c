@@ -64,7 +64,6 @@ void keep_quotes_args(t_com *commands, char *line)
         args[j++] = arg;
     }
     args[j] = NULL;
-    //free(line);  PROBANDO A SOLUCIONARLO
     commands->args = args;
 }
 

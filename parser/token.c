@@ -59,19 +59,21 @@ void type_command(char *line, t_com *commands)
 
     ft_bzero(&data, sizeof(t_clean_cmd));
     data.cmd = only_cmd(line, &data);
-    len_cmd = ft_strlen(data.cmd) + 1; //por si luego tengo que coger el siguiente comando, por perder la referencia
-    if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))) //hay posible expansion en el comando
+    if (!data.cmd)
+       return; 
+    len_cmd = ft_strlen(data.cmd) + 1; // por si luego tengo que coger el siguiente comando, por perder la referencia
+    if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))) // hay posible expansion en el comando
     {
         if (expand_cmd(&data, commands->vars)) // si hay $ en el comando
             init_struct(line, data.cmd, data.end_index, commands);
         else // si la expansion del comando es vacio, cojo lo siguiente como comando
         {
-            data.cmd = only_cmd(line, &data); 
+            data.cmd = only_cmd(line, &data);
             data.cmd = clean_cmd(data.cmd, &data);
-            init_struct(line, data.cmd, data.end_index + len_cmd, commands); 
+            init_struct(line, data.cmd, data.end_index + len_cmd, commands);
         }
     }
-    else //cuando no hay expansion
+    else // cuando no hay expansion
     {
         data.cmd = clean_cmd(line, &data);
         init_struct(line, data.cmd, data.end_index, commands);

@@ -18,7 +18,7 @@ char **ft_strjoin_cmd_arg(t_com *commands)
     int len;
     char **aux;
     int i;
- 
+
     j = -1;
     i = 0;
     if (commands->command)
@@ -67,7 +67,7 @@ t_com *create_struct(char *line)
 }
 
 void init_struct(char *line, char *cmd, int end, t_com *commands)
-{ 
+{
     int len;
     char *new_line;
 
@@ -76,21 +76,21 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd)); // PROBANDO A ARREGLARLO
     while (line[end] == ' ')
         end++;
-    if (ft_strnstr(line + end, "$", ft_strlen(line + end))) //posible expansion en los argumentos
+    if (ft_strnstr(line + end, "$", ft_strlen(line + end))) // posible expansion en los argumentos
     {
         new_line = expand_args(line + end, commands->vars);
         commands->args = ft_split_parser(new_line);
-		free(new_line); // PROBANDO A ARREGLARLO
+        free(new_line); // PROBANDO A ARREGLARLO
         redirects(commands);
     }
     else
     {
-        keep_quotes_args(commands, line + end); //me quita comillas excepto si hay redirecciones
-        redirects(commands); 
+        keep_quotes_args(commands, line + end); // me quita comillas excepto si hay redirecciones
+        redirects(commands);
     }
     if (!ft_strncmp(commands->command, "echo", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "pwd", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "cd", ft_strlen(commands->command)) ||
         !ft_strncmp(commands->command, "exit", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "env", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "export", ft_strlen(commands->command)) ||
         !ft_strncmp(commands->command, "unset", ft_strlen(commands->command)))
-            commands->flag_built = 1;
+        commands->flag_built = 1;
     commands->command_arg = ft_strjoin_cmd_arg(commands);
 }

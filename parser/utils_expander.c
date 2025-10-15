@@ -92,24 +92,15 @@ char *handle_double_quotes(char *line, int *i, t_vars *vars)
 
     start = *i;     // posición de la comilla de apertura
     (*i)++;         // saltamos la comilla inicial
-
     end = *i;
     while (line[end] && line[end] != '"')
         end++;
-
-    // procesamos lo que hay dentro de las comillas dobles
     inner = process_inside_double_quotes(line, *i, end);
-
-    // avanzamos i hasta después de la comilla de cierre (si existe)
     if (line[end] == '"')
         end++;
-
     *i = end;
-
-    // reconstruimos incluyendo las comillas
     token = ft_strjoin("\"", inner);
     token = str_append(token, "\"");
-
     free(inner);
     return (token);
 }
