@@ -128,5 +128,6 @@ t_com *token(char *line)
         error(commands);
         return (NULL);
     }
+    print_list(commands);
     return (commands);
 }

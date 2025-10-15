@@ -87,9 +87,9 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
         keep_quotes_args(commands, line + end); //me quita comillas excepto si hay redirecciones
         redirects(commands); 
     }
-    if (!ft_strncmp(commands->command, "echo", 4) || !ft_strncmp(commands->command, "pwd", 3) || !ft_strncmp(commands->command, "cd", 2) ||
-        !ft_strncmp(commands->command, "exit", 4) || !ft_strncmp(commands->command, "env", 3) || !ft_strncmp(commands->command, "export", 6) ||
-        !ft_strncmp(commands->command, "unset", 5))
-        commands->flag_built = 1;
+    if (!ft_strncmp(commands->command, "echo", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "pwd", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "cd", ft_strlen(commands->command)) ||
+        !ft_strncmp(commands->command, "exit", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "env", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "export", ft_strlen(commands->command)) ||
+        !ft_strncmp(commands->command, "unset", ft_strlen(commands->command)))
+            commands->flag_built = 1;
     commands->command_arg = ft_strjoin_cmd_arg(commands);
 }
