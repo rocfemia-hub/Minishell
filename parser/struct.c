@@ -39,7 +39,7 @@ char **ft_strjoin_cmd_arg(t_com *commands)
     return (aux);
 }
 
-t_com *create_struct(char *line)
+t_com *create_struct(char *line, t_vars *vars)
 { // create nodes list
     int i;
     int pipes;
@@ -52,7 +52,8 @@ t_com *create_struct(char *line)
     {
         head = lstnew(i);
         head->error = ft_strdup("bash: open quote error");
-        head->vars->exit_error = 1;
+        head->vars = vars;
+        vars->exit_status = 1;
         return (head);
     }
     head = lstnew(i);

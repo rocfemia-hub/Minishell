@@ -35,6 +35,7 @@ void echo_function(t_com *list, t_vars *vars)
 	}
 	if (newline)
 		write(list->fd_out, "\n", 1);
+	vars->exit_status = 0;
 }
 
 void pwd_function(t_com *list, t_vars *vars)
@@ -47,6 +48,7 @@ void pwd_function(t_com *list, t_vars *vars)
 	bytes_written = write(list->fd_out, cwd, ft_strlen(cwd));
 	if (bytes_written != -1)
 		write(list->fd_out, "\n", 1);
+	vars->exit_status = 0;
 }
 
 void exit_function(t_com *list, t_vars *vars)
@@ -92,4 +94,5 @@ void cd_function(t_com *list, t_vars *vars)
 	}
     old_pwd = ft_strjoin("OLDPWD=", current_dir);
 	cd_aux_funcion(list, vars, old_pwd);
+	vars->exit_status = 0;
 }

@@ -118,7 +118,7 @@ t_com *token(char *line, t_vars *vars)
 {
     t_com *commands;
 
-    commands = create_struct(line);
+    commands = create_struct(line, vars);
     commands->vars = vars;
     if (commands->error)
     {

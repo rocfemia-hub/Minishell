@@ -29,6 +29,7 @@ void env_function(t_com *list, t_vars *vars)
 		free(line);
         env_list = env_list->next;
 	}
+	vars->exit_status = 0;
 }
 
 void export_function(t_com *list, t_vars *vars)
@@ -53,6 +54,7 @@ void export_function(t_com *list, t_vars *vars)
     }
     ft_free_free(list->args);
 	list->args = NULL;
+	vars->exit_status = 0;
 }
 
 void unset_function(t_com *list, t_vars *vars)
@@ -79,4 +81,5 @@ void unset_function(t_com *list, t_vars *vars)
     }
     ft_free_free(list->args); // Liberar memoria de los argumentos
 	list->args = NULL;
+	vars->exit_status = 0;
 }

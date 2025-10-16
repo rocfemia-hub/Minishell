@@ -21,11 +21,14 @@ void execute_control(t_com *list, t_vars *vars)
 	if (tmp_list->next == NULL) // si solo hay un comando
 	{
 		if (!set_redirections(tmp_list)) // Si falla, no ejecutar
+		{
+			vars->exit_status = 1;
 			return (clean_fds(tmp_list));
+		}
 		if (tmp_list->flag_built == 1)
 			commands_control(tmp_list, vars);
 		else
-			execute(tmp_list);
+			execute(tmp_list, vars);
 		clean_fds(tmp_list);
 	}
 	else // mas de un comando (con pipes)
@@ -60,7 +63,7 @@ void commands_control(t_com *list, t_vars *vars)
 		clean_fds(list);
 	}
 	else
-		execute(list);
+		execute(list, vars);
 }
 
 char *get_path(char *cmd, char **envp, t_com *pipex)
@@ -92,12 +95,12 @@ char *get_path(char *cmd, char **envp, t_com *pipex)
 	return (ft_free_free(paths), result);
 }
 
-int execute(t_com *list)
+int execute(t_com *list, t_vars *vars)
 { // recibir estructura de comando y hacer execve en funcion del contenido de la estructura
 	int pid;
 	int status;
-	DIR *dir; // esto es necesario para opendir, esa función devuele un dir *, esto es una variable que representa un directorio abrierto, como un puntero hacia el
-	int has_slash;
+	DIR *dir;	   // esto es necesario para opendir, esa función devuele un dir *, esto es una variable que representa un directorio abrierto, como un puntero hacia el
+	int has_slash; // para saber si es ruta especifica o no
 
 	list->path_command = get_path(list->command, list->vars->env, list);
 	if (ft_strnstr(list->command, ";", ft_strlen(list->command)) || ft_strnstr(list->command, "\\", ft_strlen(list->command)))
@@ -105,16 +108,27 @@ int execute(t_com *list)
 	has_slash = ft_strchr(list->command, '/') != NULL;
 	if (list->path_command == NULL)
 	{
-		if (!has_slash)
+		if (!has_slash) // Si tiene '/', se trata como ruta explícita
+		{
+			list->vars->exit_status = 127;
 			return (printf("minishell: %s: command not found\n", list->command), 0);
-		// Si tiene '/', se trata como ruta explícita
+		}
 		if (access(list->command, F_OK) == -1)
+		{
+			list->vars->exit_status = 1;
 			return (printf("minishell: %s: No such file or directory\n", list->command), 0);
+		}
 		dir = opendir(list->command);
 		if (dir != NULL)
+		{
+			list->vars->exit_status = 126;
 			return (closedir(dir), printf("minishell: %s: Is a directory\n", list->command), 0);
+		}
 		if (access(list->command, X_OK) == -1)
+		{
+			list->vars->exit_status = 126;
 			return (printf("minishell: %s: Permission denied\n", list->command), 0);
+		}
 	}
 	pid = fork();
 	if (pid == -1)
@@ -125,10 +139,11 @@ int execute(t_com *list)
 		if (execve(list->path_command, list->command_arg, list->vars->env) == 0) // CUIDADO CON ENV
 		{
 			perror("execve");
+			list->vars->exit_status = 127;
 			exit(127);
 		}
 	}
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		list->vars->exit_status = WEXITSTATUS(status); // investigar bienn que es el WEXITSTATUS
 	ft_free_free(list->command_arg);

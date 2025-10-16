@@ -48,7 +48,6 @@ typedef struct s_vars
 	char	**env;
 	t_env	*env_list; // para cambios de variables, es más facil gestionar liberación de memoria con una lista que con una matriz
 	int		exit_status;
-	int 	exit_error;
 }	t_vars;
 
 typedef struct s_red
@@ -126,7 +125,7 @@ void	handle_backslash();
 void	execute_control(t_com *list, t_vars *vars);
 void	commands_control(t_com *list, t_vars *vars);
 char	*get_path(char *cmd, char **envp, t_com *pipex);
-int		execute(t_com *list);
+int 	execute(t_com *list, t_vars *vars);
 
 // PIPELINES
 void	setup_pipeline(t_com *list);
@@ -193,7 +192,7 @@ int look_for_char(char *line, char c);
 
 // STRUCT
 char **ft_join_cmd_args(t_com *commands);
-t_com	*create_struct(char *line);
+t_com *create_struct(char *line, t_vars *vars);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 
 // EXPANDER_CMD

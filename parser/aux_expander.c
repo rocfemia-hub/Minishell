@@ -16,7 +16,7 @@ char *handle_inter(t_vars *vars)
 {
     char *nbr;
 
-    nbr = ft_itoa(vars->exit_error);
+    nbr = ft_itoa(vars->exit_status);
     return (nbr);
 }
 char *get_env_var(const char *var)
