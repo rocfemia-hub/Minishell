@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 16:29:02 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/16 23:40:46 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int execute(t_com *list, t_vars *vars)
 	has_slash = ft_strchr(list->command, '/') != NULL;
 	if (list->path_command == NULL)
 	{
-		if (!has_slash) // Si tiene '/', se trata como ruta explícita
+		if (!has_slash) // Si tiene '/', se trata como ruta explícita o absoluta
 		{
 			list->vars->exit_status = 127;
 			return (printf("minishell: %s: command not found\n", list->command), 0);
@@ -132,12 +132,13 @@ int execute(t_com *list, t_vars *vars)
 	}
 	pid = fork();
 	if (pid == -1)
-		return (perror("fork"), 0);
+		return (write(2, "minishell: ", 11), perror("fork"), 0);
 	if (pid == 0)
 	{
 		apply_redirections(list);
 		if (execve(list->path_command, list->command_arg, list->vars->env) == 0) // CUIDADO CON ENV
 		{
+			write(2, "minishell: ", 11), 
 			perror("execve");
 			list->vars->exit_status = 127;
 			exit(127);

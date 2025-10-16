@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/10/13 22:53:22 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/16 23:40:55 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void setup_pipeline(t_com *list)
 	while (tmp_list && tmp_list->next) // Crear pipe entre comando actual y siguiente
 	{
 		if (pipe(pipe_fd) == -1) // Crea una conexión para comunicación entre procesos, es un canal unidireccional donde la salida de un proceso se convierte en la entrada de otro
-			return(perror("pipe"));
+			return(write(2, "minishell: ", 11), perror("pipe"));
 		if (tmp_list->fd_out == STDOUT_FILENO)
 			tmp_list->fd_out = pipe_fd[WRITE_FD];
 		else
@@ -81,7 +81,7 @@ void execute_pipelines2(t_com *list, pid_t *pids)
         set_redirections(tmp_list); // Configura redirecciones ANTES del fork
         pid = fork();
         if (pid == -1)
-            return(perror("fork"), free(pids));
+            return(write(2, "minishell: ", 11), ("fork"), free(pids));
         if (pid == 0) // PROCESO HIJO
         {
             apply_redirections(tmp_list); // Aplica fd_in y fd_out
@@ -101,6 +101,7 @@ void execute_pipelines2(t_com *list, pid_t *pids)
                 }
                 if (execve(tmp_list->path_command, tmp_list->command_arg, tmp_list->vars->env) == -1)
                 {
+					write(2, "minishell: ", 11), 
                     perror("execve");
                     exit(127);
                 }

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/13 23:08:53 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/16 23:39:41 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int set_redirections(t_com *list)
         {
             tmp_fd = open(list->redirects->output_file[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
             if (tmp_fd == -1)
-                return(perror(list->redirects->output_file[i]), 0);
+                return(write(2, "minishell: ", 11), perror(list->redirects->output_file[i]), 0); //
             if (list->redirects->output_file[i + 1] != NULL) // Si NO es el último, cierra
                 close(tmp_fd);
             else
@@ -39,7 +39,7 @@ int set_redirections(t_com *list)
         {
             tmp_fd = open(list->redirects->append_file[i], O_CREAT | O_WRONLY | O_APPEND, 0644);
             if (tmp_fd == -1)
-                return(perror(list->redirects->append_file[i]), 0);
+                return(write(2, "minishell: ", 11), perror(list->redirects->append_file[i]), 0);
             if (list->redirects->append_file[i + 1] != NULL)
                 close(tmp_fd);
             else
@@ -69,7 +69,7 @@ int set_redirections_two(t_com *list)
 			i++; // esto es para recorrer la matriz de cada redirección
 		list->fd_in = open(list->redirects->input_file[i], O_RDONLY);
 		if (list->fd_in == -1)
-			return(perror(list->redirects->input_file[i]), 0);
+			return(write(2, "minishell: ", 11), perror(list->redirects->input_file[i]), 0);
 	}
 	if (list->redirects->redirect_out && list->redirects->output_file)
 	{
@@ -79,7 +79,7 @@ int set_redirections_two(t_com *list)
 			close(list->fd_out);
 		list->fd_out = open(list->redirects->output_file[j], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (list->fd_out == -1)
-            return(perror(list->redirects->output_file[j]), list->fd_out = 1, 0);
+            return(write(2, "minishell: ", 11), perror(list->redirects->output_file[j]), list->fd_out = 1, 0);
 	}
 	if (list->redirects->redirect_append && list->redirects->append_file)
 	{
@@ -87,7 +87,7 @@ int set_redirections_two(t_com *list)
 			k++;
 		list->fd_out = open(list->redirects->append_file[k], O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (list->fd_out == -1)
-			return(perror(list->redirects->append_file[k]), list->fd_out = 1, 0);
+			return(write(2, "minishell: ", 11), perror(list->redirects->append_file[k]), list->fd_out = 1, 0);
 	}
 	return(1);
 }
@@ -106,6 +106,7 @@ void heredoc_execution(t_com *list)
 	fd = open(temp_file, O_CREAT | O_WRONLY | O_TRUNC, 0600); // Crear archivo temporal
 	if (fd == -1)
 	{
+		write(2, "minishell: ", 11);
 		perror("heredoc");
 		free(temp_file);
 		return;
@@ -139,6 +140,7 @@ void apply_redirections(t_com *list)
 	{
 		if (dup2(list->fd_in, STDIN_FILENO) == -1)
 		{
+			write(2, "minishell: ", 11), 
 			perror("dup2 stdin");
 			exit(1);
 		}
@@ -149,6 +151,7 @@ void apply_redirections(t_com *list)
 	{
 		if (dup2(list->fd_out, STDOUT_FILENO) == -1)
 		{
+			write(2, "minishell: ", 11), 
 			perror("dup2 stdout");
 			exit(1);
 		}
