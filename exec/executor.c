@@ -105,7 +105,9 @@ int execute(t_com *list, t_vars *vars)
 	list->path_command = get_path(list->command, list->vars->env, list);
 	if (ft_strnstr(list->command, ";", ft_strlen(list->command)) || ft_strnstr(list->command, "\\", ft_strlen(list->command)))
 		return (printf("minishell: %s: command not found\n", list->command), 0);
-	has_slash = ft_strchr(list->command, '/') != NULL;
+	has_slash = 0;
+	if(ft_strchr(list->command, '/'))
+		has_slash = 1;
 	if (list->path_command == NULL)
 	{
 		if (!has_slash) // Si tiene '/', se trata como ruta explícita o absoluta

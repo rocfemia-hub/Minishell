@@ -42,14 +42,14 @@ char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *t
 
     vstart = *k + 1;
     vlen = 0;
-    if (!line[vstart] || !(ft_isalnum((unsigned char)line[vstart]) || line[vstart] == '_'))
+    if (!line[vstart] || !(ft_isalnum((unsigned char)line[vstart]) || line[vstart] == '_')) //aqui el error
     {
         token = str_append(token, "$");
         *k = vstart;
         *start = *k;
         return (token);
     }
-    while (line[vstart + vlen] && (ft_isalnum((unsigned char)line[vstart + vlen]) || line[vstart + vlen] == '_'))
+    while (line[vstart + vlen] && (ft_isalnum((unsigned char)line[vstart + vlen]) || line[vstart + vlen] == '_')) //aqui el error 
         vlen++;
     varname = ft_substr(line, vstart, vlen);
     value = get_env_var(varname);
