@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/21 19:44:43 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 20:25:25 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,10 +148,8 @@ int execute(t_com *list, t_vars *vars)
 		}
 	}
 	waitpid(pid, &status, 0);
+	//dprintf(1, "path:%s, ")
 	if (WIFEXITED(status))
 		list->vars->exit_status = WEXITSTATUS(status); // investigar bienn que es el WEXITSTATUS
-	ft_free_free(list->command_arg);
-	if (list->path_command)
-		free(list->path_command);
 	return (0); // dprintf(1, "--->%s<---", list->command);
 }

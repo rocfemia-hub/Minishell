@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/21 19:35:53 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 20:06:26 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,13 +126,13 @@ void heredoc_execution(t_com *list)
 			free(line);
 			break;
 		}
-		dprintf(1, "|%s|%s|\n", line, list->redirects->delimiter);
 		write(fd, line, ft_strlen(line)); // Escribir al archivo temporal
 		write(fd, "\n", 1);
 		free(line);
 	}
 	close(fd);
 	list->redirects->heredoc_file = temp_file;
+	list->fd_in = open(temp_file, O_RDONLY, 0777);
 }
 
 void apply_redirections(t_com *list)
