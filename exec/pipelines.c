@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/10/16 23:40:55 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 22:26:33 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void execute_pipelines2(t_com *list, pid_t *pids)
                 tmp_list->path_command = get_path(tmp_list->command, tmp_list->vars->env, tmp_list);
                 if (!tmp_list->path_command)
                 {
-                    ft_printf("minishell: %s: command not found\n", tmp_list->command);
+                    ft_printf(2, "minishell: %s: command not found\n", tmp_list->command);
                     exit(127);
                 }
                 if (execve(tmp_list->path_command, tmp_list->command_arg, tmp_list->vars->env) == -1)

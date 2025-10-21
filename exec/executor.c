@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/21 20:25:25 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 22:13:52 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,23 +114,23 @@ int execute(t_com *list, t_vars *vars)
 		if (!has_slash) // Si tiene '/', se trata como ruta explícita o absoluta
 		{
 			list->vars->exit_status = 127;
-			return (printf("minishell: %s: command not found\n", list->command), 0);
+			return (ft_printf(2, "minishell: %s: command not found\n", list->command), 0);
 		}
 		if (access(list->command, F_OK) == -1)
 		{
 			list->vars->exit_status = 1;
-			return (printf("minishell: %s: No such file or directory\n", list->command), 0);
+			return (ft_printf(2, "minishell: %s: No such file or directory\n", list->command), 0);
 		}
 		dir = opendir(list->command);
 		if (dir != NULL)
 		{
 			list->vars->exit_status = 126;
-			return (closedir(dir), printf("minishell: %s: Is a directory\n", list->command), 0);
+			return (closedir(dir), ft_printf(2, "minishell: %s: Is a directory\n", list->command), 0);
 		}
 		if (access(list->command, X_OK) == -1)
 		{
 			list->vars->exit_status = 126;
-			return (printf("minishell: %s: Permission denied\n", list->command), 0);
+			return (ft_printf(2, "minishell: %s: Permission denied\n", list->command), 0);
 		}
 	}
 	pid = fork();
@@ -141,7 +141,7 @@ int execute(t_com *list, t_vars *vars)
 		apply_redirections(list);
 		if (execve(list->path_command, list->command_arg, list->vars->env) == 0) // CUIDADO CON ENV
 		{
-			write(2, "minishell: ", 11), 
+			write(2, "minishell: ", 11); 
 			perror("execve");
 			list->vars->exit_status = 127;
 			exit(127);

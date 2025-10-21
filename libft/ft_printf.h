@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 21:11:08 by roo               #+#    #+#             */
-/*   Updated: 2025/06/10 21:16:58 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 22:07:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include "libft.h"
 
-int		ft_printf(char const *str, ...);
+int		ft_printf(int fd, char const *str, ...);
 int		ft_printf_x(unsigned long long n, int fd, int result);
 int		ft_printf_super_x(unsigned int n, int fd, int result);
 int		ft_printf_u(unsigned int n, int fd, int result);

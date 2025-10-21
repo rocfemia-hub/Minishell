@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:38:13 by roo               #+#    #+#             */
-/*   Updated: 2025/01/21 19:40:01 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 22:10:58 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ int	ft_printf_x(unsigned long long n, int fd, int result)
 {
 	if (n >= 16)
 	{
-		result = ft_printf_x((n / 16), 1, result);
-		result = ft_printf_x((n % 16), 1, result);
+		result = ft_printf_x((n / 16), fd, result);
+		result = ft_printf_x((n % 16), fd, result);
 	}
 	else
 	{
@@ -38,8 +38,8 @@ int	ft_printf_super_x(unsigned int n, int fd, int result)
 {
 	if (n >= 16)
 	{
-		result = ft_printf_super_x((n / 16), 1, result);
-		result = ft_printf_super_x((n % 16), 1, result);
+		result = ft_printf_super_x((n / 16), fd, result);
+		result = ft_printf_super_x((n % 16), fd, result);
 	}
 	else
 	{
@@ -60,8 +60,8 @@ int	ft_printf_u(unsigned int n, int fd, int result)
 {
 	if (n > 9)
 	{
-		result = ft_printf_u((n / 10), 1, result);
-		result = ft_printf_u((n % 10), 1, result);
+		result = ft_printf_u((n / 10), fd, result);
+		result = ft_printf_u((n % 10), fd, result);
 	}
 	else
 		result = ft_printf_putchar_fd((n + '0'), fd, result);
