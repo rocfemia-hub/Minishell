@@ -56,6 +56,7 @@ void type_command(char *line, t_com *commands)
 {
     t_clean_cmd data;
     int len_cmd;
+    char *temp;
 
     ft_bzero(&data, sizeof(t_clean_cmd));
     data.cmd = only_cmd(line, &data);
@@ -68,14 +69,19 @@ void type_command(char *line, t_com *commands)
             init_struct(line, data.cmd, data.end_index, commands);
         else // si la expansion del comando es vacio, cojo lo siguiente como comando
         {
+            free(data.cmd);
             data.cmd = only_cmd(line, &data);
+            temp = data.cmd;
             data.cmd = clean_cmd(data.cmd, &data);
+            free(temp);
             init_struct(line, data.cmd, data.end_index + len_cmd, commands);
         }
     }
     else // cuando no hay expansion
     {
-        data.cmd = clean_cmd(line, &data);
+        temp = data.cmd;
+        data.cmd = clean_cmd(data.cmd, &data);
+        free(temp);
         init_struct(line, data.cmd, data.end_index, commands);
     }
     free(data.cmd);

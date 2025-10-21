@@ -19,9 +19,7 @@ t_com *lstnew(int index) // he borrado el new->fd_out = 1; porque lo he declarad
 	new = (t_com *)ft_calloc(sizeof(t_com), 1);
 	if (!new)
 		return (NULL);
-	new->vars = ft_calloc(1, sizeof(t_vars));  // INICIALIZAR VARS
-    if (!new->vars)
-        return (free(new), (NULL));
+	new->vars = NULL;  // No asignamos vars aquí, se asignará en init_fds
 	new->index = index;
 	return (new);
 }
