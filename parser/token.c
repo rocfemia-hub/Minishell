@@ -25,11 +25,11 @@ int skip_spaces(char *line)
 char *only_cmd(char *line, t_clean_cmd *data)
 { // ME SEPARA EL COMANDO DE LA LINEA QUE ENTRA POR TERMINAL
     data->only_cmd_i += skip_spaces(&line[data->only_cmd_i]);
+    while (line[data->only_cmd_i] == '\n')
+        data->only_cmd_i++;
     data->quote = 0;
     if (!line[data->only_cmd_i])
         return (NULL);
-    while (line[data->only_cmd_i] == ' ' || line[data->only_cmd_i] == '\n')
-        data->only_cmd_i++;
     data->start = data->only_cmd_i;
     while (line[data->only_cmd_i])
     {
@@ -57,12 +57,14 @@ void type_command(char *line, t_com *commands)
     t_clean_cmd data;
     int len_cmd;
     char *temp;
+    int saved_index;
 
     ft_bzero(&data, sizeof(t_clean_cmd));
     data.cmd = only_cmd(line, &data);
     if (!data.cmd)
-       return; 
-    len_cmd = ft_strlen(data.cmd) + 1; // por si luego tengo que coger el siguiente comando, por perder la referencia
+        return;
+    saved_index = data.only_cmd_i;  // Guardar el índice correcto de only_cmd
+    len_cmd = ft_strlen(data.cmd) + 1;                  // por si luego tengo que coger el siguiente comando, por perder la referencia
     if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))) // hay posible expansion en el comando
     {
         if (expand_cmd(&data, commands->vars)) // si hay $ en el comando
@@ -74,7 +76,7 @@ void type_command(char *line, t_com *commands)
             temp = data.cmd;
             data.cmd = clean_cmd(data.cmd, &data);
             free(temp);
-            init_struct(line, data.cmd, data.end_index + len_cmd, commands);
+            init_struct(line, data.cmd, data.only_cmd_i, commands);
         }
     }
     else // cuando no hay expansion
@@ -82,7 +84,7 @@ void type_command(char *line, t_com *commands)
         temp = data.cmd;
         data.cmd = clean_cmd(data.cmd, &data);
         free(temp);
-        init_struct(line, data.cmd, data.end_index, commands);
+        init_struct(line, data.cmd, saved_index, commands);
     }
     free(data.cmd);
 }

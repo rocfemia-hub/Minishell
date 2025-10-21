@@ -208,10 +208,10 @@ char *expand_args(char *line, t_vars *vars);
 
 //UTILS_EXPANDER
 char *handle_single_quotes(char *line, int *i, t_vars *vars);
-char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token);
-char *process_inside_double_quotes(char *line, int start, int end);
+char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token, t_vars * vars);
+char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars);
 char *handle_double_quotes(char *line, int *i, t_vars *vars);
-char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token);
+char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token, t_vars *vars);
 
 //AUX_EXPANDER
 char *handle_inter(t_vars *vars);
