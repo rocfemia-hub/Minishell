@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/21 22:13:52 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 22:56:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int execute(t_com *list, t_vars *vars)
 		}
 		if (access(list->command, F_OK) == -1)
 		{
-			list->vars->exit_status = 1;
+			list->vars->exit_status = 127;
 			return (ft_printf(2, "minishell: %s: No such file or directory\n", list->command), 0);
 		}
 		dir = opendir(list->command);
