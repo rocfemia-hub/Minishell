@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/16 23:39:41 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 19:35:53 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int set_redirections(t_com *list)
         {
             tmp_fd = open(list->redirects->output_file[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
             if (tmp_fd == -1)
-                return(write(2, "minishell: ", 11), perror(list->redirects->output_file[i]), 0); //
+                return(write(2, "minishell: ", 11), perror(list->redirects->output_file[i]), 0);
             if (list->redirects->output_file[i + 1] != NULL) // Si NO es el último, cierra
                 close(tmp_fd);
             else
@@ -62,7 +62,7 @@ int set_redirections_two(t_com *list)
 	if (list->redirects == NULL)
 		return(0);
 	if (list->redirects->redirect_heredoc) // Heredoc toma prioridad sobre otras redirecciones de input
-    	return(heredoc_execution(list), 1);
+    	return(heredoc_execution(list), list->redirects->redirected = 1, 1);
 	else if (list->redirects->redirect_in && list->redirects->input_file)
 	{
 		while(list->redirects->redirect_in && list->redirects->input_file[i + 1]) //list->redirects->redirect_in Esto se comprueba antes?
@@ -126,6 +126,7 @@ void heredoc_execution(t_com *list)
 			free(line);
 			break;
 		}
+		dprintf(1, "|%s|%s|\n", line, list->redirects->delimiter);
 		write(fd, line, ft_strlen(line)); // Escribir al archivo temporal
 		write(fd, "\n", 1);
 		free(line);

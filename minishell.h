@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/14 19:22:42 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/21 19:24:14 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_vars
 
 typedef struct s_red
 {
+	int		redirected; //flag para ver si ya he redireccionado 
 	char	**input_file; //archivo para redirección con <
 	char	**output_file; // archivo para redirección con >
 	char	**append_file; //archivo para redirección con >>
