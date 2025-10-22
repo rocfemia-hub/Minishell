@@ -226,6 +226,7 @@ char *handle_dollar(char *line, int *i, t_vars *vars);
 int aux_parser_redirects(t_com *commands, char *redirect);
 int parser_redirects(t_com *commands, char *redirect);
 char *clean_quotes_in_line(char *arg);
+char *find_redirect_position(char *arg, char *redirect);
 int is_redirect_token(char *arg, char *redirect);
 void find(t_com *commands);
 void redirects(t_com *commands);

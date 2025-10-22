@@ -35,24 +35,71 @@ int aux_parser_redirects(t_com *commands, char *redirect)
     return (1);
 }
 
+char *find_redirect_position(char *arg, char *redirect)
+{
+    int i;
+    int quote;
+
+    i = 0;
+    quote = 0;
+    while (arg[i])
+    {
+        if (arg[i] == '\'' || arg[i] == '"')
+        {
+            if (quote == 0)
+                quote = arg[i];
+            else if (quote == arg[i])
+                quote = 0;
+        }
+        else if (!quote && ft_strncmp(arg + i, redirect, ft_strlen(redirect)) == 0)
+            return (arg + i);
+        i++;
+    }
+    return (NULL);
+}
+
 int parser_redirects(t_com *commands, char *redirect)
-{                                                                     // chequear si despues de la redireccion hay archivo o antes
+{
+    char *redirect_pos;
+    
     if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
         commands->vars->exit_status = 2;
         return (0);
     }
-    else if (commands->args[commands->redirects->j][0] != redirect[0] || ft_strnstr(commands->args[commands->redirects->j], "<<<", 3)) // error hola< y <<<
+    else if (ft_strnstr(commands->args[commands->redirects->j], "<<<", 3)) // error hola< y <<<
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
         commands->vars->exit_status = 2;
         return (0);
     }
-    else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect)) // si la redireccion esta asi ">adios" --> no es error
+    else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect)) // si la redireccion esta asi ">adios" o "hola>adios"
     {
-        commands->redirects->file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect)); // archivo al que redirecciona
-        fill(commands, commands->redirects->j, commands->redirects->j, redirect);                            // rellena estructura
+        redirect_pos = find_redirect_position(commands->args[commands->redirects->j], redirect);
+        if (redirect_pos)
+        {
+            char *before_redirect;
+            int pos;
+            
+            commands->redirects->file = ft_strdup(redirect_pos + ft_strlen(redirect)); // archivo al que redirecciona
+            pos = redirect_pos - commands->args[commands->redirects->j]; // posicion del redirect en el string
+            if (pos > 0) // hay texto antes de la redireccion "hola>adios"
+            {
+                before_redirect = ft_calloc(pos + 1, sizeof(char));
+                ft_strlcpy(before_redirect, commands->args[commands->redirects->j], pos + 1);
+                free(commands->args[commands->redirects->j]);
+                commands->args[commands->redirects->j] = before_redirect; // reemplazar "hola>adios" por "hola"
+                fill(commands, -1, -1, redirect); // no eliminar ningun elemento del array
+            }
+            else // la redireccion esta al inicio ">adios"
+                fill(commands, commands->redirects->j, commands->redirects->j, redirect); // eliminar el elemento
+        }
+        else
+        {
+            commands->redirects->file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect));
+            fill(commands, commands->redirects->j, commands->redirects->j, redirect);                            // rellena estructura
+        }
     }
     else // el archivo esta separado del simbolo "hola > adios"
         if (!aux_parser_redirects(commands, redirect))
