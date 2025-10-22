@@ -94,6 +94,7 @@ typedef struct s_com
 
 
 // MAIN
+void 	init_env(t_vars *vars);
 int		line_break(char *line);
 void	init_vars(t_vars *vars, int argc, char **argv,  char **env);
 void	init_fds(t_com *list, t_vars *vars);
