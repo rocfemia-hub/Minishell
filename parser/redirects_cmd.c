@@ -9,18 +9,40 @@ char **realloc_redirect_args(char **flag)
     j = 0;
     while (flag[j])
         j++;
-    realloc_matrix = ft_calloc(j, sizeof(char *)); // no añado el NULL porque stoy quitando una linea, viene ya en la j
+    realloc_matrix = ft_calloc(j, sizeof(char *));
     if (!realloc_matrix)
         return (NULL);
-    i = 1;
-    j = -1;
-    while (flag[++j])
+    i = 0;
+    j = 0;
+    while (flag[++i])
     {
         realloc_matrix[j] = ft_strdup(flag[i]);
-        i++;
+        j++;
     }
     ft_free_free(flag);
     return (realloc_matrix);
+}
+
+void look_for_cmd(t_com *commands)
+{
+    char **temp;
+    int i;
+
+    i = 0;
+    if (!commands || !commands->args)
+        return;
+    while (commands->args[i])
+    {
+        if(is_redirect_token(commands->args[i], "<<") || is_redirect_token(commands->args[i], ">>") || is_redirect_token(commands->args[i], "<") || is_redirect_token(commands->args[i], ">"))
+            find(commands);
+        i++;
+    }
+    if (ft_strlen(commands->command) < 1 || ft_strlen(commands->args[i]))
+    {
+        commands->command = ft_strdup(commands->args[i]);
+        temp = realloc_redirect_args(commands->args);
+        commands->args = temp;
+    }
 }
 
 void fill_cmd(t_com *commands, char *redirect)
@@ -74,7 +96,6 @@ int redirects_cmd(t_com *commands)
 {
     if (is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">>"))
     {
-        // printf("entra << o >> \n");
         if (commands->args[0] || ft_strlen(commands->command) > 2)
         {
             if (is_redirect_token(commands->command, "<<"))
@@ -83,6 +104,7 @@ int redirects_cmd(t_com *commands)
             if (is_redirect_token(commands->command, ">>"))
                 if (!clean_redirects_cmd(commands, ">>"))
                     return (0);
+            look_for_cmd(commands);
             return (1);
         }
         else
@@ -94,13 +116,13 @@ int redirects_cmd(t_com *commands)
     }
     if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, ">"))
     {
-        // printf("entra < o > \n");
         if (commands->args[0] || ft_strlen(commands->command) > 1)
         {
             if (is_redirect_token(commands->command, "<"))
                 clean_redirects_cmd(commands, "<");
             if (is_redirect_token(commands->command, ">"))
                 clean_redirects_cmd(commands, ">");
+            look_for_cmd(commands);
             return (1);
         }
         else

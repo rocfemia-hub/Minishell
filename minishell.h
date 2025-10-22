@@ -237,6 +237,8 @@ void handle_redirect_array(char ***arr, int *count, char *file);
 void fill(t_com *commands, int start, int end, char *redirect);
 
 //REDIRECTS_CMD.C
+void look_for_cmd(t_com *commands);
+char **realloc_redirect_args(char **flag);
 void fill_cmd(t_com *commands, char *redirect);
 int clean_redirects_cmd(t_com *commands, char *redirect);
 int redirects_cmd(t_com *commands);

@@ -19,13 +19,13 @@ void error(t_com *commands)
     return;
 }
 
-// void printf_matrix(char **split) // debugueo de la matrix, escribiendola
-// {
-//     int i = 0;
+void printf_matrix(char **split) // debugueo de la matrix, escribiendola
+{
+    int i = 0;
 
-//     while (split[i])
-//     {
-//         printf("->%s\n", split[i]);
-//         i++;
-//     }
-// }
+    while (split[i])
+    {
+        printf("->%s\n", split[i]);
+        i++;
+    }
+}

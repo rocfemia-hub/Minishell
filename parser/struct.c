@@ -21,21 +21,25 @@ char **ft_strjoin_cmd_arg(t_com *commands)
 
     j = -1;
     i = 0;
+    len = 0;
     if (commands->command)
         len = 1;
-    while (commands->args[++j])
-        len++;
+    if(commands->args)
+        while (commands->args[++j])
+            len++;
     aux = ft_calloc(len + 1, sizeof(char *));
     j = -1;
     if (commands->command)
     {
         aux[0] = ft_strdup(commands->command);
-        while (commands->args[++j])
-            aux[++i] = ft_strdup(commands->args[j]);
+        if (commands->args)
+            while (commands->args[++j])
+                aux[++i] = ft_strdup(commands->args[j]);
     }
     else
-        while (commands->args[++j])
-            aux[i++] = ft_strdup(commands->args[j]);
+        if (commands->args)
+            while (commands->args[++j])
+                aux[i++] = ft_strdup(commands->args[j]);
     return (aux);
 }
 
@@ -89,9 +93,12 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
         keep_quotes_args(commands, line + end); // me quita comillas excepto si hay redirecciones
         redirects(commands);
     }
-    if (!ft_strncmp(commands->command, "echo", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "pwd", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "cd", ft_strlen(commands->command)) ||
-        !ft_strncmp(commands->command, "exit", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "env", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "export", ft_strlen(commands->command)) ||
-        !ft_strncmp(commands->command, "unset", ft_strlen(commands->command)))
-        commands->flag_built = 1;
+    if (commands->command)
+    {
+        if (!ft_strncmp(commands->command, "echo", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "pwd", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "cd", ft_strlen(commands->command)) ||
+            !ft_strncmp(commands->command, "exit", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "env", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "export", ft_strlen(commands->command)) ||
+            !ft_strncmp(commands->command, "unset", ft_strlen(commands->command)))
+            commands->flag_built = 1;
+    }
     commands->command_arg = ft_strjoin_cmd_arg(commands);
 }
