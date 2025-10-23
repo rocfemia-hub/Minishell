@@ -196,7 +196,8 @@ void find(t_com *commands)
                 return;
             commands->redirects->j = -1;
         }
-        else
+        else if (ft_strnstr(commands->args[commands->redirects->j], "<<", ft_strlen(commands->args[commands->redirects->j])) || ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])) ||
+                    ft_strnstr(commands->args[commands->redirects->j], "<", ft_strlen(commands->args[commands->redirects->j])) || ft_strnstr(commands->args[commands->redirects->j], ">", ft_strlen(commands->args[commands->redirects->j])))
         {
             temp = commands->args[commands->redirects->j];
             commands->args[commands->redirects->j] = clean_quotes_in_line(temp);

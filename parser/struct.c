@@ -43,6 +43,29 @@ char **ft_strjoin_cmd_arg(t_com *commands)
     return (aux);
 }
 
+int has_expandable_dollar(char *line)
+{
+    int i;
+    char quote;
+
+    i = 0;
+    quote = 0;
+    while (line[i])
+    {
+        if (line[i] == '\'' || line[i] == '"')
+        {
+            if (!quote)
+                quote = line[i];
+            else if (line[i] == quote)
+                quote = 0;
+        }
+        else if (line[i] == '$' && quote != '\'')
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
 t_com *create_struct(char *line, t_vars *vars)
 { // create nodes list
     int i;
@@ -81,12 +104,13 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd)); // PROBANDO A ARREGLARLO
     while (line[end] == ' ')
         end++;
-    if (ft_strnstr(line + end, "$", ft_strlen(line + end))) // posible expansion en los argumentos
+    if (has_expandable_dollar(line + end)) // posible expansion en los argumentos
     {
         new_line = expand_args(line + end, commands->vars);
         commands->args = ft_split_parser(new_line);
         free(new_line); // PROBANDO A ARREGLARLO
         redirects(commands);
+        clean_quotes_in_args(commands);
     }
     else
     {

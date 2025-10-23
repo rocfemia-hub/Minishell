@@ -20,6 +20,7 @@ void init_env(t_vars *vars)
 	vars->env[0] = cwd;
 	vars->env[1] = ft_strdup("LS_COLORS=");
 	vars->env[2] = ft_strdup("SHLVL=1");
+	vars->env[3] = ft_strdup("PATH=/usr/local/bin");
 }
 
 void init_vars(t_vars *vars, int argc, char **argv, char **env)

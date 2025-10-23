@@ -18,17 +18,18 @@ char *handle_single_quotes(char *line, int *i, t_vars *vars)
     char *token;
     int len;
 
-    start = *i; // incluye la comilla de apertura
     (*i)++; // saltamos la comilla de apertura
+    start = *i; // start ahora apunta después de la comilla
 
     while (line[*i] && line[*i] != '\'')
         (*i)++;
 
+    len = *i - start; // longitud del contenido sin las comillas
+    token = ft_substr(line, start, len); // NO incluye las comillas
+
     if (line[*i] == '\'')
         (*i)++; // saltamos la de cierre
 
-    len = *i - start;
-    token = ft_substr(line, start, len); // incluye ambas comillas
     return (token);
 }
 

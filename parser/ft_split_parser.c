@@ -43,17 +43,19 @@ int count_words_with_quotes(char *s)
         if (!s[i])
             break;
         words++;
-        if (s[i] == '\'' || s[i] == '"')
+        while (s[i] && s[i] != ' ')
         {
-            quote = s[i++];
-            while (s[i] && s[i] != quote)
-                i++;
-            if (s[i])
+            if (s[i] == '\'' || s[i] == '"')
+            {
+                quote = s[i++];
+                while (s[i] && s[i] != quote)
+                    i++;
+                if (s[i])
+                    i++;
+            }
+            else
                 i++;
         }
-        else
-            while (s[i] && s[i] != ' ' && s[i] != '\'' && s[i] != '"')
-                i++;
     }
     return (words);
 }
@@ -68,18 +70,18 @@ char *extract_token(char *s, int *i)
         return (NULL);
 
     start = *i;
-    if (s[*i] == '\'' || s[*i] == '"')
+    while (s[*i] && s[*i] != ' ')
     {
-        quote = s[*i];
-        (*i)++;
-        while (s[*i] && s[*i] != quote)
+        if (s[*i] == '\'' || s[*i] == '"')
+        {
+            quote = s[*i];
             (*i)++;
-        if (s[*i])
-            (*i)++; // saltamos la comilla de cierre
-    }
-    else
-    {
-        while (s[*i] && s[*i] != ' ' && s[*i] != '\'' && s[*i] != '"')
+            while (s[*i] && s[*i] != quote)
+                (*i)++;
+            if (s[*i])
+                (*i)++;
+        }
+        else
             (*i)++;
     }
     return (ft_substr(s, start, *i - start));
