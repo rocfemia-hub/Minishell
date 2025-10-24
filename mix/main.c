@@ -99,9 +99,13 @@ int main(int argc, char **argv, char **env)
 		}
 		if (!commands->command)
 		{
-			printf("Error: empty command\n");
-			(free(line), free_t_com_list(commands));
-			continue;
+			if (!commands->redirects)
+			{
+				printf("Error: empty command\n");
+				(free(line), free_t_com_list(commands));
+				continue;
+
+			}
 		}
 		init_fds(commands, &vars);
 		setup_pipeline(commands);
