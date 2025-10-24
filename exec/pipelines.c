@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/10/24 11:52:53 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/24 12:34:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,11 @@ void execute_pipelines2(t_com *list, pid_t *pids)
     tmp_list = list;
     while (tmp_list) // Crear un proceso para cada comando
     {
-		if(list->redirects->redirected != 1)
-        	set_redirections(tmp_list); // Configura redirecciones ANTES del fork
+		if(tmp_list->redirects->redirected != 1)
+		{
+			//tmp_list->redirects->redirected = 1;	
+			set_redirections(tmp_list); // Configura redirecciones ANTES del fork
+		}
         pid = fork();
         if (pid == -1)
             return(write(2, "minishell: ", 11), ("fork"), free(pids));
