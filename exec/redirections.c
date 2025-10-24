@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/24 12:15:26 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/24 12:54:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,21 @@ int set_redirections(t_com *list)
 	int i;
     int tmp_fd;
 	
+	if (list->redirects->append_file)
+    {
+        i = 0;
+        while (list->redirects->append_file[i])
+        {
+            tmp_fd = open(list->redirects->append_file[i], O_CREAT | O_WRONLY | O_APPEND, 0644);
+            if (tmp_fd == -1)
+                return(write(2, "minishell: ", 11), perror(list->redirects->append_file[i]), 0);
+            if (list->redirects->append_file[i + 1] != NULL)
+                close(tmp_fd);
+            else
+                list->fd_out = tmp_fd;
+            i++;
+        }
+    }
     if (list->redirects->output_file) // abrir archivos de output (aunque no escribas en ellos)
     {
         i = 0;
@@ -29,21 +44,6 @@ int set_redirections(t_com *list)
                 close(tmp_fd);
             else
                 list->fd_out = tmp_fd; // Solo el último se usa para escribir
-            i++;
-        }
-    }
-    if (list->redirects->append_file)
-    {
-        i = 0;
-        while (list->redirects->append_file[i])
-        {
-            tmp_fd = open(list->redirects->append_file[i], O_CREAT | O_WRONLY | O_APPEND, 0644);
-            if (tmp_fd == -1)
-                return(write(2, "minishell: ", 11), perror(list->redirects->append_file[i]), 0);
-            if (list->redirects->append_file[i + 1] != NULL)
-                close(tmp_fd);
-            else
-                list->fd_out = tmp_fd;
             i++;
         }
     }
