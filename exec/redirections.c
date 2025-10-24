@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/21 20:06:26 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/24 11:57:03 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ int set_redirections(t_com *list)
         i = 0;
         while (list->redirects->output_file[i])
         {
-            tmp_fd = open(list->redirects->output_file[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+            tmp_fd = open(list->redirects->output_file[i], O_CREAT | O_WRONLY | O_TRUNC, 0644); //  write(2, "minishell: ", 11), perror(list->redirects->output_file[i]),
             if (tmp_fd == -1)
-                return(write(2, "minishell: ", 11), perror(list->redirects->output_file[i]), 0);
+                return(ft_printf(2, "minishell: %s: No such file or directory\n", list->redirects->output_file[i]), 0); //AQUIIIIIIIIIIIII echo hi | echo >>./outfiles/outfile01 bye >./test_files/invalid_permission
             if (list->redirects->output_file[i + 1] != NULL) // Si NO es el último, cierra
                 close(tmp_fd);
             else
