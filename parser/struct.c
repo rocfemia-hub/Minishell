@@ -84,11 +84,13 @@ t_com *create_struct(char *line, t_vars *vars)
         return (head);
     }
     head = lstnew(i);
+    head->vars = vars;
     while (++i <= pipes) // create nodes
     {
         new = lstnew(i);
         if (!new)
             return (NULL);
+        new->vars = vars;
         lstadd_back(&head, new);
     }
     return (head);
