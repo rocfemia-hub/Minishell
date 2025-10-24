@@ -80,6 +80,7 @@ int main(int argc, char **argv, char **env)
 		{
 			rl_clear_history();		 // Liberar historial de readline
 			free_t_vars_list(&vars); // Liberar env_list
+			printf("exit\n");
 			break;
 		}
 		if (line[0] == '\0')
