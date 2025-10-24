@@ -108,26 +108,49 @@ void clean_quotes_in_args(t_com *commands)
 }
 
 char *clean_cmd(char *line, t_clean_cmd *data)
-{ // clean quotes of command
+{
+    char *result;
+    char *temp;
+    int j, k;
+    char quote;
+
     while (line[data->i] == ' ' || line[data->i] == '\n')
-        data->i++;
-    if (line[data->i] == '\'' || line[data->i] == '"')
-    {
-        data->quote = line[data->i]; 
-        data->i++;
-        data->start = data->i;
-        while (line[data->i] && line[data->i] != data->quote)
-            data->i++;
-        data->end = data->i;
-        data->end_index = data->i + 1;
-        return (ft_substr(line, data->start, data->end - data->start));
-    }
+        data->i++;    
     data->start = data->i;
     while (line[data->i] && line[data->i] != ' ')
         data->i++;
     data->end = data->i;
     data->end_index = data->end;
-    return (ft_substr(line, data->start, data->end - data->start));
+    temp = ft_substr(line, data->start, data->end - data->start);
+    if (!temp)
+        return (NULL);
+    result = ft_calloc(ft_strlen(temp) + 1, sizeof(char));
+    if (!result)
+    {
+        free(temp);
+        return (NULL);
+    }
+    j = 0;
+    k = 0;
+    quote = 0;
+    while (temp[j])
+    {
+        if ((temp[j] == '\'' || temp[j] == '"'))
+        {
+            if (!quote)              // open quote
+                quote = temp[j];
+            else if (quote == temp[j]) // close quote
+                quote = 0;
+            else
+                result[k++] = temp[j]; // different quote → normal character
+        }
+        else
+            result[k++] = temp[j];
+        j++;
+    }
+    result[k] = '\0';
+    free(temp);
+    return (result);
 }
 
 int look_for_char(char *line, char c)
