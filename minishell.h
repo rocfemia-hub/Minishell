@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/21 19:24:14 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/27 20:55:46 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ typedef struct s_vars
 
 typedef struct s_red
 {
-	int		redirected; //flag para ver si ya he redireccionado 
+	int		redirected; //flag para ver si ya he redireccionado
+	int		*type_redirec; //array d int para saber cual es ek orden en el q lo escriben por terminal (1-input, 2-output, 3-append, 4-heredoc)
 	char	**input_file; //archivo para redirección con <
 	char	**output_file; // archivo para redirección con >
 	char	**append_file; //archivo para redirección con >>
@@ -165,8 +166,10 @@ t_env	*find_env_var(t_vars *vars, char *env_name);
 void	remove_in_env_array(t_vars *vars, char *name);
 
 // REDIRECTIONS
-int		set_redirections(t_com *list);
-int		set_redirections_two(t_com *list);
+int		redirections_control(t_com *list, int j, int q, int k);
+int		infile_redirection(t_com *list, int i);
+int		outfile_redirection(t_com *list, int i);
+int		append_redirection(t_com *list, int i);
 void	heredoc_execution(t_com *list);
 void	apply_redirections(t_com *list);
 void	clean_fds(t_com *list);

@@ -6,89 +6,81 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/24 12:54:39 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/27 21:00:20 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int set_redirections(t_com *list)
+int redirections_control(t_com *list, int j, int q, int k)
 {
 	int i;
-    int tmp_fd;
-	
-	if (list->redirects->append_file)
-    {
-        i = 0;
-        while (list->redirects->append_file[i])
-        {
-            tmp_fd = open(list->redirects->append_file[i], O_CREAT | O_WRONLY | O_APPEND, 0644);
-            if (tmp_fd == -1)
-                return(write(2, "minishell: ", 11), perror(list->redirects->append_file[i]), 0);
-            if (list->redirects->append_file[i + 1] != NULL)
-                close(tmp_fd);
-            else
-                list->fd_out = tmp_fd;
-            i++;
-        }
-    }
-    if (list->redirects->output_file) // abrir archivos de output (aunque no escribas en ellos)
-    {
-        i = 0;
-        while (list->redirects->output_file[i])
-        {
-            tmp_fd = open(list->redirects->output_file[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-            if (tmp_fd == -1)
-                return(write(2, "minishell: ", 11), perror(list->redirects->output_file[i]), 0); //AQUIIIIIIIIIIIII echo hi | echo >>./outfiles/outfile01 bye >./test_files/invalid_permission
-            if (list->redirects->output_file[i + 1] != NULL) // Si NO es el último, cierra
-                close(tmp_fd);
-            else
-                list->fd_out = tmp_fd; // Solo el último se usa para escribir
-            i++;
-        }
-    }
-	return(set_redirections_two(list));
-}
 
-int set_redirections_two(t_com *list)
-{
-	int i;
-	int j;
-	int k;
-	
 	i = 0;
-	j = 0;
-	k = 0;
 	if (list->redirects == NULL)
 		return(0);
 	if (list->redirects->redirect_heredoc) // Heredoc toma prioridad sobre otras redirecciones de input
     	return(heredoc_execution(list), list->redirects->redirected = 1, 1);
-	else if (list->redirects->redirect_in && list->redirects->input_file)
+	while (list->redirects->type_redirec[i++] != 0)
 	{
-		while(list->redirects->redirect_in && list->redirects->input_file[i + 1]) //list->redirects->redirect_in Esto se comprueba antes?
-			i++; // esto es para recorrer la matriz de cada redirección
-		list->fd_in = open(list->redirects->input_file[i], O_RDONLY);
-		if (list->fd_in == -1)
+		if (list->redirects->type_redirec[i] == 1) 
+			if(!infile_redirection(list, j++))
+				return (0);
+		if (list->redirects->type_redirec[i] == 2) 
+			if(!outfile_redirection(list, q++))
+				return (0);
+		if (list->redirects->type_redirec[i] == 3) 
+			if(!append_redirection(list, k++))
+				return (0);
+	}
+	return(1);
+}
+
+int infile_redirection(t_com *list, int i)
+{
+	int tmp_fd;
+
+	if (list->redirects->redirect_in && list->redirects->input_file)
+	{
+		tmp_fd = open(list->redirects->input_file[i], O_RDONLY);
+		if (tmp_fd == -1)
 			return(write(2, "minishell: ", 11), perror(list->redirects->input_file[i]), 0);
+		if (list->fd_in != 0)
+            close(list->fd_in);
+        list->fd_in = tmp_fd;
 	}
-	if (list->redirects->redirect_out && list->redirects->output_file)
-	{
-		while (list->redirects->redirect_out && list->redirects->output_file[j + 1]) // Encontrar el ultimo archivo de output
-			j++;
-		if (list->fd_out != STDOUT_FILENO) // > sobrescribe >> si hay ambos
-			close(list->fd_out);
-		list->fd_out = open(list->redirects->output_file[j], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (list->fd_out == -1)
-            return(write(2, "minishell: ", 11), perror(list->redirects->output_file[j]), list->fd_out = 1, 0);
-	}
-	if (list->redirects->redirect_append && list->redirects->append_file)
-	{
-		while(list->redirects->redirect_append && list->redirects->append_file[k + 1]) // Encontrar el ultimo archivo de append
-			k++;
-		list->fd_out = open(list->redirects->append_file[k], O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if (list->fd_out == -1)
-			return(write(2, "minishell: ", 11), perror(list->redirects->append_file[k]), list->fd_out = 1, 0);
-	}
+	return(1);
+}
+
+int outfile_redirection(t_com *list, int i)
+{
+	int tmp_fd;
+
+    if (list->redirects->output_file && list->redirects->output_file[i])
+    {
+        tmp_fd = open(list->redirects->output_file[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+        if (tmp_fd == -1)
+            return(write(2, "minishell: ", 11), perror(list->redirects->output_file[i]), 0); //AQUIIIIIIIIIIIII echo hi | echo >>./outfiles/outfile01 bye >./test_files/invalid_permission
+        if (list->fd_out != 1)
+            close(list->fd_out);
+        list->fd_out = tmp_fd;
+    }
+	return(1);
+}
+
+int	append_redirection(t_com *list, int i)
+{
+    int tmp_fd;
+
+    if (list->redirects->append_file && list->redirects->append_file[i])
+    {
+        tmp_fd = open(list->redirects->append_file[i], O_CREAT | O_WRONLY | O_APPEND, 0644);
+        if (tmp_fd == -1)
+            return(write(2, "minishell: ", 11), perror(list->redirects->append_file[i]), 0);
+        if (list->fd_out != 1)
+            close(list->fd_out);
+        list->fd_out = tmp_fd;
+    }
 	return(1);
 }
 

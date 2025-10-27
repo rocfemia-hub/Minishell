@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/10/24 13:25:48 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/27 20:59:51 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void execute_pipelines2(t_com *list, pid_t *pids)
     {
 		if(tmp_list->redirects->redirected != 1)
 		{
-			if (!set_redirections(tmp_list)) // Hacer ANTES del fork
+			if (!redirections_control(tmp_list, 0, 0, 0)) // Hacer ANTES del fork
 			{
 				tmp_list->redirects->redirected = 1;
                 tmp_list = tmp_list->next;
