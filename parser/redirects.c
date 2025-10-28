@@ -191,13 +191,13 @@ void find(t_com *commands)
         }
         else if (is_redirect_token(commands->args[commands->redirects->j], ">"))
         {
-            if (!parser_redirects(commands, ">", 1))
+            if (!parser_redirects(commands, ">", 2))
                 return;
             commands->redirects->j = -1;
         }
         else if (is_redirect_token(commands->args[commands->redirects->j], "<"))
         {
-            if (!parser_redirects(commands, "<", 2))
+            if (!parser_redirects(commands, "<", 1))
                 return;
             commands->redirects->j = -1;
         }
