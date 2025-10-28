@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int aux_parser_redirects(t_com *commands, char *redirect)
+int aux_parser_redirects(t_com *commands, char *redirect, int type)
 {
     if (!commands->args[commands->redirects->j + 1]) // no hay archivo al que redireccionar
     {
@@ -22,7 +22,7 @@ int aux_parser_redirects(t_com *commands, char *redirect)
     }
     if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1) || ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1)) // dos operadores juntos > >
     {
-        //printf("entra\n");
+        // printf("entra\n");
         if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1))
             commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
         else if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1)) // ELSE IF
@@ -31,7 +31,8 @@ int aux_parser_redirects(t_com *commands, char *redirect)
         return (0);
     }
     commands->redirects->file = ft_strdup(commands->args[commands->redirects->j + 1]); // archivo al que redirecciona
-    fill(commands, commands->redirects->j, commands->redirects->j + 1, redirect);      // rellena estructura
+    fill_type_redirect(commands, type);
+    fill(commands, commands->redirects->j, commands->redirects->j + 1, redirect); // rellena estructura
     return (1);
 }
 
@@ -58,10 +59,12 @@ char *find_redirect_position(char *arg, char *redirect)
     return (NULL);
 }
 
-int parser_redirects(t_com *commands, char *redirect)
+int parser_redirects(t_com *commands, char *redirect, int type)
 {
     char *redirect_pos;
-    
+    char *before_redirect;
+    int pos;
+
     if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
@@ -79,30 +82,32 @@ int parser_redirects(t_com *commands, char *redirect)
         redirect_pos = find_redirect_position(commands->args[commands->redirects->j], redirect);
         if (redirect_pos)
         {
-            char *before_redirect;
-            int pos;
-            
             commands->redirects->file = ft_strdup(redirect_pos + ft_strlen(redirect)); // archivo al que redirecciona
-            pos = redirect_pos - commands->args[commands->redirects->j]; // posicion del redirect en el string
-            if (pos > 0) // hay texto antes de la redireccion "hola>adios"
+            pos = redirect_pos - commands->args[commands->redirects->j];               // posicion del redirect en el string
+            if (pos > 0)                                                               // hay texto antes de la redireccion "hola>adios"
             {
                 before_redirect = ft_calloc(pos + 1, sizeof(char));
                 ft_strlcpy(before_redirect, commands->args[commands->redirects->j], pos + 1);
                 free(commands->args[commands->redirects->j]);
                 commands->args[commands->redirects->j] = before_redirect; // reemplazar "hola>adios" por "hola"
+                fill_type_redirect(commands, type);
                 fill(commands, -1, -1, redirect); // no eliminar ningun elemento del array
             }
             else // la redireccion esta al inicio ">adios"
+            {
+                fill_type_redirect(commands, type);
                 fill(commands, commands->redirects->j, commands->redirects->j, redirect); // eliminar el elemento
+            }
         }
         else
         {
             commands->redirects->file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect));
-            fill(commands, commands->redirects->j, commands->redirects->j, redirect);                            // rellena estructura
+            fill_type_redirect(commands, type);
+            fill(commands, commands->redirects->j, commands->redirects->j, redirect); // rellena estructura
         }
     }
     else // el archivo esta separado del simbolo "hola > adios"
-        if (!aux_parser_redirects(commands, redirect))
+        if (!aux_parser_redirects(commands, redirect, type))
             return (0);
     return (1);
 }
@@ -130,7 +135,7 @@ char *clean_quotes_in_line(char *arg)
             else if (quote == arg[j])
                 quote = 0;
             else
-                new_arg[k++] = arg[j]; 
+                new_arg[k++] = arg[j];
         }
         else
             new_arg[k++] = arg[j];
@@ -166,38 +171,38 @@ int is_redirect_token(char *arg, char *redirect)
 
 void find(t_com *commands)
 { // look for < or >
-	char *temp;
-	
-	if (!commands->args || !commands->redirects) //COMPROBAR Q EXISTE
+    char *temp;
+
+    if (!commands->args || !commands->redirects) // COMPROBAR Q EXISTE
         return;
     while (commands->args[commands->redirects->j])
     {
         if (is_redirect_token(commands->args[commands->redirects->j], ">>"))
         {
-            if (!parser_redirects(commands, ">>"))
+            if (!parser_redirects(commands, ">>", 3))
                 return;
             commands->redirects->j = -1;
         }
         else if (is_redirect_token(commands->args[commands->redirects->j], "<<"))
         {
-            if (!parser_redirects(commands, "<<"))
+            if (!parser_redirects(commands, "<<", 4))
                 return;
             commands->redirects->j = -1;
         }
         else if (is_redirect_token(commands->args[commands->redirects->j], ">"))
         {
-            if (!parser_redirects(commands, ">"))
+            if (!parser_redirects(commands, ">", 2))
                 return;
             commands->redirects->j = -1;
         }
         else if (is_redirect_token(commands->args[commands->redirects->j], "<"))
         {
-            if (!parser_redirects(commands, "<"))
+            if (!parser_redirects(commands, "<", 1))
                 return;
             commands->redirects->j = -1;
         }
         else if (ft_strnstr(commands->args[commands->redirects->j], "<<", ft_strlen(commands->args[commands->redirects->j])) || ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])) ||
-                    ft_strnstr(commands->args[commands->redirects->j], "<", ft_strlen(commands->args[commands->redirects->j])) || ft_strnstr(commands->args[commands->redirects->j], ">", ft_strlen(commands->args[commands->redirects->j])))
+                 ft_strnstr(commands->args[commands->redirects->j], "<", ft_strlen(commands->args[commands->redirects->j])) || ft_strnstr(commands->args[commands->redirects->j], ">", ft_strlen(commands->args[commands->redirects->j])))
         {
             temp = commands->args[commands->redirects->j];
             commands->args[commands->redirects->j] = clean_quotes_in_line(temp);
@@ -209,8 +214,8 @@ void find(t_com *commands)
 void redirects(t_com *commands)
 {
     commands->redirects = ft_calloc(1, sizeof(t_red)); // redirect struct
-	if(!commands->redirects)
-		return;
+    if (!commands->redirects)
+        return;
     if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">") || is_redirect_token(commands->command, ">>"))
         if (!redirects_cmd(commands))
             return;

@@ -60,7 +60,8 @@ void fill_cmd(t_com *commands, char *redirect)
     }
     free(commands->redirects->file);
 }
-int clean_redirects_cmd(t_com *commands, char *redirect)
+
+int clean_redirects_cmd(t_com *commands, char *redirect, int type)
 {
     if (ft_strnstr(commands->command, ">>>", 3)) // error >>>
     {
@@ -78,6 +79,7 @@ int clean_redirects_cmd(t_com *commands, char *redirect)
     {
         commands->redirects->file = ft_strdup(commands->command + ft_strlen(redirect)); // archivo al que redirecciona
         fill_cmd(commands, redirect);                                                   // rellena estructura
+        fill_type_redirect(commands, type);
         free(commands->command);
         commands->command = ft_strdup("");
     }
@@ -88,6 +90,7 @@ int clean_redirects_cmd(t_com *commands, char *redirect)
         free(commands->command);
         commands->command = ft_strdup("");
         commands->args = realloc_redirect_args(commands->args);
+        fill_type_redirect(commands, type);
     }
     return (1);
 }
@@ -99,10 +102,10 @@ int redirects_cmd(t_com *commands)
         if (commands->args[0] || ft_strlen(commands->command) > 2)
         {
             if (is_redirect_token(commands->command, "<<"))
-                if (!clean_redirects_cmd(commands, "<<"))
+                if (!clean_redirects_cmd(commands, "<<", 4))
                     return (0);
             if (is_redirect_token(commands->command, ">>"))
-                if (!clean_redirects_cmd(commands, ">>"))
+                if (!clean_redirects_cmd(commands, ">>", 3))
                     return (0);
             look_for_cmd(commands);
             return (1);
@@ -119,9 +122,9 @@ int redirects_cmd(t_com *commands)
         if (commands->args[0] || ft_strlen(commands->command) > 1)
         {
             if (is_redirect_token(commands->command, "<"))
-                clean_redirects_cmd(commands, "<");
+                clean_redirects_cmd(commands, "<", 1);
             if (is_redirect_token(commands->command, ">"))
-                clean_redirects_cmd(commands, ">");
+                clean_redirects_cmd(commands, ">", 2);
             look_for_cmd(commands);
             return (1);
         }

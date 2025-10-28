@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/21 22:56:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/27 20:59:36 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void execute_control(t_com *list, t_vars *vars)
 	tmp_list = list;
 	if (tmp_list->next == NULL) // si solo hay un comando
 	{
-		if (list->redirects->redirected != 1 && !set_redirections(tmp_list)) // Si falla, no ejecutar
+		if (list->redirects->redirected != 1 && !redirections_control(tmp_list, 0, 0, 0)) // Si falla, no ejecutar
 		{
 			vars->exit_status = 1;
 			return (clean_fds(tmp_list));
@@ -43,7 +43,7 @@ void commands_control(t_com *list, t_vars *vars)
 { // printf("list->command = '%s' \n", list->command); //dprintf(1, "--->%s<---\n", list->command); //dprintf(1, "--->%s<---\n", list->command_arg); //dprintf(1, "--->%s<---\n", list->args[1]);
 	if (!list || !list->command)
 		return;
-	if (list->redirects->redirected != 1 && !set_redirections(list))
+	if (list->redirects->redirected != 1 && !redirections_control(list, 0, 0, 0))
 		return;
 	if (list->flag_built == 1)
 	{
