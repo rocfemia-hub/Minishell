@@ -21,9 +21,9 @@ int redirections_control(t_com *list, int j, int q, int k)
 		return(0);
 	if (list->redirects->redirect_heredoc) // Heredoc toma prioridad sobre otras redirecciones de input
     	return(heredoc_execution(list), list->redirects->redirected = 1, 1);
-	if (list->redirects->type_redirec)
+	if (list->redirects->type_redirec) // sino peta el programa cuando no hay redirecciones
 	{
-		while (list->redirects->type_redirec[++i] != 0)
+		while (list->redirects->type_redirec[++i] != 0) // cambio el ++ porque sino no miro el primer digito 
 		{
 			if (list->redirects->type_redirec[i] == 1) 
 				if(!infile_redirection(list, j++))
