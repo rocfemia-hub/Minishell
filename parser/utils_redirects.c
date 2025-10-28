@@ -67,6 +67,32 @@ void handle_redirect_array(char ***arr, int *flag, char *file)
     (*flag)++;                               // flag que si es mayor a 1 es que hay ese tipo de redireccion
 }
 
+void fill_type_redirect(t_com *commands, int type)
+{
+    int *temp;
+    int i;
+    int size;
+
+    temp = commands->redirects->type_redirec;
+    if (!temp)
+    {
+        commands->redirects->type_redirec = ft_calloc(2, sizeof(int));
+        commands->redirects->type_redirec[0] = type;
+    }
+    else
+    {
+        size = 0;
+        while (temp[size] != 0)
+            size++;
+        commands->redirects->type_redirec = ft_calloc(size + 2, sizeof(int));
+        i = -1;
+        while (++i < size)
+            commands->redirects->type_redirec[i] = temp[i];
+        commands->redirects->type_redirec[size] = type;
+        free(temp);
+    }
+}
+
 void fill(t_com *commands, int start, int end, char *redirect)
 {
     commands->args = copy_redirect_matrix(commands->args, start, end);

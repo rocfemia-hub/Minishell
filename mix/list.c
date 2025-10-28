@@ -69,15 +69,52 @@ void print_list(t_com *list)
 		}
 		else
 			printf("command_arg: (null)\n");
-		// if (list->flag_built)
-		// 	printf("flag_built: %d\n", list->flag_built);
-		// else
-		// 	printf("flag_built: (null)\n");
-		// printf("\033[34mprint_redirects:\033[0m\n");
-		// printf("append_file: %s, flag: %d\n", list->redirects->append_file[0], list->redirects->redirect_append);
-		// printf("input_file: %s, flag: %d\n", list->redirects->input_file[0], list->redirects->redirect_in);
-		// printf("output_file: %s, flag: %d\n", list->redirects->output_file[0], list->redirects->redirect_out);
-		// printf("output_file: %s, flag: %d\n", commands->redirects->output_file[1], commands->redirects->redirect_out);
+		
+		// Verificar si redirects existe antes de acceder
+		if (list->redirects)
+		{
+			printf("\033[34mprint_redirects:\033[0m\n");
+			
+			// Verificar append_file
+			if (list->redirects->append_file && list->redirects->append_file[0])
+				printf("append_file: %s, flag: %d\n", list->redirects->append_file[0], list->redirects->redirect_append);
+			else
+				printf("append_file: (null), flag: %d\n", list->redirects->redirect_append);
+			
+			// Verificar input_file
+			if (list->redirects->input_file && list->redirects->input_file[0])
+				printf("input_file: %s, flag: %d\n", list->redirects->input_file[0], list->redirects->redirect_in);
+			else
+				printf("input_file: (null), flag: %d\n", list->redirects->redirect_in);
+			
+			// Verificar output_file
+			if (list->redirects->output_file && list->redirects->output_file[0])
+				printf("output_file: %s, flag: %d\n", list->redirects->output_file[0], list->redirects->redirect_out);
+			else
+				printf("output_file: (null), flag: %d\n", list->redirects->redirect_out);
+			
+			// Verificar type_redirec
+			if (list->redirects->type_redirec)
+			{
+				int j = 0;
+				printf("type_redirec: [");
+				while (list->redirects->type_redirec[j] != 0)
+				{
+					printf("%d", list->redirects->type_redirec[j]);
+					if (list->redirects->type_redirec[j + 1] != 0)
+						printf(", ");
+					j++;
+				}
+				printf("]\n");
+			}
+			else
+				printf("type_redirec: (null)\n");
+		}
+		else
+		{
+			printf("redirects: (null)\n");
+		}
+		
 		list = list->next;
 	}
 }

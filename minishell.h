@@ -227,8 +227,8 @@ char *extract_varname(char *line, int start, int *vlen);
 char *handle_dollar(char *line, int *i, t_vars *vars);
 
 // REDIRECTS
-int aux_parser_redirects(t_com *commands, char *redirect);
-int parser_redirects(t_com *commands, char *redirect);
+int aux_parser_redirects(t_com *commands, char *redirect, int type);
+int parser_redirects(t_com *commands, char *redirect, int type);
 char *clean_quotes_in_line(char *arg);
 char *find_redirect_position(char *arg, char *redirect);
 int is_redirect_token(char *arg, char *redirect);
@@ -240,12 +240,13 @@ char **realloc_redirect_flags(char **flag);
 char **copy_redirect_matrix(char **args, int start, int end);
 void handle_redirect_array(char ***arr, int *count, char *file);
 void fill(t_com *commands, int start, int end, char *redirect);
+void fill_type_redirect(t_com *commands, int type);
 
 //REDIRECTS_CMD.C
 void look_for_cmd(t_com *commands);
 char **realloc_redirect_args(char **flag);
 void fill_cmd(t_com *commands, char *redirect);
-int clean_redirects_cmd(t_com *commands, char *redirect);
+int clean_redirects_cmd(t_com *commands, char *redirect, int type);
 int redirects_cmd(t_com *commands);
 
 #endif

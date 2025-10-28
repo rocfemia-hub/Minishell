@@ -16,22 +16,25 @@ int redirections_control(t_com *list, int j, int q, int k)
 {
 	int i;
 
-	i = 0;
+	i = -1;
 	if (list->redirects == NULL)
 		return(0);
 	if (list->redirects->redirect_heredoc) // Heredoc toma prioridad sobre otras redirecciones de input
     	return(heredoc_execution(list), list->redirects->redirected = 1, 1);
-	while (list->redirects->type_redirec[i++] != 0)
+	if (list->redirects->type_redirec)
 	{
-		if (list->redirects->type_redirec[i] == 1) 
-			if(!infile_redirection(list, j++))
-				return (0);
-		if (list->redirects->type_redirec[i] == 2) 
-			if(!outfile_redirection(list, q++))
-				return (0);
-		if (list->redirects->type_redirec[i] == 3) 
-			if(!append_redirection(list, k++))
-				return (0);
+		while (list->redirects->type_redirec[++i] != 0)
+		{
+			if (list->redirects->type_redirec[i] == 1) 
+				if(!infile_redirection(list, j++))
+					return (0);
+			if (list->redirects->type_redirec[i] == 2) 
+				if(!outfile_redirection(list, q++))
+					return (0);
+			if (list->redirects->type_redirec[i] == 3) 
+				if(!append_redirection(list, k++))
+					return (0);
+		}
 	}
 	return(1);
 }
