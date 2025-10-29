@@ -12,6 +12,8 @@
 
 #include "../minishell.h"
 
+int g_signal;
+
 void init_env(t_vars *vars)
 {
 	char cwd[1024];
@@ -27,7 +29,8 @@ void init_vars(t_vars *vars, int argc, char **argv, char **env)
 {
 	if(!env)
 		init_env(vars);
-	vars->env = env;
+	else
+		vars->env = env;
 	vars->exit_status = 0;
 	env_to_list(vars, env);
 }
