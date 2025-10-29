@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/27 20:55:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/29 16:48:04 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,8 @@ void	execute_control(t_com *list, t_vars *vars);
 void	commands_control(t_com *list, t_vars *vars);
 char	*get_path(char *cmd, char **envp, t_com *pipex);
 int 	execute(t_com *list, t_vars *vars);
+int		execute_error_control(t_com *list);
+int		pids_funcion(t_com *list, int status);
 
 // PIPELINES
 void	setup_pipeline(t_com *list);
@@ -171,6 +173,7 @@ int		infile_redirection(t_com *list, int i);
 int		outfile_redirection(t_com *list, int i);
 int		append_redirection(t_com *list, int i);
 void	heredoc_execution(t_com *list);
+void	found_delimiter(t_com *list, int fd);
 void	apply_redirections(t_com *list);
 void	clean_fds(t_com *list);
 

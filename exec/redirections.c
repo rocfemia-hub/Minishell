@@ -6,19 +6,21 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/27 21:00:20 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/29 16:40:53 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int redirections_control(t_com *list, int j, int q, int k)
+int	redirections_control(t_com *list, int j, int q, int k)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	if (list->redirects == NULL)
-		return(0);
+		return (0);
+	if (list->redirects->redirected == 1)
+		return (1);
 	if (list->redirects->redirect_heredoc) // Heredoc toma prioridad sobre otras redirecciones de input
     	return(heredoc_execution(list), list->redirects->redirected = 1, 1);
 	if (list->redirects->type_redirec) // sino peta el programa cuando no hay redirecciones
@@ -39,9 +41,9 @@ int redirections_control(t_com *list, int j, int q, int k)
 	return(1);
 }
 
-int infile_redirection(t_com *list, int i)
+int	infile_redirection(t_com *list, int i)
 {
-	int tmp_fd;
+	int	tmp_fd;
 
 	if (list->redirects->redirect_in && list->redirects->input_file)
 	{
@@ -55,9 +57,9 @@ int infile_redirection(t_com *list, int i)
 	return(1);
 }
 
-int outfile_redirection(t_com *list, int i)
+int	outfile_redirection(t_com *list, int i)
 {
-	int tmp_fd;
+	int	tmp_fd;
 
     if (list->redirects->output_file && list->redirects->output_file[i])
     {
@@ -87,13 +89,12 @@ int	append_redirection(t_com *list, int i)
 	return(1);
 }
 
-void heredoc_execution(t_com *list)
+void	heredoc_execution(t_com *list)
 {
-	char *line;
-	char *temp_file;
-	int fd;
-	char *num_str;
-	static int heredoc_count = 0;
+	char		*temp_file;
+	int			fd;
+	char		*num_str;
+	static int	heredoc_count = 0;
 	
 	num_str = ft_itoa(heredoc_count++); // Crear nombre único para archivo temporal
 	temp_file = ft_strjoin("/tmp/.heredoc_", num_str);
@@ -106,6 +107,16 @@ void heredoc_execution(t_com *list)
 		free(temp_file);
 		return;
 	}
+	found_delimiter(list, fd);
+	close(fd);
+	list->redirects->heredoc_file = temp_file;
+	list->fd_in = open(temp_file, O_RDONLY, 0777);
+}
+
+void	found_delimiter(t_com *list, int fd)
+{
+	char *line;
+
 	while (1) // Leer líneas hasta encontrar delimiter
 	{
 		line = readline("> ");
@@ -125,12 +136,10 @@ void heredoc_execution(t_com *list)
 		write(fd, "\n", 1);
 		free(line);
 	}
-	close(fd);
-	list->redirects->heredoc_file = temp_file;
-	list->fd_in = open(temp_file, O_RDONLY, 0777);
+	return;
 }
 
-void apply_redirections(t_com *list)
+void	apply_redirections(t_com *list)
 {
 	if (list->fd_in != STDIN_FILENO) // Aplicar redirección de entrada
 	{
@@ -156,7 +165,7 @@ void apply_redirections(t_com *list)
 	}
 }
 
-void clean_fds(t_com *list)
+void	clean_fds(t_com *list)
 {
     if (list->fd_in != STDIN_FILENO)
         close(list->fd_in);
