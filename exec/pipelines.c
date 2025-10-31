@@ -61,7 +61,21 @@ void execute_pipeline(t_com *list)
     while (i < num_cmds)
 	{
     	waitpid(pids[i], &status, 0);
-	    if (i == num_cmds - 1 && WIFEXITED(status)) // El exit status del último comando es el que importa
+		// Check for signals in child processes
+		if (WIFSIGNALED(status))
+		{
+			int sig = WTERMSIG(status);
+			if (sig == SIGINT)
+				list->vars->exit_status = 130;
+			else if (sig == SIGQUIT)
+			{
+				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+				list->vars->exit_status = 131;
+			}
+			else
+				list->vars->exit_status = 128 + sig;
+		}
+		else if (i == num_cmds - 1 && WIFEXITED(status)) // El exit status del último comando es el que importa
     	    list->vars->exit_status = WEXITSTATUS(status);
 		i++;
 	}
@@ -93,6 +107,7 @@ void execute_pipelines2(t_com *list, pid_t *pids)
             return(write(2, "minishell: ", 11), ("fork"), free(pids));
         if (pid == 0) // PROCESO HIJO
         {
+            setup_signals_default(); // Child processes should have default signal handling
             apply_redirections(tmp_list); // Aplica fd_in y fd_out
             close_pipes(list, tmp_list); // Cerrar TODOS los pipes que no usa este comando
             if (tmp_list->flag_built) // Ejecutar comando (built-in o externo)

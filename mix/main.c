@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int g_signal;
+int g_signal; // variable global única
 
 void init_env(t_vars *vars)
 {
@@ -74,10 +74,10 @@ int main(int argc, char **argv, char **env)
 	commands = NULL;			   // la verdad aqui no tengo del todo calro porque no se hace malloc
 	ft_bzero(&vars, sizeof(vars)); // malloc d la nueva struct
 	init_vars(&vars, argc, argv, env);
-	signal(SIGINT, handle_c);
+	setup_signals_interactive();   // Configurar señales para modo interactivo
 	while (1)
 	{
-		signal(SIGQUIT, SIG_IGN); // SIGQUITE control 4, SIG_ING es que ingnore
+		g_signal = 0; // Reset signal status
 		line = readline("minishell-> ");
 		if (!line) // Ctrl+D
 		{
@@ -86,15 +86,23 @@ int main(int argc, char **argv, char **env)
 			printf("exit\n");
 			break;
 		}
+		if (g_signal == SIGINT) // Ctrl+C en el prompt
+		{
+			vars.exit_status = 130;
+			g_signal = 0; // Reset para que no interfiera con el próximo comando
+		}
 		if (line[0] == '\0')
+		{
+			free(line);
 			continue;
+		}
 		add_history(line); // añade al historial para poder usar las flechitas arriba y abajo
 		if (!line_break(line))
 		{
 			free(line);
 			continue;
 		}
-		commands = token(line, &vars); // llama a la funcion tokeniza
+		commands = token(line, &vars);
 		if (!commands)				   // debug para comprobar que el comando sea valido
 		{
 			free(line);
@@ -113,6 +121,11 @@ int main(int argc, char **argv, char **env)
 		init_fds(commands, &vars);
 		setup_pipeline(commands);
 		execute_control(commands, &vars);
+		setup_signals_interactive(); // Restaurar señales interactivas
+		
+		// Check if a signal was received and update exit status
+		if (g_signal == SIGINT)
+			vars.exit_status = 130;
 		free(line);
 		free_t_com_list(commands);
 		commands = NULL; // reseteamos el puntero

@@ -16,7 +16,7 @@ void	execute_control(t_com *list, t_vars *vars)
 {
 	t_com	*tmp_list;
 
-	signal(SIGQUIT, handle_backslash);
+	setup_signals_noninteractive(); // Configurar señales para ejecución de comandos
 	list->redirects->redirected = 0;
 	tmp_list = list;
 	if (tmp_list->next == NULL)
@@ -154,6 +154,7 @@ int	pids_funcion(t_com *list, int status)
 		return (write(2, "minishell: ", 11), perror("fork"), 0);
 	if (pid == 0)
 	{
+		setup_signals_default(); // Child processes should have default signal handling
 		apply_redirections(list);
 		if (execve(list->path_command, list->command_arg, list->vars->env) == 0)
 		{
@@ -164,7 +165,20 @@ int	pids_funcion(t_com *list, int status)
 		}
 	}
 	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
+	if (WIFSIGNALED(status))
+	{
+		int sig = WTERMSIG(status);
+		if (sig == SIGINT)
+			list->vars->exit_status = 130;
+		else if (sig == SIGQUIT)
+		{
+			write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+			list->vars->exit_status = 131;
+		}
+		else
+			list->vars->exit_status = 128 + sig;
+	}
+	else if (WIFEXITED(status))
 		list->vars->exit_status = WEXITSTATUS(status);
 	return (1);
 }

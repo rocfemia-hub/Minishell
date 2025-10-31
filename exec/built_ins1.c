@@ -18,7 +18,11 @@ void	echo_function(t_com *list, t_vars *vars)
 	int	newline;
 
 	if (!list->args || !*list->args)
-		return ((void)write(list->fd_out, "\n", 1));
+	{
+		write(list->fd_out, "\n", 1);
+		list->vars->exit_status = 0;
+		return;
+	}
 	i = 0;
 	newline = 1;
 	while (list->args[i] && valid_n_option(list->args[i]))
@@ -35,7 +39,7 @@ void	echo_function(t_com *list, t_vars *vars)
 	}
 	if (newline)
 		write(list->fd_out, "\n", 1);
-	vars->exit_status = 0;
+	list->vars->exit_status = 0;
 }
 
 void	pwd_function(t_com *list, t_vars *vars)

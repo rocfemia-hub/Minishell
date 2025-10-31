@@ -22,7 +22,14 @@ int	redirections_control(t_com *list, int j, int q, int k)
 	if (list->redirects->redirected == 1)
 		return (1);
 	if (list->redirects->redirect_heredoc) // Heredoc toma prioridad sobre otras redirecciones de input
-    	return(heredoc_execution(list), list->redirects->redirected = 1, 1);
+	{
+		heredoc_execution(list);
+		list->redirects->redirected = 1;
+		// Si el heredoc fue interrumpido, retornar 0 para indicar error
+		if (g_signal == SIGINT)
+			return (0);
+		return (1);
+	}
 	if (list->redirects->type_redirec) // sino peta el programa cuando no hay redirecciones
 	{
 		while (list->redirects->type_redirec[++i] != 0) // cambio el ++ porque sino no miro el primer digito 
@@ -109,33 +116,109 @@ void	heredoc_execution(t_com *list)
 	}
 	found_delimiter(list, fd);
 	close(fd);
+	
+	// Si el heredoc fue interrumpido por SIGINT, no configurar el archivo
+	if (g_signal == SIGINT)
+	{
+		unlink(temp_file); // Borrar el archivo temporal
+		free(temp_file);
+		list->vars->exit_status = 130; // Set exit status for interrupted heredoc
+		return;
+	}
+	
 	list->redirects->heredoc_file = temp_file;
 	list->fd_in = open(temp_file, O_RDONLY, 0777);
+}
+
+char	*read_line_heredoc(void)
+{
+	char	*line;
+	char	buffer[1000];
+	char	c;
+	int		i;
+	int		ret;
+
+	i = 0;
+	ft_putstr_fd("> ", 1);
+	while (i < 999)
+	{
+		ret = read(STDIN_FILENO, &c, 1);
+		if (ret <= 0 || g_signal == SIGINT)
+		{
+			if (i > 0)
+				buffer[i] = '\0';
+			else
+				return (NULL);
+			break;
+		}
+		if (c == '\n')
+		{
+			buffer[i] = '\0';
+			break;
+		}
+		buffer[i] = c;
+		i++;
+	}
+	if (i == 0 && (ret <= 0 || g_signal == SIGINT))
+		return (NULL);
+	buffer[i] = '\0';
+	line = ft_strdup(buffer);
+	return (line);
 }
 
 void	found_delimiter(t_com *list, int fd)
 {
 	char *line;
 
-	while (1) // Leer líneas hasta encontrar delimiter
+	setup_signals_heredoc(); // Set up heredoc-specific signal handling
+	g_signal = 0; // Reset signal status
+	
+	while (1)
 	{
-		line = readline("> ");
+		line = read_line_heredoc();
+		
+		// Si recibimos SIGINT, salir inmediatamente
+		if (g_signal == SIGINT)
+		{
+			if (line)
+				free(line);
+			setup_signals_interactive();
+			restore_terminal_heredoc();
+			return;
+		}
+		
+		// Si read_line_heredoc retorna NULL (EOF)
 		if (!line)
 		{
+			if (g_signal == SIGINT)
+			{
+				setup_signals_interactive();
+				restore_terminal_heredoc();
+				return;
+			}
+			ft_putstr_fd("\n", 2); // Salto de línea antes del warning (como bash)
 			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
 			ft_putstr_fd(list->redirects->delimiter, 2);
 			ft_putstr_fd("')\n", 2);
+			list->vars->exit_status = 0; // EOF en heredoc no es error
 			break;
 		}
-		if (ft_strncmp(line, list->redirects->delimiter, ft_strlen(list->redirects->delimiter) + 1) == 0) // Comparar con delimiter
+		
+		// Verificar delimiter
+		if (ft_strncmp(line, list->redirects->delimiter, ft_strlen(list->redirects->delimiter) + 1) == 0)
 		{
 			free(line);
 			break;
 		}
-		write(fd, line, ft_strlen(line)); // Escribir al archivo temporal
+		
+		// Escribir al archivo
+		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);
 	}
+	
+	setup_signals_interactive();
+	restore_terminal_heredoc();
 	return;
 }
 

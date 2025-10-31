@@ -12,18 +12,25 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# define _POSIX_C_SOURCE 200809L
 # define READ_FD 0
 # define WRITE_FD 1
+
+# ifndef ECHOCTL
+#  define ECHOCTL 0001000
+# endif
 
 # include "./libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <sys/types.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <dirent.h>
 # include <signal.h>
+# include <termios.h>
 
 typedef struct s_clean_cmd
 {
@@ -118,8 +125,18 @@ void	free_t_vars_list(t_vars *list);
 char	**ft_split_mini(char const *s, char c);
 
 //SIGNALS
-void	handle_c();
-void	handle_backslash();
+extern int g_signal;
+
+void	handle_sigint_interactive(int sig);
+void	handle_sigint_child(int sig);
+void	handle_sigquit_child(int sig);
+void	handle_sigint_heredoc(int sig);
+void	setup_signals_interactive(void);
+void	setup_signals_noninteractive(void);
+void	setup_signals_heredoc(void);
+void	setup_signals_default(void);
+void	setup_terminal_heredoc(void);
+void	restore_terminal_heredoc(void);
 
 /*EXEC*/ 
 
