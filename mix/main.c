@@ -17,22 +17,28 @@ int g_signal; // variable global única
 void init_env(t_vars *vars)
 {
 	char cwd[1024];
+	char *pwd_str;
 
+	vars->env = ft_calloc(5, sizeof(char *));
+	if (!vars->env)
+		return;
 	getcwd(cwd, sizeof(cwd)); // getcwd me dice el directorio que estoy actualemte
-	vars->env[0] = cwd;
-	vars->env[1] = ft_strdup("LS_COLORS=");
-	vars->env[2] = ft_strdup("SHLVL=1");
-	vars->env[3] = ft_strdup("PATH=/usr/local/bin");
+	pwd_str = ft_strjoin("PWD=", cwd);
+	vars->env[0] = pwd_str;
+	vars->env[1] = ft_strdup("SHLVL=1");
+	vars->env[2] = ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin");
+	vars->env[3] = ft_strdup("_=/usr/bin/env");
+	vars->env[4] = NULL;
 }
 
 void init_vars(t_vars *vars, int argc, char **argv, char **env)
 {
-	if(!env)
+	if(!env || !env[0])
 		init_env(vars);
 	else
 		vars->env = env;
 	vars->exit_status = 0;
-	env_to_list(vars, env);
+	env_to_list(vars, vars->env);
 }
 
 void init_fds(t_com *list, t_vars *vars)
