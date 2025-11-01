@@ -12,6 +12,29 @@
 
 #include "../minishell.h"
 
+char *ft_strjoin_cmd(char **cmd)
+{
+    int len;
+    char *result;
+    int i;
+    int k;
+
+    len = 0;
+    i = -1;
+    if (!cmd || !cmd[0])
+        return (NULL);
+    while (cmd[++i])
+        len += ft_strlen(cmd[i]);
+    result = malloc(len + 1);
+    if (!result)
+        return(NULL);
+    result[0] = '\0';
+    i = -1;
+    while (cmd[++i])
+        ft_strlcat(result, cmd[i], ft_strlen(result) + ft_strlen(cmd[i]) + 1);
+    return(result);
+}
+
 char *handle_plain_text_args(char *line, int *i, t_vars *vars)
 {
     int start;

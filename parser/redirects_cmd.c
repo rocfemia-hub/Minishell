@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 char **realloc_redirect_args(char **flag)
-{ // acortar los char **
+{
     int i;
     int j;
     char **realloc_matrix;

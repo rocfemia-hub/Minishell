@@ -12,19 +12,21 @@
 
 #include "../minishell.h"
 
-void free_array_parser(char **p)
-{
-    int i;
-
-    i = -1;
-    while (p && p[++i])
-        free(p[i]);
-    free(p);
-}
-
 int skip_space(char *s, int i)
 {
     while (s[i] == ' ')
+        i++;
+    return (i);
+}
+
+static int skip_quoted_section(char *s, int i)
+{
+    char quote;
+
+    quote = s[i++];
+    while (s[i] && s[i] != quote)
+        i++;
+    if (s[i])
         i++;
     return (i);
 }
@@ -33,7 +35,6 @@ int count_words_with_quotes(char *s)
 {
     int i;
     int words;
-    char quote;
 
     i = 0;
     words = 0;
@@ -46,13 +47,7 @@ int count_words_with_quotes(char *s)
         while (s[i] && s[i] != ' ')
         {
             if (s[i] == '\'' || s[i] == '"')
-            {
-                quote = s[i++];
-                while (s[i] && s[i] != quote)
-                    i++;
-                if (s[i])
-                    i++;
-            }
+                i = skip_quoted_section(s, i);
             else
                 i++;
         }
@@ -106,7 +101,7 @@ char **ft_split_parser(char const *s)
     {
         p[j] = extract_token((char *)s, &i);
         if (!p[j])
-            return (free_array_parser(p), NULL);
+            return (free_array(p), NULL);
         j++;
     }
     p[j] = NULL;

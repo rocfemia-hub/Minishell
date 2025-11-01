@@ -96,11 +96,11 @@ void init_commands(char *line, t_com *commands)
     char quote;
     t_com *current;
 
-    i = 0;
+    i = -1;
     start = 0;
     quote = 0;
     current = commands;
-    while (line[i])
+    while (line[++i])
     {
         if ((line[i] == '"' || line[i] == '\''))
         {
@@ -116,7 +116,6 @@ void init_commands(char *line, t_com *commands)
             start = i + 1;
             current = current->next;
         }
-        i++;
     }
     if (current)
         type_command(line + start, current);
@@ -139,6 +138,5 @@ t_com *token(char *line, t_vars *vars)
         error(commands);
         return (NULL);
     }
-    // print_list(commands);
     return (commands);
 }

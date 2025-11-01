@@ -27,7 +27,7 @@ void keep_quotes_args(t_com *commands, char *line)
         return;
     while (line[i])
     {
-        i += skip_spaces(line + i); //PROBANDO A SOLUCIONARLO
+        i += skip_spaces(line + i);
         if (!line[i])
             break;
         arg = ft_calloc(ft_strlen(line) + 3, sizeof(char));
@@ -137,12 +137,12 @@ char *clean_cmd(char *line, t_clean_cmd *data)
     {
         if ((temp[j] == '\'' || temp[j] == '"'))
         {
-            if (!quote)              // open quote
+            if (!quote)
                 quote = temp[j];
-            else if (quote == temp[j]) // close quote
+            else if (quote == temp[j])
                 quote = 0;
             else
-                result[k++] = temp[j]; // different quote → normal character
+                result[k++] = temp[j];
         }
         else
             result[k++] = temp[j];
@@ -154,7 +154,7 @@ char *clean_cmd(char *line, t_clean_cmd *data)
 }
 
 int look_for_char(char *line, char c)
-{  // buscar un caracter que no este dentro de comillas y devuelve las veces encontrado
+{
     int i;
     int count;
     char open_quote;
@@ -166,9 +166,9 @@ int look_for_char(char *line, char c)
     {
         if (line[i] == '\'' || line[i] == '"')
         {
-            if (!open_quote) //open
+            if (!open_quote)
                 open_quote = line[i]; 
-            else if (line[i] == open_quote) //close
+            else if (line[i] == open_quote)
                 open_quote = 0; 
         }
         else if (line[i] == c && !open_quote)
@@ -176,6 +176,6 @@ int look_for_char(char *line, char c)
         i++;
     }
     if (open_quote != 0)
-        return (-1); // error
+        return (-1);
     return (count);
 }
