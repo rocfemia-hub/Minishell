@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/29 16:51:35 by roo              ###   ########.fr       */
+/*   Updated: 2025/10/31 13:34:19 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	execute_control(t_com *list, t_vars *vars)
 {
 	t_com	*tmp_list;
 
-	setup_signals_noninteractive(); // Configurar señales para ejecución de comandos
+	//setup_signals_noninteractive(); // Configurar señales para ejecución de comandos
 	list->redirects->redirected = 0;
 	tmp_list = list;
 	if (tmp_list->next == NULL)
@@ -154,7 +154,7 @@ int	pids_funcion(t_com *list, int status)
 		return (write(2, "minishell: ", 11), perror("fork"), 0);
 	if (pid == 0)
 	{
-		setup_signals_default(); // Child processes should have default signal handling
+		//setup_signals_default();
 		apply_redirections(list);
 		if (execve(list->path_command, list->command_arg, list->vars->env) == 0)
 		{
@@ -165,9 +165,17 @@ int	pids_funcion(t_com *list, int status)
 		}
 	}
 	waitpid(pid, &status, 0);
+	execute_signals(list, status);
+	return (1);
+}
+
+void	execute_signals(t_com *list, int status)
+{
+	int	sig;
+
 	if (WIFSIGNALED(status))
 	{
-		int sig = WTERMSIG(status);
+		sig = WTERMSIG(status);
 		if (sig == SIGINT)
 			list->vars->exit_status = 130;
 		else if (sig == SIGQUIT)
@@ -180,5 +188,4 @@ int	pids_funcion(t_com *list, int status)
 	}
 	else if (WIFEXITED(status))
 		list->vars->exit_status = WEXITSTATUS(status);
-	return (1);
 }
