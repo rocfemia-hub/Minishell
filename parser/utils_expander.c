@@ -13,26 +13,21 @@
 #include "../minishell.h"
 
 char *handle_single_quotes(char *line, int *i, t_vars *vars)
-{ //MANEJO DE COMILLAS SIMPLES
+{ 
     int start;
     char *token;
     int len;
 
-    (*i)++; // saltamos la comilla de apertura
-    start = *i; // start ahora apunta después de la comilla
-
+    (*i)++; 
+    start = *i; 
     while (line[*i] && line[*i] != '\'')
         (*i)++;
-
-    len = *i - start; // longitud del contenido sin las comillas
-    token = ft_substr(line, start, len); // NO incluye las comillas
-
+    len = *i - start;
+    token = ft_substr(line, start, len);
     if (line[*i] == '\'')
-        (*i)++; // saltamos la de cierre
-
+        (*i)++; 
     return (token);
 }
-
 
 char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token, t_vars *vars)
 { // VARIABLES DENTRO DE COMILLAS DOBLES
@@ -69,6 +64,7 @@ char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *t
     *start = *k;
     return(token);
 }
+
 char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars)
 { //GESTION DE COMILLAS DOBLES FUNCION AUXILIAR
     int k;
@@ -99,8 +95,8 @@ char *handle_double_quotes(char *line, int *i, t_vars *vars)
     char *token;
     char *inner;
 
-    start = *i;     // posición de la comilla de apertura
-    (*i)++;         // saltamos la comilla inicial
+    start = *i;
+    (*i)++;
     end = *i;
     while (line[end] && line[end] != '"')
         end++;
@@ -113,7 +109,6 @@ char *handle_double_quotes(char *line, int *i, t_vars *vars)
     free(inner);
     return (token);
 }
-
 
 char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token, t_vars *vars)
 {

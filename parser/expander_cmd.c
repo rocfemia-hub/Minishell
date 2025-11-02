@@ -12,6 +12,23 @@
 
 #include "../minishell.h"
 
+char *str_append(char *dest, const char *src)
+{
+    char *tmp;
+
+    if (!dest)
+        dest = ft_strdup(src);
+    else
+    {
+        tmp = malloc(ft_strlen(dest) + ft_strlen(src) + 1);
+        ft_strlcpy(tmp, dest, ft_strlen(tmp) + ft_strlen(dest) + 1);
+        ft_strlcat(tmp, src, ft_strlen(tmp) + ft_strlen(src) + 1);
+        free(dest);
+        dest = tmp;
+    }
+    return(dest);
+}
+
 char *handle_plain_text(char *cmd, int *i, t_vars *vars)
 {
     int start;

@@ -13,7 +13,7 @@
 #include "../minishell.h"
 
 char **realloc_redirect_flags(char **flag)
-{ // extender los char ** en caso de haber mas de 1 redireccion
+{
     int j;
     char **realloc_matrix;
 
@@ -31,7 +31,7 @@ char **realloc_redirect_flags(char **flag)
 }
 
 char **copy_redirect_matrix(char **args, int start, int end)
-{ // copiar matriz de args sin el simbolo de redireccion y el nombre del archivo
+{
     int i;
     int j;
     char **new_arg;
@@ -62,9 +62,9 @@ void handle_redirect_array(char ***arr, int *flag, char *file)
     if (!*arr)
         *arr = ft_calloc(2, sizeof(char *));
     else
-        *arr = realloc_redirect_flags(*arr); // me hace un espacio de memoria mas para añadir la nuvea redireccion
-    (*arr)[*flag] = ft_strdup(file);         // me mete en el ultimo la redireccion
-    (*flag)++;                               // flag que si es mayor a 1 es que hay ese tipo de redireccion
+        *arr = realloc_redirect_flags(*arr);
+    (*arr)[*flag] = ft_strdup(file);
+    (*flag)++;
 }
 
 void fill_type_redirect(t_com *commands, int type)

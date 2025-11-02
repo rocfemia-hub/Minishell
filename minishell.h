@@ -123,6 +123,7 @@ void	free_t_vars_list(t_vars *list);
 
 // SPLIT_MINI.C
 char	**ft_split_mini(char const *s, char c);
+void	free_array(char **p);
 
 //SIGNALS
 extern int g_signal;
