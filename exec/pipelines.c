@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/10/31 15:08:57 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/02 13:23:27 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,9 @@ void	execute_pipeline(t_com *list)
 	t_com	*tmp_list;
 	pid_t	*pids;
 	int		num_cmds;
-	int		i;
 
 	tmp_list = list;
 	num_cmds = 0;
-	i = 0;
 	while (tmp_list)
 	{
 		num_cmds++;
@@ -57,33 +55,8 @@ void	execute_pipeline(t_com *list)
 		clean_fds(tmp_list);
 		tmp_list = tmp_list->next;
 	}
-	while (i < num_cmds)
-	{
-		
-	}
+	pipelines_signals(list, pids, num_cmds, 0);
 	free(pids);
-}
-pipelines_signals(t_com *list, )
-{
-	int		status;
-
-	waitpid(pids[i], &status, 0);
-		if (WIFSIGNALED(status))
-		{
-			int sig = WTERMSIG(status);
-			if (sig == SIGINT)
-				list->vars->exit_status = 130;
-			else if (sig == SIGQUIT)
-			{
-				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
-				list->vars->exit_status = 131;
-			}
-			else
-				list->vars->exit_status = 128 + sig;
-		}
-		else if (i == num_cmds - 1 && WIFEXITED(status))
-			list->vars->exit_status = WEXITSTATUS(status);
-		i++;
 }
 
 void	execute_pipelines2(t_com *list, pid_t *pids)
@@ -113,6 +86,33 @@ void	execute_pipelines2(t_com *list, pid_t *pids)
 			pids_pipelines(list, tmp_list);
 		pids[i++] = pid;
 		tmp_list = tmp_list->next;
+	}
+}
+
+void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i)
+{
+	int		status;
+	int		sig;
+
+	while (i < num_cmds)
+	{
+		waitpid(pids[i], &status, 0);
+		if (WIFSIGNALED(status))
+		{
+			sig = WTERMSIG(status);
+			if (sig == SIGINT)
+			list->vars->exit_status = 130;
+			else if (sig == SIGQUIT)
+			{
+				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+				list->vars->exit_status = 131;
+			}
+			else
+				list->vars->exit_status = 128 + sig;
+		}
+		else if (i == num_cmds - 1 && WIFEXITED(status))
+			list->vars->exit_status = WEXITSTATUS(status);
+		i++;
 	}
 }
 

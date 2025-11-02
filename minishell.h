@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/31 15:02:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/02 13:23:05 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void	execute_signals(t_com *list, int status);
 void	setup_pipeline(t_com *list);
 void	execute_pipeline(t_com *list);
 void	execute_pipelines2(t_com *list, pid_t *pids);
+void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i);
 void	pids_pipelines(t_com *list, t_com *tmp_list);
 void	close_pipes(t_com *list, t_com *current_cmd);
 
