@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 14:33:11 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/02 16:53:20 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,20 +94,24 @@ void remove_env_var(t_vars *vars, char *name)
     }
 }
 
-void cd_aux_funcion(t_com *list, t_vars *vars, char *old_pwd)
+int	cd_aux_funcion(t_com *list, t_vars *vars)
 { // Actualizar PWD y OLDPWD en el entorno
-	char *new_pwd;
+	char	*new_pwd;
+	char	*old_pwd;
+	char	*current_dir;
 	
+	current_dir = getcwd(NULL, 0);
+	if (!current_dir)
+		return (write(2, "minishell: ", 11), perror("cd"), 0);
+	old_pwd = ft_strjoin("OLDPWD=", current_dir);
     add_update_env_var(vars, old_pwd);
     free(old_pwd);
 
 	if (vars->pwd)
         free(vars->pwd);
     vars->pwd = getcwd(NULL, 0);
-
     new_pwd = ft_strjoin("PWD=", vars->pwd);
     add_update_env_var(vars, new_pwd);
-
     free(new_pwd);
 
     if (list->args) 
@@ -115,4 +119,5 @@ void cd_aux_funcion(t_com *list, t_vars *vars, char *old_pwd)
         ft_free_free(list->args);
         list->args = NULL;
     }
+	return (1);
 }

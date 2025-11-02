@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 14:21:35 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/02 16:38:02 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ int		valid_n_option(char *str);
 int		valid_number(char *str);
 void	print_export_vars(t_com *list, t_vars *vars);
 void	remove_env_var(t_vars *vars, char *name);
-void	cd_aux_funcion(t_com *list, t_vars *vars, char *old_pwd);
+int		cd_aux_funcion(t_com *list, t_vars *vars);
 
 void	add_update_env_var(t_vars *vars, char *var_str);
 void	update_env(t_vars *vars, char *name, char *value);

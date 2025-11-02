@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 14:36:35 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/02 16:45:42 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,16 +74,13 @@ void	exit_function(t_com *list, t_vars *vars)
 void	cd_function(t_com *list, t_vars *vars)
 {
 	char	*target_dir;
-	char	*current_dir;
-	char	*old_pwd;
 
-	current_dir = getcwd(NULL, 0);
-	if (!current_dir)
-		return (write(2, "minishell: ", 11), perror("cd"));
-	if (!list->args || !list->args[0])
-		if (!getenv("HOME"))
-			return (write(2, "cd: HOME not set\n", 17), free(current_dir));
-	else if (list->args [1])
+	if ((!list->args || !list->args[0]) && !getenv("HOME"))
+	{
+		write(2, "cd: HOME not set\n", 17);
+		return ;
+	}
+	else if (list->args[1])
 	{
 		write(2, "cd: too many arguments\n", 23);
 		return (ft_free_free(list->args));
@@ -96,7 +93,7 @@ void	cd_function(t_com *list, t_vars *vars)
 		write(2, ": No such file or directory\n", 28);
 		return (free(target_dir));
 	}
-	old_pwd = ft_strjoin("OLDPWD=", current_dir);
-	cd_aux_funcion(list, vars, old_pwd);
+	if(!cd_aux_funcion(list, vars))
+		return ;
 	vars->exit_status = 0;
 }
