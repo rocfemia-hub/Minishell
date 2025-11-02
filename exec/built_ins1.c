@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/10/29 16:25:48 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/02 13:42:19 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	cd_function(t_com *list, t_vars *vars)
 	char	*old_pwd;
 
 	current_dir = getcwd(NULL, 0);
+	if (!current_dir)
+		return (write(2, "minishell: ", 11), perror("cd"));
 	if (!list->args || !list->args[0])
 		if (!getenv("HOME"))
 			return (write(2, "cd: HOME not set\n", 17), free(current_dir));
