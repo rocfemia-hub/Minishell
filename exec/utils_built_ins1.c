@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/10/29 16:20:38 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/02 14:33:11 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,18 @@ void remove_env_var(t_vars *vars, char *name)
 
 void cd_aux_funcion(t_com *list, t_vars *vars, char *old_pwd)
 { // Actualizar PWD y OLDPWD en el entorno
-	char *new_dir;
 	char *new_pwd;
 	
     add_update_env_var(vars, old_pwd);
     free(old_pwd);
 
-    new_dir = getcwd(NULL, 0); // Obtener y actualizar el PWD
-    new_pwd = ft_strjoin("PWD=", new_dir);
+	if (vars->pwd)
+        free(vars->pwd);
+    vars->pwd = getcwd(NULL, 0);
+
+    new_pwd = ft_strjoin("PWD=", vars->pwd);
     add_update_env_var(vars, new_pwd);
 
-    free(new_dir);
     free(new_pwd);
 
     if (list->args) 

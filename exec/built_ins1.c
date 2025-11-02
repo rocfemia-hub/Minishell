@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 13:42:19 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/02 14:36:35 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,11 @@ void	echo_function(t_com *list, t_vars *vars)
 
 void	pwd_function(t_com *list, t_vars *vars)
 {
-	char	cwd[1024];
 	ssize_t	bytes_written;
 
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	if (vars->pwd == NULL)
 		return (write(2, "minishell: ", 11), perror("pwd"));
-	bytes_written = write(list->fd_out, cwd, ft_strlen(cwd));
+	bytes_written = write(list->fd_out, vars->pwd, ft_strlen(vars->pwd));
 	if (bytes_written != -1)
 		write(list->fd_out, "\n", 1);
 	vars->exit_status = 0;
