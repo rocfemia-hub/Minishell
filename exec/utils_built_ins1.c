@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/11/03 17:56:45 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/03 19:06:55 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,18 @@ void print_export_vars(t_com *list, t_vars *vars)
 {
     t_env *env_list;
     char *line;
+    char *tmp_line;
 
     env_list = vars->env_list;
     while (env_list)
     {
         write(list->fd_out, "declare -x ", 11);
 		if (ft_strlen(env_list->env_inf) != 0)
-			line = ft_strjoin(env_list->env_name, "=");
+			tmp_line = ft_strjoin(env_list->env_name, "=");
 		else
-			line = env_list->env_name;
-        line = ft_strjoin_gnl(line, env_list->env_inf);
+			tmp_line = ft_strdup(env_list->env_name);
+        line = ft_strjoin(tmp_line, env_list->env_inf);
+		free(tmp_line);
         write(list->fd_out, line, ft_strlen(line));
         write(list->fd_out, "\n", 1);
         free(line);
