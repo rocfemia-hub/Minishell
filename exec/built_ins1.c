@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/03 16:48:11 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/03 16:59:19 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ void	cd_function(t_com *list, t_vars *vars)
 	if (chdir(target_dir) == -1)
 	{
 		if (errno == EACCES)
-            write(2, ": Permission denied\n", 20);
+            write(2, "minishell: cd: Permission denied\n", 33);
         else if (errno == ENOENT)
-            write(2, ": No such file or directory\n", 28);
+            write(2, "minishell: cd: No such file or directory\n", 41);
         else
-            write(2, ": Error changing directory\n", 26);
+            write(2, "minishell: cd: Error changing directory\n", 40);
 		return ;
 	}
 	if(!cd_aux_funcion(list, vars))
