@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/03 16:52:49 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/03 20:35:56 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ typedef struct s_com
 // MAIN
 void 	init_env(t_vars *vars);
 int		line_break(char *line);
+int		matrix_len(char **matrix);
+char	**malloc_matrix(char **matrix);
 void	init_vars(t_vars *vars, int argc, char **argv,  char **env);
 void	init_fds(t_com *list, t_vars *vars);
 

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 10:58:41 by rocfemia          #+#    #+#             */
-/*   Updated: 2025/10/07 14:29:23 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/03 20:41:36 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ char				*ft_substr(const char *s, unsigned int start, size_t len);
 char				*ft_strjoin(const char *s1, const char *s2);
 char				*ft_strtrim(const char *s1, const char *set);
 char				**ft_split(const char *s, char c);
-void				ft_free_free(char **matrix);
 char				*ft_itoa(int n);
 char				*ft_strmapi(const char *s, char (*f)(unsigned int, char));
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
@@ -65,6 +64,12 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
+
+// Parte_roo
+
+char				**malloc_matrix(char **matrix);
+int					matrix_len(char **matrix);
+void				ft_free_free(char **matrix);
 
 // Parte_BONUS
 

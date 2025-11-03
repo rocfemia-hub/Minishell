@@ -6,7 +6,7 @@
 #    By: roo <roo@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 11:13:01 by rocfemia          #+#    #+#              #
-#    Updated: 2025/03/20 00:47:21 by roo              ###   ########.fr        #
+#    Updated: 2025/11/03 20:43:46 by roo              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 	ft_lstadd_front.c ft_lstadd_back.c ft_lstlast.c ft_lstnew.c ft_lstsize.c\
 	ft_printf.c ft_printf_utils.c ft_libft_utils.c\
 	get_next_line.c get_next_line_utils.c\
+	malloc_matrix.c matrix_len.c\
 
 OBJ = $(SRC:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 14:19:26 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/03 20:41:55 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void init_vars(t_vars *vars, int argc, char **argv, char **env)
 	if(!env || !env[0])
 		init_env(vars);
 	else
-		vars->env = env;
+		vars->env = malloc_matrix(env);
 	vars->exit_status = 0;
 	vars->pwd = getcwd(NULL, 0);
 	env_to_list(vars, vars->env);
