@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 16:38:02 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/03 16:52:49 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,15 @@
 # include "./libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <sys/wait.h>
 # include <sys/types.h>
+# include <sys/wait.h>
+# include <termios.h>
 # include <unistd.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <dirent.h>
 # include <signal.h>
-# include <termios.h>
+# include <stdio.h>
+# include <errno.h>
 
 typedef struct s_clean_cmd
 {

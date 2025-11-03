@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 16:53:20 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/03 16:51:35 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,13 +103,14 @@ int	cd_aux_funcion(t_com *list, t_vars *vars)
 	current_dir = getcwd(NULL, 0);
 	if (!current_dir)
 		return (write(2, "minishell: ", 11), perror("cd"), 0);
-	old_pwd = ft_strjoin("OLDPWD=", current_dir);
+	old_pwd = ft_strjoin("OLDPWD=", vars->pwd);
     add_update_env_var(vars, old_pwd);
     free(old_pwd);
 
 	if (vars->pwd)
         free(vars->pwd);
-    vars->pwd = getcwd(NULL, 0);
+		
+    vars->pwd = current_dir;
     new_pwd = ft_strjoin("PWD=", vars->pwd);
     add_update_env_var(vars, new_pwd);
     free(new_pwd);

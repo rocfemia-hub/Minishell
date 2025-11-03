@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 16:45:42 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/03 16:48:11 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,13 @@ void	cd_function(t_com *list, t_vars *vars)
 	target_dir = list->args[0];
 	if (chdir(target_dir) == -1)
 	{
-		write(2, "cd: ", 4);
-		write(2, target_dir, ft_strlen(target_dir));
-		write(2, ": No such file or directory\n", 28);
-		return (free(target_dir));
+		if (errno == EACCES)
+            write(2, ": Permission denied\n", 20);
+        else if (errno == ENOENT)
+            write(2, ": No such file or directory\n", 28);
+        else
+            write(2, ": Error changing directory\n", 26);
+		return ;
 	}
 	if(!cd_aux_funcion(list, vars))
 		return ;
