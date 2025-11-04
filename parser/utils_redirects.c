@@ -63,7 +63,10 @@ void handle_redirect_array(char ***arr, int *flag, char *file)
         *arr = ft_calloc(2, sizeof(char *));
     else
         *arr = realloc_redirect_flags(*arr);
-    (*arr)[*flag] = ft_strdup(file);
+    if (ft_strnstr(file, "<", ft_strlen(file)) || ft_strnstr(file, ">", ft_strlen(file)) || ft_strnstr(file, "<<", ft_strlen(file)) || ft_strnstr(file, ">>", ft_strlen(file)))
+        (*arr)[*flag] = ft_strdup(clean_quotes_in_line(file));
+    else
+        (*arr)[*flag] = ft_strdup(file);
     (*flag)++;
 }
 
@@ -107,5 +110,4 @@ void fill(t_com *commands, int start, int end, char *redirect)
         commands->redirects->delimiter = ft_strdup(commands->redirects->file);
         commands->redirects->redirect_heredoc = 1;
     }
-    free(commands->redirects->file);
 }

@@ -103,7 +103,7 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
 
     if (!cmd || !line)
         return;
-    commands->command = ft_substr(cmd, 0, ft_strlen(cmd)); // PROBANDO A ARREGLARLO
+    commands->command = ft_substr(cmd, 0, ft_strlen(cmd));
     while (line[end] == ' ')
         end++;
     if (has_expandable_dollar(line + end)) // posible expansion en los argumentos

@@ -85,8 +85,7 @@ int main(int argc, char **argv, char **env)
 	while (1)
 	{
 		g_signal = 0; // Reset signal status
-		line = readline("minishell-> ");
-		
+		line = readline("minishell-> ");		
 		if (!line) // Ctrl+D - EOF
 		{
 			rl_clear_history();		 // Liberar historial de readline

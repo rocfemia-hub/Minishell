@@ -37,11 +37,14 @@ void look_for_cmd(t_com *commands)
             find(commands);
         i++;
     }
-    if (ft_strlen(commands->command) < 1 || ft_strlen(commands->args[i]))
+    if (!commands->command || ft_strlen(commands->command) < 1)
     {
-        commands->command = ft_strdup(commands->args[i]);
-        temp = realloc_redirect_args(commands->args);
-        commands->args = temp;
+        if (commands->args[0])
+        {
+            commands->command = ft_strdup(commands->args[0]);
+            temp = realloc_redirect_args(commands->args);
+            commands->args = temp;
+        }
     }
 }
 
