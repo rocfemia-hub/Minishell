@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 19:12:52 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 19:51:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_vars
 typedef struct s_red
 {
 	int		redirected; //flag para ver si ya he redireccionado
-	int		*type_redirec; //array d int para saber cual es ek orden en el q lo escriben por terminal (1-input, 2-output, 3-append, 4-heredoc)
+	int		*t_red; //array d int para saber cual es ek orden en el q lo escriben por terminal (1-input, 2-output, 3-append, 4-heredoc)
 	char	**input_file; //archivo para redirección con <
 	char	**output_file; // archivo para redirección con >
 	char	**append_file; //archivo para redirección con >>

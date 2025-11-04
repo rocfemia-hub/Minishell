@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:46 by roo               #+#    #+#             */
-/*   Updated: 2025/09/25 17:36:48 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 19:51:20 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,22 +76,22 @@ void fill_type_redirect(t_com *commands, int type)
     int i;
     int size;
 
-    temp = commands->redirects->type_redirec;
+    temp = commands->redirects->t_red;
     if (!temp)
     {
-        commands->redirects->type_redirec = ft_calloc(2, sizeof(int));
-        commands->redirects->type_redirec[0] = type;
+        commands->redirects->t_red = ft_calloc(2, sizeof(int));
+        commands->redirects->t_red[0] = type;
     }
     else
     {
         size = 0;
         while (temp[size] != 0)
             size++;
-        commands->redirects->type_redirec = ft_calloc(size + 2, sizeof(int));
+        commands->redirects->t_red = ft_calloc(size + 2, sizeof(int));
         i = -1;
         while (++i < size)
-            commands->redirects->type_redirec[i] = temp[i];
-        commands->redirects->type_redirec[size] = type;
+            commands->redirects->t_red[i] = temp[i];
+        commands->redirects->t_red[size] = type;
         free(temp);
     }
 }

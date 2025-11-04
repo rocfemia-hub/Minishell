@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 16:18:08 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 20:06:55 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,26 +134,19 @@ int	execute_error_control(t_com *list)
 	if (list->path_command == NULL)
 	{
 		if (!has_slash)
-		{
-			ft_printf(2, "minishell: %s: command not found\n", list->command);
-			return (list->vars->exit_status = 127, 0);
-		}
+			return (ft_printf(2, "minishell: %s: command not found\n",
+					list->command), list->vars->exit_status = 127, 0);
 		if (access(list->command, F_OK) == -1)
-		{
-			ft_printf(2, "minishell: %s: No such file or directory\n", list->command);
-			return (list->vars->exit_status = 127, 0);
-		}
+			return (ft_printf(2, "minishell: %s: No such file or directory\n",
+					list->command), list->vars->exit_status = 127, 0);
 		dir = opendir(list->command);
 		if (dir != NULL)
-		{
-			ft_printf(2, "minishell: %s: Is a directory\n", list->command);
-			return (list->vars->exit_status = 126, closedir(dir), 0);
-		}
+			return (ft_printf(2, "minishell: %s: Is a directory\n",
+					list->command), list->vars->exit_status = 126,
+				closedir(dir), 0);
 		if (access(list->command, X_OK) == -1)
-		{
-			ft_printf(2, "minishell: %s: Permission denied\n", list->command);
-			return (list->vars->exit_status = 126, 0);
-		}
+			return (ft_printf(2, "minishell: %s: Permission denied\n",
+					list->command), list->vars->exit_status = 126, 0);
 	}
 	return (1);
 }

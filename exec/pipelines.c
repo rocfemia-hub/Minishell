@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 19:19:36 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 19:54:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,6 @@ void	execute_pipeline(t_com *list)
 	pids = malloc(sizeof(pid_t) * num_cmds);
 	list->redirects->err = 0;
 	execute_pipelines2(list, pids);
-	// ELIMINAR ESTE BUCLE - el padre ya cerró los FDs
-	// tmp_list = list;
-	// while (tmp_list)
-	// {
-	//     clean_fds(tmp_list);
-	//     tmp_list = tmp_list->next;
-	// }
 	pipelines_signals(list, pids, num_cmds, 0);
 	free(pids);
 }
@@ -67,7 +60,7 @@ void	execute_pipelines2(t_com *list, pid_t *pids)
 	int		i;
 
 	tmp_list = list;
-	i = 0;  // MOVER el contador aquí
+	i = 0;
 	while (tmp_list)
 	{
 		if (!tmp_list->redirects)
@@ -79,14 +72,12 @@ void	execute_pipelines2(t_com *list, pid_t *pids)
 		{
 			if (!redirections_control(tmp_list, 0, 0, 0))
 			{
-				tmp_list->redirects->redirected = 1;
 				tmp_list->redirects->err = 1;
 				tmp_list = tmp_list->next;
 				continue ;
 			}
-			tmp_list->redirects->redirected = 1;
 		}
-		pids_pipelines(list, tmp_list, pids, i++);  // PASAR i
+		pids_pipelines(list, tmp_list, pids, i++);
 		tmp_list = tmp_list->next;
 	}
 }
@@ -102,12 +93,11 @@ void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i)
 		pids2_pipelines(list, tmp_list);
 	else
 	{
-		// PADRE: cerrar los file descriptors que ya no necesita
 		if (tmp_list->fd_in != STDIN_FILENO)
 			close(tmp_list->fd_in);
 		if (tmp_list->fd_out != STDOUT_FILENO)
 			close(tmp_list->fd_out);
-		pids[i] = pid;  // USAR el índice correcto
+		pids[i] = pid;
 	}
 }
 

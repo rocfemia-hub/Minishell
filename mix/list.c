@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:46 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 16:10:16 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 19:51:20 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,14 @@ void print_list(t_com *list)
 				printf("output_file: %s, flag: %d\n", list->redirects->output_file[0], list->redirects->redirect_out);
 			else
 				printf("output_file: (null), flag: %d\n", list->redirects->redirect_out);
-			if (list->redirects->type_redirec)
+			if (list->redirects->t_red)
 			{
 				int j = 0;
 				printf("type_redirec: [");
-				while (list->redirects->type_redirec[j] != 0)
+				while (list->redirects->t_red[j] != 0)
 				{
-					printf("%d", list->redirects->type_redirec[j]);
-					if (list->redirects->type_redirec[j + 1] != 0)
+					printf("%d", list->redirects->t_red[j]);
+					if (list->redirects->t_red[j + 1] != 0)
 						printf(", ");
 					j++;
 				}

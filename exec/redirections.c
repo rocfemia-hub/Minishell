@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 19:29:01 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 19:52:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,22 @@ int	redirections_control(t_com *list, int j, int q, int k)
 		return (0);
 	if (list->redirects->redirected == 1)
 		return (1);
+	list->redirects->redirected = 1;
 	if (list->redirects->redirect_heredoc) // Heredoc toma prioridad sobre otras redirecciones de input
 	{
 		heredoc_execution(list);
-		list->redirects->redirected = 1;
-		// Si el heredoc fue interrumpido, retornar 0 para indicar error
 		if (g_signal == SIGINT)
 			return (0);
 		return (1);
 	}
-	if (list->redirects->type_redirec) // sino peta el programa cuando no hay redirecciones
+	while (list->redirects->t_red && list->redirects->t_red[++i] != 0) // cambio el ++ porque sino no miro el primer digito 
 	{
-		while (list->redirects->type_redirec[++i] != 0) // cambio el ++ porque sino no miro el primer digito 
-		{
-			if (list->redirects->type_redirec[i] == 1) 
-				if(!infile_redirection(list, j++))
-					return (0);
-			if (list->redirects->type_redirec[i] == 2) 
-				if(!outfile_redirection(list, q++))
-					return (0);
-			if (list->redirects->type_redirec[i] == 3) 
-				if(!append_redirection(list, k++))
-					return (0);
-		}
+		if (list->redirects->t_red[i] == 1 && !infile_redirection(list, j++))
+			return (0);
+		if (list->redirects->t_red[i] == 2 && !outfile_redirection(list, q++))
+			return (0);
+		if (list->redirects->t_red[i] == 3 && !append_redirection(list, k++))
+			return (0);
 	}
 	return(1);
 }
