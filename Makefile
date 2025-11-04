@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CCFLAGS = #-g3 -fsanitize=address #-Wall -Wextra -Werror
+CCFLAGS = #-g3 #-fsanitize=address #-Wall -Wextra -Werror
 
 BLUE = \033[34m
 RESET = \033[0m

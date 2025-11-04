@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/03 16:59:19 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:07:34 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	echo_function(t_com *list, t_vars *vars)
 	{
 		write(list->fd_out, "\n", 1);
 		list->vars->exit_status = 0;
-		return;
+		return ;
 	}
 	i = 0;
 	newline = 1;
@@ -30,12 +30,11 @@ void	echo_function(t_com *list, t_vars *vars)
 		newline = 0;
 		i++;
 	}
-	while (list->args[i])
+	while (list->args[i++])
 	{
 		write(list->fd_out, list->args[i], ft_strlen(list->args[i]));
 		if (list->args[i + 1])
 			write(list->fd_out, " ", 1);
-		i++;
 	}
 	if (newline)
 		write(list->fd_out, "\n", 1);
@@ -89,14 +88,14 @@ void	cd_function(t_com *list, t_vars *vars)
 	if (chdir(target_dir) == -1)
 	{
 		if (errno == EACCES)
-            write(2, "minishell: cd: Permission denied\n", 33);
-        else if (errno == ENOENT)
-            write(2, "minishell: cd: No such file or directory\n", 41);
-        else
-            write(2, "minishell: cd: Error changing directory\n", 40);
+			write(2, "minishell: cd: Permission denied\n", 33);
+		else if (errno == ENOENT)
+			write(2, "minishell: cd: No such file or directory\n", 41);
+		else
+			write(2, "minishell: cd: Error changing directory\n", 40);
 		return ;
 	}
-	if(!cd_aux_funcion(list, vars))
+	if (!cd_aux_funcion(list, vars))
 		return ;
 	vars->exit_status = 0;
 }

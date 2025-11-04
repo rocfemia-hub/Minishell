@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/11/03 17:16:44 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:08:43 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ void	export_function(t_com *list, t_vars *vars)
 
 	i = 0;
 	if (!list->args || !*list->args)
-		return (free(list->args), (list->args = NULL), print_export_vars(list, vars));
+		return (free(list->args), (list->args = NULL),
+			print_export_vars(list, vars));
 	while (list->args && list->args[i])
 	{
 		if (!valid_var_name(list->args[i]))
