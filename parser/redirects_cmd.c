@@ -33,7 +33,7 @@ void look_for_cmd(t_com *commands)
         return;
     while (commands->args[i])
     {
-        if(is_redirect_token(commands->args[i], "<<") || is_redirect_token(commands->args[i], ">>") || is_redirect_token(commands->args[i], "<") || is_redirect_token(commands->args[i], ">"))
+        if (is_redirect_token(commands->args[i], "<<") || is_redirect_token(commands->args[i], ">>") || is_redirect_token(commands->args[i], "<") || is_redirect_token(commands->args[i], ">"))
             find(commands);
         i++;
     }
@@ -66,25 +66,29 @@ void fill_cmd(t_com *commands, char *redirect)
 
 int clean_redirects_cmd(t_com *commands, char *redirect, int type)
 {
+    int i;
+
+    i = 0;
     if (ft_strnstr(commands->command, ">>>", 3)) // error >>>
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
         commands->vars->exit_status = 2;
         return (0);
     }
-    else if (commands->command[0] != redirect[0] || ft_strnstr(commands->command, "<<<", 3)) // error hola< y <<<
+    else if (ft_strnstr(commands->command, "<<<", 3)) // error hola< y <<<
     {
         commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
         commands->vars->exit_status = 2;
         return (0);
     }
-    else if (ft_strlen(commands->command) > ft_strlen(redirect)) // si la redireccion esta asi ">adios" --> no es error
+    else if (ft_strlen(commands->command) > ft_strlen(redirect)) // cat>Makefile
     {
-        commands->redirects->file = ft_strdup(commands->command + ft_strlen(redirect)); // archivo al que redirecciona
-        fill_cmd(commands, redirect);                                                   // rellena estructura
+        while (commands->command[i] && ft_strncmp(commands->command + i, redirect, ft_strlen(redirect)) != 0)
+            i++;
+        commands->redirects->file = ft_strdup(commands->command + i + ft_strlen(redirect));
+        fill_cmd(commands, redirect);
         fill_type_redirect(commands, type);
-        free(commands->command);
-        commands->command = ft_strdup("");
+        commands->command = ft_substr(commands->command, 0, i);
     }
     else if (commands->args[0])
     {
@@ -138,6 +142,5 @@ int redirects_cmd(t_com *commands)
             return (0);
         }
     }
-            return (0);
-
+    return (0);
 }
