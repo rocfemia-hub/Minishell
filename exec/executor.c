@@ -16,7 +16,7 @@ void	execute_control(t_com *list, t_vars *vars)
 {
 	t_com	*tmp_list;
 
-	//setup_signals_noninteractive(); // Configurar señales para ejecución de comandos
+	setup_signals_noninteractive(); // Configurar señales para ejecución de comandos
 	list->redirects->redirected = 0;
 	tmp_list = list;
 	if (tmp_list->next == NULL)
@@ -154,7 +154,7 @@ int	pids_funcion(t_com *list, int status)
 		return (write(2, "minishell: ", 11), perror("fork"), 0);
 	if (pid == 0)
 	{
-		//setup_signals_default();
+		setup_signals_default();
 		apply_redirections(list);
 		if (execve(list->path_command, list->command_arg, list->vars->env) == 0)
 		{

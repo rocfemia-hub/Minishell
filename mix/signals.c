@@ -17,6 +17,7 @@ void handle_sigint_interactive(int sig)
 {
     (void)sig;
     g_signal = SIGINT;
+    
     write(STDOUT_FILENO, "\n", 1);
     rl_on_new_line();
     rl_replace_line("", 0);
@@ -88,15 +89,37 @@ void	restore_terminal_heredoc(void)
 }// Configurar señales para modo interactivo (main shell)
 void setup_signals_interactive(void)
 {
-    signal(SIGINT, handle_sigint_interactive);
-    signal(SIGQUIT, SIG_IGN); // Ignorar SIGQUIT en modo interactivo
+    struct sigaction sa_int;
+    struct sigaction sa_quit;
+    
+    // Configurar SIGINT con sigaction
+    sa_int.sa_handler = handle_sigint_interactive;
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = 0; // Sin SA_RESTART para que readline maneje correctamente la señal
+    sigaction(SIGINT, &sa_int, NULL);
+    
+    // Ignorar SIGQUIT
+    sa_quit.sa_handler = SIG_IGN;
+    sigemptyset(&sa_quit.sa_mask);
+    sa_quit.sa_flags = 0;
+    sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
 // Configurar señales para ejecución de comandos
 void setup_signals_noninteractive(void)
 {
-    signal(SIGINT, handle_sigint_child);
-    signal(SIGQUIT, SIG_IGN); // Ignorar SIGQUIT en comandos también
+    struct sigaction sa_int;
+    struct sigaction sa_quit;
+    
+    sa_int.sa_handler = handle_sigint_child;
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = 0;
+    sigaction(SIGINT, &sa_int, NULL);
+    
+    sa_quit.sa_handler = SIG_IGN;
+    sigemptyset(&sa_quit.sa_mask);
+    sa_quit.sa_flags = 0;
+    sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
 // Configurar señales para heredoc
@@ -118,6 +141,13 @@ void setup_signals_heredoc(void)
 // Configurar señales por defecto para procesos hijos
 void setup_signals_default(void)
 {
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_IGN); // Ignorar SIGQUIT también en procesos hijos
+    struct sigaction sa;
+    
+    sa.sa_handler = SIG_DFL;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGINT, &sa, NULL);
+    
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGQUIT, &sa, NULL);
 }

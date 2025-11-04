@@ -86,17 +86,24 @@ int main(int argc, char **argv, char **env)
 	{
 		g_signal = 0; // Reset signal status
 		line = readline("minishell-> ");
-		if (!line) // Ctrl+D
+		
+		if (!line) // Ctrl+D - EOF
 		{
 			rl_clear_history();		 // Liberar historial de readline
 			free_t_vars_list(&vars); // Liberar env_list
 			printf("exit\n");
 			break;
 		}
-		if (g_signal == SIGINT) // Ctrl+C en el prompt
+		
+		if (g_signal == SIGINT) // Ctrl+C fue presionado
 		{
 			vars.exit_status = 130;
 			g_signal = 0; // Reset para que no interfiera con el próximo comando
+			if (line[0] == '\0') // Si es línea vacía por SIGINT
+			{
+				free(line);
+				continue;
+			}
 		}
 		if (line[0] == '\0')
 		{
@@ -129,7 +136,6 @@ int main(int argc, char **argv, char **env)
 		setup_pipeline(commands);
 		execute_control(commands, &vars);
 		setup_signals_interactive(); // Restaurar señales interactivas
-		
 		// Check if a signal was received and update exit status
 		if (g_signal == SIGINT)
 			vars.exit_status = 130;
