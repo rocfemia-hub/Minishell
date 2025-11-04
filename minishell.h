@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 15:59:57 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 19:12:52 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_red
 	int		redirect_heredoc; // flag 1 si hay <<, 0 si no hay
 	int		j; //posicion en char * de < ó >
 	int		i; //posicion en char ** de < ó >
+	int		err;
 	int		sintax_error; //sintax error
 	int		error; //falta a donde redireccionar
 	char	*file; // archivo de slaida o entrada
@@ -160,7 +161,8 @@ void	setup_pipeline(t_com *list);
 void	execute_pipeline(t_com *list);
 void	execute_pipelines2(t_com *list, pid_t *pids);
 void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i);
-void	pids_pipelines(t_com *list, t_com *tmp_list);
+void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i);
+void	pids2_pipelines(t_com *list, t_com *tmp_list);
 void	close_pipes(t_com *list, t_com *current_cmd);
 
 // BUILT-INS

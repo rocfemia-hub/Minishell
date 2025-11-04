@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 15:55:33 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 19:29:01 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,8 @@ void	apply_redirections(t_com *list)
 		close(list->fd_out);
 		list->fd_out = 1;
 	}
+	if (list->previous && list->previous->redirects->err && !list->redirects->redirect_in)
+		close(list->fd_in);
 }
 
 void	clean_fds(t_com *list)

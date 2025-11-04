@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 15:54:12 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 16:18:08 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	execute_control(t_com *list, t_vars *vars)
 {
 	t_com	*tmp_list;
 
-	setup_signals_noninteractive(); // Configurar señales para ejecución de comandos
+	setup_signals_noninteractive();
 	list->redirects->redirected = 0;
 	tmp_list = list;
 	if (tmp_list->next == NULL)
@@ -134,14 +134,26 @@ int	execute_error_control(t_com *list)
 	if (list->path_command == NULL)
 	{
 		if (!has_slash)
-			return (list->vars->exit_status = 127, ft_printf(2, "minishell: %s: command not found\n", list->command), 0);
+		{
+			ft_printf(2, "minishell: %s: command not found\n", list->command);
+			return (list->vars->exit_status = 127, 0);
+		}
 		if (access(list->command, F_OK) == -1)
-			return (list->vars->exit_status = 127, ft_printf(2, "minishell: %s: No such file or directory\n", list->command), 0);
+		{
+			ft_printf(2, "minishell: %s: No such file or directory\n", list->command);
+			return (list->vars->exit_status = 127, 0);
+		}
 		dir = opendir(list->command);
 		if (dir != NULL)
-			return (list->vars->exit_status = 126, closedir(dir), ft_printf(2, "minishell: %s: Is a directory\n", list->command), 0);
+		{
+			ft_printf(2, "minishell: %s: Is a directory\n", list->command);
+			return (list->vars->exit_status = 126, closedir(dir), 0);
+		}
 		if (access(list->command, X_OK) == -1)
-			return (list->vars->exit_status = 126, ft_printf(2, "minishell: %s: Permission denied\n", list->command), 0);
+		{
+			ft_printf(2, "minishell: %s: Permission denied\n", list->command);
+			return (list->vars->exit_status = 126, 0);
+		}
 	}
 	return (1);
 }
