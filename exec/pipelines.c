@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/02 13:23:27 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 13:42:11 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,11 @@ void	execute_pipelines2(t_com *list, pid_t *pids)
 	tmp_list = list;
 	while (tmp_list)
 	{
+		if (!tmp_list->redirects)
+		{
+			tmp_list->redirects = ft_calloc(1, sizeof(t_red));
+			tmp_list->redirects->redirected = 0;
+		}
 		if (tmp_list->redirects->redirected != 1)
 		{
 			if (!redirections_control(tmp_list, 0, 0, 0))

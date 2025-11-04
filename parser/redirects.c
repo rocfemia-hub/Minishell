@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 15:23:28 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 13:56:52 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ void find(t_com *commands)
 { // look for < or >
     char *temp;
 
-    if (!commands->args || !commands->redirects) // COMPROBAR Q EXISTE
+    if (!commands->args || !commands->redirects || commands->redirects->j) // COMPROBAR Q EXISTE (HOLA BUENOS DIAS HE CAMBIADO QUE CHECKIE QUE NO HAYA "J" JAJA HOLA)
         return;
     while (commands->args[commands->redirects->j])
     {
