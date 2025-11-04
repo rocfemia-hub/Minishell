@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 15:07:34 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 16:04:34 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,18 @@ void	echo_function(t_com *list, t_vars *vars)
 		list->vars->exit_status = 0;
 		return ;
 	}
-	i = 0;
+	i = -1;
 	newline = 1;
-	while (list->args[i] && valid_n_option(list->args[i]))
-	{
+	while (list->args[++i] && valid_n_option(list->args[i]))
 		newline = 0;
-		i++;
-	}
-	while (list->args[i++])
+	while (list->args[i])
 	{
 		write(list->fd_out, list->args[i], ft_strlen(list->args[i]));
 		if (list->args[i + 1])
 			write(list->fd_out, " ", 1);
+		i++;
 	}
-	if (newline)
+	if (newline && vars)
 		write(list->fd_out, "\n", 1);
 	list->vars->exit_status = 0;
 }
@@ -55,7 +53,7 @@ void	pwd_function(t_com *list, t_vars *vars)
 
 void	exit_function(t_com *list, t_vars *vars)
 {
-	if (!list->args[0])
+	if (!list->args[0] || !vars)
 		exit(0);
 	if (list->args[0] && !list->args[1])
 	{
@@ -75,10 +73,7 @@ void	cd_function(t_com *list, t_vars *vars)
 	char	*target_dir;
 
 	if ((!list->args || !list->args[0]) && !getenv("HOME"))
-	{
-		write(2, "cd: HOME not set\n", 17);
-		return ;
-	}
+		return (write(2, "cd: HOME not set\n", 17), (void)0);
 	else if (list->args[1])
 	{
 		write(2, "cd: too many arguments\n", 23);

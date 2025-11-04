@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/03 20:41:55 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:52:38 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void init_env(t_vars *vars)
 	vars->env[4] = NULL;
 }
 
-void init_vars(t_vars *vars, int argc, char **argv, char **env)
+void init_vars(t_vars *vars, char **env)
 {
 	if(!env || !env[0])
 		init_env(vars);
@@ -80,7 +80,7 @@ int main(int argc, char **argv, char **env)
 		return 1;
 	commands = NULL;			   // la verdad aqui no tengo del todo calro porque no se hace malloc
 	ft_bzero(&vars, sizeof(vars)); // malloc d la nueva struct
-	init_vars(&vars, argc, argv, env);
+	init_vars(&vars, env);
 	setup_signals_interactive();   // Configurar señales para modo interactivo
 	while (1)
 	{

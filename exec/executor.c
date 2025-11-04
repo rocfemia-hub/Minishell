@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/31 13:34:19 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:54:12 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,9 @@ int	execute(t_com *list, t_vars *vars)
 {
 	int	status;
 
+	status = 0;
 	list->path_command = get_path(list->command, list->vars->env, list);
-	if (list->command)
+	if (list->command && vars)
 	{
 		if (ft_strnstr(list->command, ";", ft_strlen(list->command)))
 		{

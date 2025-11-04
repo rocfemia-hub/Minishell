@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/10/29 16:40:53 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:55:33 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,9 @@ void	clean_fds(t_com *list)
     if (list->fd_in != STDIN_FILENO)
         close(list->fd_in);
     if (list->fd_out != STDOUT_FILENO)
+	{
         close(list->fd_out);
+	}
 	list->fd_in = STDIN_FILENO;
 	list->fd_out = STDOUT_FILENO;
 	if (list->redirects && list->redirects->heredoc_file)

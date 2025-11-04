@@ -138,4 +138,6 @@ int redirects_cmd(t_com *commands)
             return (0);
         }
     }
+            return (0);
+
 }

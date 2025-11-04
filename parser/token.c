@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 13:11:40 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:56:09 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ char *only_cmd(char *line, t_clean_cmd *data)
 void type_command(char *line, t_com *commands)
 {
     t_clean_cmd data;
-    int len_cmd;
     char *temp;
     int saved_index;
 
@@ -64,7 +63,6 @@ void type_command(char *line, t_com *commands)
     if (!data.cmd)
         return;
     saved_index = data.only_cmd_i;  // Guardar el índice correcto de only_cmd
-    len_cmd = ft_strlen(data.cmd) + 1;                  // por si luego tengo que coger el siguiente comando, por perder la referencia
     if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))) // hay posible expansion en el comando
     {
         if (expand_cmd(&data, commands->vars)) // si hay $ en el comando

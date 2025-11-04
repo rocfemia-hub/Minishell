@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:51 by roo               #+#    #+#             */
-/*   Updated: 2025/10/21 20:17:13 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:56:14 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ t_com *create_struct(char *line, t_vars *vars)
 
 void init_struct(char *line, char *cmd, int end, t_com *commands)
 {
-    int len;
     char *new_line;
 
     if (!cmd || !line)

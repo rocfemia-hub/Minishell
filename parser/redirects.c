@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 13:56:52 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 16:00:11 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int aux_parser_redirects(t_com *commands, char *redirect, int type)
     commands->redirects->file = ft_strdup(commands->args[commands->redirects->j + 1]);
     fill_type_redirect(commands, type);
     fill(commands, commands->redirects->j, commands->redirects->j + 1, redirect);
+	return (0);
 }
 
 char *find_redirect_position(char *arg, char *redirect)

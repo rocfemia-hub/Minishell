@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/03 20:35:56 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:59:57 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void 	init_env(t_vars *vars);
 int		line_break(char *line);
 int		matrix_len(char **matrix);
 char	**malloc_matrix(char **matrix);
-void	init_vars(t_vars *vars, int argc, char **argv,  char **env);
+void	init_vars(t_vars *vars, char **env);
 void	init_fds(t_com *list, t_vars *vars);
 
 //LISTAS
@@ -241,10 +241,10 @@ char *expand_args(char *line, t_vars *vars);
 
 //UTILS_EXPANDER
 char *handle_single_quotes(char *line, int *i, t_vars *vars);
-char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token, t_vars * vars);
+char *expand_var_in_quotes_args(char *line, int *k, int *start, char *token, t_vars * vars);
 char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars);
 char *handle_double_quotes(char *line, int *i, t_vars *vars);
-char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token, t_vars *vars);
+char *expand_var_in_quotes(char *cmd, int *k, int *start, char *token, t_vars *vars);
 
 //AUX_EXPANDER
 char *handle_inter(t_vars *vars);

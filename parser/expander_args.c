@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:30 by roo               #+#    #+#             */
-/*   Updated: 2025/09/25 17:37:32 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:56:57 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ char *ft_strjoin_cmd(char **cmd)
     int len;
     char *result;
     int i;
-    int k;
 
     len = 0;
     i = -1;
@@ -40,6 +39,8 @@ char *handle_plain_text_args(char *line, int *i, t_vars *vars)
     int start;
     char *token;
 
+	if (!vars)
+		return (NULL);
     token = NULL;
     start = *i;
     while (line[*i] && line[*i] != '\'' && line[*i] != '"' && line[*i] != '$')

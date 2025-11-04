@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:56 by roo               #+#    #+#             */
-/*   Updated: 2025/09/25 17:36:58 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 15:59:47 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char *handle_single_quotes(char *line, int *i, t_vars *vars)
     char *token;
     int len;
 
+	if (!vars)
+		return (NULL);
     (*i)++; 
     start = *i; 
     while (line[*i] && line[*i] != '\'')
@@ -29,7 +31,7 @@ char *handle_single_quotes(char *line, int *i, t_vars *vars)
     return (token);
 }
 
-char *expand_var_in_quotes_args(char *line, int *k, int end, int *start, char *token, t_vars *vars)
+char *expand_var_in_quotes_args(char *line, int *k, int *start, char *token, t_vars *vars)
 { // VARIABLES DENTRO DE COMILLAS DOBLES
     int vstart;
     int vlen;
@@ -78,7 +80,7 @@ char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars)
         {
             if (k > start)
                 token = str_append(token, ft_substr(line, start, k - start));
-            token = expand_var_in_quotes_args(line, &k, end, &start, token, vars);
+            token = expand_var_in_quotes_args(line, &k, &start, token, vars);
         }
         else
             k++;
@@ -90,12 +92,10 @@ char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars)
 
 char *handle_double_quotes(char *line, int *i, t_vars *vars)
 { //GESTION COMILLAS DOBLES
-    int start;
     int end;
     char *token;
     char *inner;
 
-    start = *i;
     (*i)++;
     end = *i;
     while (line[end] && line[end] != '"')
@@ -110,7 +110,7 @@ char *handle_double_quotes(char *line, int *i, t_vars *vars)
     return (token);
 }
 
-char *expand_var_in_quotes(char *cmd, int *k, int end, int *start, char *token, t_vars *vars)
+char *expand_var_in_quotes(char *cmd, int *k, int *start, char *token, t_vars *vars)
 {
     int vstart;
     int vlen;
