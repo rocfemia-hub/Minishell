@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 15:52:38 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 22:58:04 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,14 @@ int main(int argc, char **argv, char **env)
 		setup_pipeline(commands);
 		execute_control(commands, &vars);
 		setup_signals_interactive(); // Restaurar señales interactivas
-		// Check if a signal was received and update exit status
 		if (g_signal == SIGINT)
 			vars.exit_status = 130;
 		free(line);
+		
 		free_t_com_list(commands);
 		commands = NULL; // reseteamos el puntero
 	}
+	free_array(vars.env);
+	free(vars.pwd);
 	return (0);
 }
