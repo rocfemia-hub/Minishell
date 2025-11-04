@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 20:06:55 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/04 23:45:21 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ char	*get_path(char *cmd, char **envp, t_com *pipex)
 		free(result);
 		result = NULL;
 	}
-	if (result == NULL)
-		return (result);
+	/*if (result == NULL)
+		return (result);*/
 	return (ft_free_free(paths), result);
 }
 
