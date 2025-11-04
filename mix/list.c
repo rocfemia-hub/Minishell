@@ -74,26 +74,22 @@ void print_list(t_com *list)
 		if (list->redirects)
 		{
 			printf("\033[34mprint_redirects:\033[0m\n");
-			
-			// Verificar append_file
+			if (list->redirects->delimiter)
+				printf("delimiter: %s, flag; %d\n", list->redirects->delimiter, list->redirects->redirect_heredoc);
+			else
+				printf("delimiter: (null), flag: %d\n", list->redirects->redirect_heredoc);
 			if (list->redirects->append_file && list->redirects->append_file[0])
 				printf("append_file: %s, flag: %d\n", list->redirects->append_file[0], list->redirects->redirect_append);
 			else
 				printf("append_file: (null), flag: %d\n", list->redirects->redirect_append);
-			
-			// Verificar input_file
 			if (list->redirects->input_file && list->redirects->input_file[0])
 				printf("input_file: %s, flag: %d\n", list->redirects->input_file[0], list->redirects->redirect_in);
 			else
 				printf("input_file: (null), flag: %d\n", list->redirects->redirect_in);
-			
-			// Verificar output_file
 			if (list->redirects->output_file && list->redirects->output_file[0])
 				printf("output_file: %s, flag: %d\n", list->redirects->output_file[0], list->redirects->redirect_out);
 			else
 				printf("output_file: (null), flag: %d\n", list->redirects->redirect_out);
-			
-			// Verificar type_redirec
 			if (list->redirects->type_redirec)
 			{
 				int j = 0;

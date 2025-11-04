@@ -32,7 +32,7 @@ int aux_parser_redirects(t_com *commands, char *redirect, int type)
     commands->redirects->file = ft_strdup(commands->args[commands->redirects->j + 1]);
     fill_type_redirect(commands, type);
     fill(commands, commands->redirects->j, commands->redirects->j + 1, redirect);
-	return (0);
+    return (1);
 }
 
 char *find_redirect_position(char *arg, char *redirect)
