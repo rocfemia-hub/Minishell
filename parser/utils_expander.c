@@ -103,19 +103,15 @@ char *handle_double_quotes(char *line, int *i, t_vars *vars)
 { //GESTION COMILLAS DOBLES
 	int end;
 	char *token;
-	char *inner;
 
 	(*i)++;
 	end = *i;
 	while (line[end] && line[end] != '"')
 		end++;
-	inner = process_inside_double_quotes(line, *i, end, vars);
+	token = process_inside_double_quotes(line, *i, end, vars);
 	if (line[end] == '"')
 		end++;
 	*i = end;
-	token = ft_strjoin("\"", inner);
-	token = str_append(token, "\"");
-	free(inner);
 	return (token);
 }
 

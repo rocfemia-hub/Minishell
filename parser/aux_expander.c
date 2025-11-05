@@ -76,6 +76,11 @@ char	*handle_dollar(char *line, int *i, t_vars *vars)
 		token = handle_var_expansion(vars, line, start, &vlen);
 		*i = start + vlen;
 	}
+	else if (line[start] == '"' || line[start] == '\'')
+	{
+		token = ft_strdup("");
+		*i = start;
+	}
 	else
 	{
 		token = ft_strdup("$");

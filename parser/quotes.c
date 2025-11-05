@@ -69,7 +69,7 @@ void keep_quotes_args(t_com *commands, char *line)
 
 
 void clean_quotes_in_args(t_com *commands)
-{ //clean quotes of char **args
+{
     int i = 0;
     int j, k;
     char *arg;
@@ -89,12 +89,12 @@ void clean_quotes_in_args(t_com *commands)
         {
             if ((arg[j] == '\'' || arg[j] == '"'))
             {
-                if (!quote)              // abrir comilla
+                if (!quote)
                     quote = arg[j];
-                else if (quote == arg[j]) // cerrar comilla
+                else if (quote == arg[j]) 
                     quote = 0;
                 else
-                    new_arg[k++] = arg[j]; // comilla distinta → carácter normal
+                    new_arg[k++] = arg[j];
             }
             else
                 new_arg[k++] = arg[j];

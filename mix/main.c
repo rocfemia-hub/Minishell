@@ -130,7 +130,6 @@ int main(int argc, char **argv, char **env)
 		if (g_signal == SIGINT)
 			vars.exit_status = 130;
 		free(line);
-		
 		free_t_com_list(commands);
 		commands = NULL; // reseteamos el puntero
 	}
