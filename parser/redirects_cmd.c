@@ -53,14 +53,14 @@ void look_for_cmd(t_com *commands)
 void fill_cmd(t_com *commands, char *redirect, char *file)
 {
 	if (ft_strncmp(redirect, "<", 2) == 0)
-		handle_redirect_array(&commands->redirects->input_file, &commands->redirects->redirect_in, file);
+		handle_redirect_array(&commands->redirects->input_file, &commands->redirects->redirect_in, file, commands);
 	else if (ft_strncmp(redirect, ">", 2) == 0)
-		handle_redirect_array(&commands->redirects->output_file, &commands->redirects->redirect_out, file);
+		handle_redirect_array(&commands->redirects->output_file, &commands->redirects->redirect_out, file, commands);
 	else if (ft_strncmp(redirect, ">>", 3) == 0)
-		handle_redirect_array(&commands->redirects->append_file, &commands->redirects->redirect_append, file);
+		handle_redirect_array(&commands->redirects->append_file, &commands->redirects->redirect_append, file, commands);
 	else if (ft_strncmp(redirect, "<<", 3) == 0)
 	{
-		commands->redirects->delimiter = ft_strdup(file);
+		commands->redirects->delimiter = clean_quotes_in_line(ft_strdup(file));
 		commands->redirects->redirect_heredoc = 1;
 	}
 	free(file);

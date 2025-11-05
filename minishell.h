@@ -93,6 +93,7 @@ typedef struct s_com
 	int flag_pipe; // 1 si hay pipe 0 si no
 	char *error;
 	int n_args; //se utiliza en keep_quotes_args en quotes.c
+	int expanded; // 1 si ya se expandieron los args, 0 si no
 	struct s_com *next;
 	t_red *redirects; // estructura para > >> < <<
 	t_vars *vars;
@@ -263,7 +264,7 @@ void redirects(t_com *commands);
 //UTILS_REDIRECTS.C
 char **realloc_redirect_flags(char **flag);
 char **copy_redirect_matrix(char **args, int start, int end);
-void handle_redirect_array(char ***arr, int *count, char *file);
+void handle_redirect_array(char ***arr, int *count, char *file, t_com *commands);
 void fill(t_com *commands, int start, int end, char *redirect);
 void fill_type_redirect(t_com *commands, int type);
 

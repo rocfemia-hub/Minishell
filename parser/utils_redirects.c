@@ -57,13 +57,16 @@ char **copy_redirect_matrix(char **args, int start, int end)
 	return (new_arg);
 }
 
-void handle_redirect_array(char ***arr, int *flag, char *file)
+void handle_redirect_array(char ***arr, int *flag, char *file, t_com *commands)
 { // triple puntero para modificar el valor fuera de la funcion local
 	if (!*arr)
 		*arr = ft_calloc(2, sizeof(char *));
 	else
 		*arr = realloc_redirect_flags(*arr);
-	(*arr)[*flag] = clean_quotes_in_line(ft_strdup(file));
+	if (commands->expanded)
+		(*arr)[*flag] = ft_strdup(file);
+	else
+		(*arr)[*flag] = clean_quotes_in_line(ft_strdup(file));
 	(*flag)++;
 }
 

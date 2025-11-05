@@ -24,7 +24,7 @@ char **ft_strjoin_cmd_arg(t_com *commands)
     len = 0;
     if (commands->command)
         len = 1;
-    if(commands->args)
+    if (commands->args)
         while (commands->args[++j])
             len++;
     aux = ft_calloc(len + 1, sizeof(char *));
@@ -36,10 +36,9 @@ char **ft_strjoin_cmd_arg(t_com *commands)
             while (commands->args[++j])
                 aux[++i] = ft_strdup(commands->args[j]);
     }
-    else
-        if (commands->args)
-            while (commands->args[++j])
-                aux[i++] = ft_strdup(commands->args[j]);
+    else if (commands->args)
+        while (commands->args[++j])
+            aux[i++] = ft_strdup(commands->args[j]);
     return (aux);
 }
 
@@ -106,8 +105,16 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     if (has_expandable_dollar(line + end))
     {
         commands->args = ft_split_parser(line + end);
-        redirects(commands);
-        expand_args(commands);
+        if (is_redirect_token(line + end, "<<"))
+        {
+            redirects(commands);
+            expand_args(commands);
+        }
+        else
+        {
+            expand_args(commands);
+            redirects(commands);
+        }
     }
     else
     {

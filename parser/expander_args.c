@@ -91,7 +91,7 @@ void	expand_args(t_com *commands)
 	char	**token_args;
 	char	**old_args;
 
-	if(commands->redirects->redirect_heredoc != 0)
+	if(commands->redirects && commands->redirects->redirect_heredoc != 0)
 		return;
 	token_args = ft_calloc((256 + 1), sizeof(char *));
 	if (!token_args)
@@ -99,6 +99,7 @@ void	expand_args(t_com *commands)
 	old_args = commands->args;
 	token_args = process_aux_args(commands->args, token_args, commands->vars);
 	commands->args = token_args;
+	commands->expanded = 1;  // marcar que ya se expandió
 	if (old_args)
 		ft_free_free(old_args);
 }
