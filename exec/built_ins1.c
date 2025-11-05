@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 16:04:34 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 06:10:05 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,19 @@ void	cd_function(t_com *list, t_vars *vars)
 {
 	char	*target_dir;
 
-	if ((!list->args || !list->args[0]) && !getenv("HOME"))
-		return (write(2, "cd: HOME not set\n", 17), (void)0);
-	else if (list->args[1])
+	if (!list->args || !list->args[0])
+	{
+		target_dir = get_env_var(vars, "HOME");
+		if (!target_dir)
+			return (write(2, "cd: HOME not set\n", 17), (void)0);
+	}
+	else if (list->args[0])
+		target_dir = list->args[0];
+	else
 	{
 		write(2, "cd: too many arguments\n", 23);
-		return (ft_free_free(list->args));
+		return ;
 	}
-	target_dir = list->args[0];
 	if (chdir(target_dir) == -1)
 	{
 		if (errno == EACCES)

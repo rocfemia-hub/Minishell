@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 19:54:39 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 03:37:12 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	pids2_pipelines(t_com *list, t_com *tmp_list)
 	else
 	{
 		tmp_list->path_command = get_path(tmp_list->command,
-				tmp_list->vars->env, tmp_list);
+				tmp_list->vars);
 		if (!tmp_list->path_command)
 		{
 			ft_printf(2, "minishell: %s: command not found\n",
@@ -122,7 +122,7 @@ void	pids2_pipelines(t_com *list, t_com *tmp_list)
 			exit(127);
 		}
 		if (execve(tmp_list->path_command, tmp_list->command_arg,
-				tmp_list->vars->env) == -1)
+				list_to_env(tmp_list->vars->env_list)) == -1)
 		{
 			(write(2, "minishell: ", 11), perror("execve"));
 			exit(127);
