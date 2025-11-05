@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/10/14 19:53:22 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 01:41:02 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void add_new_env_vars(char *new_var, t_vars *vars)
     }
     new_env[i] = ft_strdup(new_var); // Añadir nueva variable
     new_env[i + 1] = NULL; // Terminar el array con NULL
+	ft_free_free(vars->env);
     vars->env = new_env; // Reemplazar el array antiguo con el nuevo
 }
 

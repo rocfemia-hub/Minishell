@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:34 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 15:56:33 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 01:06:03 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,12 @@ char *str_append(char *dest, const char *src)
     char *tmp;
 
     if (!dest)
-        dest = ft_strdup(src);
+		dest = ft_strdup(src);
     else
     {
         tmp = malloc(ft_strlen(dest) + ft_strlen(src) + 1);
+		if (!tmp)
+			return (NULL);
         ft_strlcpy(tmp, dest, ft_strlen(tmp) + ft_strlen(dest) + 1);
         ft_strlcat(tmp, src, ft_strlen(tmp) + ft_strlen(src) + 1);
         free(dest);

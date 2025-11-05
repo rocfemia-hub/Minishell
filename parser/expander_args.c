@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:30 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 15:56:57 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 01:04:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ char *expand_args(char *line, t_vars *vars)
 
     token_args = aux_args(line, vars);
     new_line = ft_strjoin_cmd(token_args);
+	ft_free_free(token_args);
     return(new_line);
 }
