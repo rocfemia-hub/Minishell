@@ -114,6 +114,8 @@ char *clean_cmd(char *line)
     int j, k;
     char quote;
 
+    if (ft_strnstr(line, "<", ft_strlen(line)) || ft_strnstr(line, "<<", ft_strlen(line)) || ft_strnstr(line, ">", ft_strlen(line)) || ft_strnstr(line, ">>", ft_strlen(line)))
+        return(ft_strdup(line));
     if (!line)
         return (NULL);
     temp = ft_strdup(line);

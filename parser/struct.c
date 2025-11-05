@@ -98,24 +98,22 @@ t_com *create_struct(char *line, t_vars *vars)
 
 void init_struct(char *line, char *cmd, int end, t_com *commands)
 {
-    char *new_line;
-
     if (!cmd || !line)
         return;
     commands->command = ft_substr(cmd, 0, ft_strlen(cmd));
     while (line[end] == ' ')
         end++;
-    if (has_expandable_dollar(line + end)) // posible expansion en los argumentos
+    if (has_expandable_dollar(line + end))
     {
-        new_line = expand_args(line + end, commands->vars);
-        commands->args = ft_split_parser(new_line);
-        free(new_line); // PROBANDO A ARREGLARLO
+        commands->args = ft_split_parser(line + end);
         redirects(commands);
+        expand_args(commands);
     }
     else
     {
-        keep_quotes_args(commands, line + end); // me quita comillas excepto si hay redirecciones
+        keep_quotes_args(commands, line + end);
         redirects(commands);
+        clean_quotes_in_args(commands);
     }
     if (commands->command)
     {

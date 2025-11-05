@@ -63,10 +63,7 @@ void handle_redirect_array(char ***arr, int *flag, char *file)
 		*arr = ft_calloc(2, sizeof(char *));
 	else
 		*arr = realloc_redirect_flags(*arr);
-	if (ft_strnstr(file, "<", ft_strlen(file)) || ft_strnstr(file, ">", ft_strlen(file)) || ft_strnstr(file, "<<", ft_strlen(file)) || ft_strnstr(file, ">>", ft_strlen(file)))
-		(*arr)[*flag] = ft_strdup(clean_quotes_in_line(file));
-	else
-		(*arr)[*flag] = ft_strdup(file);
+	(*arr)[*flag] = clean_quotes_in_line(ft_strdup(file));
 	(*flag)++;
 }
 

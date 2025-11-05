@@ -177,9 +177,7 @@ int is_redirect_token(char *arg, char *redirect)
 
 void find(t_com *commands)
 { // look for < or >
-	char *temp;
-
-	if (!commands->args || !commands->redirects || commands->redirects->j) // COMPROBAR Q EXISTE (HOLA BUENOS DIAS HE CAMBIADO QUE CHECKIE QUE NO HAYA "J" JAJA HOLA)
+	if (!commands->args || !commands->redirects || commands->redirects->j)
 		return;
 	while (commands->args[commands->redirects->j])
 	{
@@ -207,23 +205,27 @@ void find(t_com *commands)
 				return;
 			commands->redirects->j = -1;
 		}
-		else if (ft_strnstr(commands->args[commands->redirects->j], "<<", ft_strlen(commands->args[commands->redirects->j])) || ft_strnstr(commands->args[commands->redirects->j], ">>", ft_strlen(commands->args[commands->redirects->j])) ||
-				 ft_strnstr(commands->args[commands->redirects->j], "<", ft_strlen(commands->args[commands->redirects->j])) || ft_strnstr(commands->args[commands->redirects->j], ">", ft_strlen(commands->args[commands->redirects->j])))
-		{
-			temp = commands->args[commands->redirects->j];
-			commands->args[commands->redirects->j] = clean_quotes_in_line(temp);
-		}
 		commands->redirects->j++;
 	}
 }
 
 void redirects(t_com *commands)
 {
+	char *temp;
+
 	commands->redirects = ft_calloc(1, sizeof(t_red)); // redirect struct
 	if (!commands->redirects)
 		return;
 	if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">") || is_redirect_token(commands->command, ">>"))
+	{
 		if (!redirects_cmd(commands))
 			return;
+	}
+	else
+	{
+		temp = clean_quotes_in_line(commands->command);
+		commands->command = ft_strdup(temp);
+		free(temp);
+	}
 	find(commands);
 }

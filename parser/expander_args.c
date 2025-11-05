@@ -49,49 +49,54 @@ char	*handle_plain_text_args(char *line, int *i, t_vars *vars)
 	return (token);
 }
 
-char	**process_aux_args(char *line, char **temp, t_vars *vars)
+char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 {
 	int		i;
 	int		j;
+	int		k;
 	char	*token;
+	char	*accumulated;
 
-	i = 0;
+	i = -1;
 	j = 0;
-	while (line[i])
+	while (args[++i])
 	{
-		token = NULL;
-		if (line[i] == '\'')
-			token = handle_single_quotes(line, &i, vars);
-		else if (line[i] == '"')
-			token = handle_double_quotes(line, &i, vars);
-		else if (line[i] == '$')
-			token = handle_dollar(line, &i, vars);
-		else
-			token = handle_plain_text_args(line, &i, vars);
-		if (token)
-			temp[j++] = token;
+		k = 0;
+		accumulated = NULL;
+		while (args[i][k])
+		{
+			if (args[i][k] == '\'')
+				token = handle_single_quotes(args[i], &k, vars);
+			else if (args[i][k] == '"')
+				token = handle_double_quotes(args[i], &k, vars);
+			else if (args[i][k] == '$')
+				token = handle_dollar(args[i], &k, vars);
+			else
+				token = handle_plain_text_args(args[i], &k, vars);
+			if (token)
+			{
+				accumulated = str_append(accumulated, token);
+				free(token);
+			}
+		}
+		if (accumulated)
+			token_args[j++] = accumulated;
 	}
-	temp[j] = NULL;
-	return (temp);
+	token_args[j] = NULL;
+	return (token_args);
 }
 
-char	**aux_args(char *line, t_vars *vars)
-{
-	char	**temp;
-
-	temp = ft_calloc((256 + 1), sizeof(char *));
-	if (!temp)
-		return (NULL);
-	return (process_aux_args(line, temp, vars));
-}
-
-char	*expand_args(char *line, t_vars *vars)
+void	expand_args(t_com *commands)
 {
 	char	**token_args;
-	char	*new_line;
+	char	**old_args;
 
-	token_args = aux_args(line, vars);
-	new_line = ft_strjoin_cmd(token_args);
-	ft_free_free(token_args);
-	return (new_line);
+	token_args = ft_calloc((256 + 1), sizeof(char *));
+	if (!token_args)
+		return ;
+	old_args = commands->args;
+	token_args = process_aux_args(commands->args, token_args, commands->vars);
+	commands->args = token_args;
+	if (old_args)
+		ft_free_free(old_args);
 }

@@ -233,9 +233,8 @@ int expand_cmd(t_clean_cmd *data, t_vars *vars);
 
 // EXPANDER_ARGS
 char *handle_plain_text_args(char *line, int *i, t_vars *vars);
-char **process_aux_args(char *line, char **temp, t_vars *vars);
-char **aux_args(char *line, t_vars *vars);
-char *expand_args(char *line, t_vars *vars);
+char **process_aux_args(char **temp, char **token_args, t_vars *vars);
+void expand_args(t_com *commands);
 
 //UTILS_EXPANDER
 char *handle_single_quotes(char *line, int *i, t_vars *vars);
