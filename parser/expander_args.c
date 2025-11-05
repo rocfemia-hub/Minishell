@@ -91,6 +91,8 @@ void	expand_args(t_com *commands)
 	char	**token_args;
 	char	**old_args;
 
+	if(commands->redirects->redirect_heredoc != 0)
+		return;
 	token_args = ft_calloc((256 + 1), sizeof(char *));
 	if (!token_args)
 		return ;
