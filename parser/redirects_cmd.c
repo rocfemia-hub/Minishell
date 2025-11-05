@@ -41,6 +41,8 @@ void look_for_cmd(t_com *commands)
 	{
 		if (commands->args[0])
 		{
+			if (commands->command)
+				free(commands->command);
 			commands->command = ft_strdup(commands->args[0]);
 			temp = realloc_redirect_args(commands->args);
 			commands->args = temp;
@@ -48,24 +50,25 @@ void look_for_cmd(t_com *commands)
 	}
 }
 
-void fill_cmd(t_com *commands, char *redirect)
+void fill_cmd(t_com *commands, char *redirect, char *file)
 {
 	if (ft_strncmp(redirect, "<", 2) == 0)
-		handle_redirect_array(&commands->redirects->input_file, &commands->redirects->redirect_in, commands->redirects->file);
+		handle_redirect_array(&commands->redirects->input_file, &commands->redirects->redirect_in, file);
 	else if (ft_strncmp(redirect, ">", 2) == 0)
-		handle_redirect_array(&commands->redirects->output_file, &commands->redirects->redirect_out, commands->redirects->file);
+		handle_redirect_array(&commands->redirects->output_file, &commands->redirects->redirect_out, file);
 	else if (ft_strncmp(redirect, ">>", 3) == 0)
-		handle_redirect_array(&commands->redirects->append_file, &commands->redirects->redirect_append, commands->redirects->file);
+		handle_redirect_array(&commands->redirects->append_file, &commands->redirects->redirect_append, file);
 	else if (ft_strncmp(redirect, "<<", 3) == 0)
 	{
-		commands->redirects->delimiter = ft_strdup(commands->redirects->file);
+		commands->redirects->delimiter = ft_strdup(file);
 		commands->redirects->redirect_heredoc = 1;
 	}
-	free(commands->redirects->file);
+	free(file);
 }
 
 int clean_redirects_cmd(t_com *commands, char *redirect, int type)
 {
+	char	*tmp_file;
 	char	*tmp_cmd;
 	int		i;
 
@@ -86,17 +89,17 @@ int clean_redirects_cmd(t_com *commands, char *redirect, int type)
 	{
 		while (commands->command[i] && ft_strncmp(commands->command + i, redirect, ft_strlen(redirect)) != 0)
 			i++;
-		commands->redirects->file = ft_strdup(commands->command + i + ft_strlen(redirect));
-		fill_cmd(commands, redirect);
+		tmp_file = ft_strdup(commands->command + i + ft_strlen(redirect));
+		fill_cmd(commands, redirect, tmp_file);
 		fill_type_redirect(commands, type);
 		tmp_cmd = commands->command;
 		commands->command = ft_substr(tmp_cmd, 0, i);
-		free(tmp_cmd); //leak d un byte cuando <Makefile cat
+		free(tmp_cmd);
 	}
 	else if (commands->args[0])
 	{
-		commands->redirects->file = ft_strdup(commands->args[0]);
-		fill_cmd(commands, redirect);
+		tmp_file = ft_strdup(commands->args[0]);
+		fill_cmd(commands, redirect, tmp_file);
 		free(commands->command);
 		commands->command = ft_strdup("");
 		commands->args = realloc_redirect_args(commands->args);

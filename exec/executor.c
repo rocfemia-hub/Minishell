@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 01:42:51 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 07:07:48 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,32 +67,29 @@ void	commands_control(t_com *list, t_vars *vars)
 		execute(list, vars);
 }
 
-char	*get_path(char *cmd, char **envp, t_com *pipex)
+char	*get_path(char *cmd, t_vars *vars)
 {
+	int		i;
+	t_env	*node;
 	char	**paths;
 	char	*result;
 
 	if ((!cmd) || access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	pipex->i = -1;
-	while (envp[++pipex->i])
-		if (ft_strncmp(envp[pipex->i], "PATH=", 5) == 0)
-			break ;
-	if (envp[pipex->i] == NULL)
+	node = find_env_var(vars, "PATH");
+	if (!node)
 		return (NULL);
-	paths = ft_split(&envp[pipex->i][5], ':');
-	pipex->i = -1;
-	while (paths[++pipex->i])
+	paths = ft_split(node->env_inf, ':');
+	i = -1;
+	while (paths[++i])
 	{
-		result = ft_strjoin(paths[pipex->i], "/");
+		result = ft_strjoin(paths[i], "/");
 		result = ft_strjoin_gnl(result, cmd);
 		if (access(result, X_OK) == 0)
 			break ;
 		free(result);
 		result = NULL;
 	}
-	/*if (result == NULL)
-		return (result);*/
 	return (ft_free_free(paths), result);
 }
 
@@ -101,7 +98,7 @@ int	execute(t_com *list, t_vars *vars)
 	int	status;
 
 	status = 0;
-	list->path_command = get_path(list->command, list->vars->env, list);
+	list->path_command = get_path(list->command, list->vars);
 	if (list->command && vars)
 	{
 		if (ft_strnstr(list->command, ";", ft_strlen(list->command)))
@@ -153,8 +150,10 @@ int	execute_error_control(t_com *list)
 
 int	pids_funcion(t_com *list, int status)
 {
-	int	pid;
+	int		pid;
+	char	**env;
 
+	env = list_to_env(list->vars->env_list);
 	pid = fork();
 	if (pid == -1)
 		return (write(2, "minishell: ", 11), perror("fork"), 0);
@@ -162,7 +161,7 @@ int	pids_funcion(t_com *list, int status)
 	{
 		setup_signals_default();
 		apply_redirections(list);
-		if (execve(list->path_command, list->command_arg, list->vars->env) == 0)
+		if (execve(list->path_command, list->command_arg, env) == 0)
 		{
 			write(2, "minishell: ", 11);
 			perror("execve");
@@ -172,6 +171,7 @@ int	pids_funcion(t_com *list, int status)
 	}
 	waitpid(pid, &status, 0);
 	execute_signals(list, status);
+	ft_free_free(env);
 	return (1);
 }
 

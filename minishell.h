@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 19:51:39 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 07:13:22 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ typedef struct s_env
 
 typedef struct s_vars
 {
-	char	**env;
 	char	*pwd;
 	t_env	*env_list; // para cambios de variables, es más facil gestionar liberación de memoria con una lista que con una matriz
 	int		exit_status;
@@ -77,7 +76,6 @@ typedef struct s_red
 	int		err;
 	int		sintax_error; //sintax error
 	int		error; //falta a donde redireccionar
-	char	*file; // archivo de slaida o entrada
 }	t_red;
 
 typedef struct s_com
@@ -108,7 +106,7 @@ typedef struct s_com
 void 	init_env(t_vars *vars);
 int		line_break(char *line);
 int		matrix_len(char **matrix);
-char	**malloc_matrix(char **matrix);
+char	**malloc_matrix(char **matrix); // NO SE USA
 void	init_vars(t_vars *vars, char **env);
 void	init_fds(t_com *list, t_vars *vars);
 
@@ -150,7 +148,7 @@ void	restore_terminal_heredoc(void);
 // EXECUTOR
 void	execute_control(t_com *list, t_vars *vars);
 void	commands_control(t_com *list, t_vars *vars);
-char	*get_path(char *cmd, char **envp, t_com *pipex);
+char	*get_path(char *cmd, t_vars *vars);
 int 	execute(t_com *list, t_vars *vars);
 int		execute_error_control(t_com *list);
 int		pids_funcion(t_com *list, int status);
@@ -183,16 +181,14 @@ void	remove_env_var(t_vars *vars, char *name);
 int		cd_aux_funcion(t_com *list, t_vars *vars);
 
 void	add_update_env_var(t_vars *vars, char *var_str);
-void	update_env(t_vars *vars, char *name, char *value);
-void	add_new_env_vars(char *new_var, t_vars *vars);
-char	*get_var_name(char *var_assignment);
+char	*get_var_name(char *var_assignment); // NO SE USA
 int		valid_var_name(char *var);
 
+char	**list_to_env(t_env *env_list);
 void	env_to_list(t_vars *vars, char **env);
 t_env	*create_env_list(char *env_string);
 void	add_env_var_to_list(t_vars *vars, char *name, char *value);
 t_env	*find_env_var(t_vars *vars, char *env_name);
-void	remove_in_env_array(t_vars *vars, char *name);
 
 // REDIRECTIONS
 int		redirections_control(t_com *list, int j, int q, int k);
@@ -250,7 +246,7 @@ char *expand_var_in_quotes(char *cmd, int *k, int *start, char *token, t_vars *v
 
 //AUX_EXPANDER
 char *handle_inter(t_vars *vars);
-char *get_env_var(const char *var);
+char *get_env_var(t_vars *vars, char *var);
 char *str_append(char *dest, const char *src);
 char *ft_strjoin_cmd(char **cmd);
 char *extract_varname(char *line, int start, int *vlen);
@@ -275,7 +271,7 @@ void fill_type_redirect(t_com *commands, int type);
 //REDIRECTS_CMD.C
 void look_for_cmd(t_com *commands);
 char **realloc_redirect_args(char **flag);
-void fill_cmd(t_com *commands, char *redirect);
+void fill_cmd(t_com *commands, char *redirect, char *file);
 int clean_redirects_cmd(t_com *commands, char *redirect, int type);
 int redirects_cmd(t_com *commands);
 

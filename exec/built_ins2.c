@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 01:26:14 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 04:14:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	env_function(t_com *list, t_vars *vars)
 	t_env	*env_list;
 	char	*line;
 
-	if (!vars->env)
+	if (!vars->env_list)
 		return ;
 	env_list = vars->env_list;
 	while (env_list)
@@ -67,10 +67,7 @@ void	unset_function(t_com *list, t_vars *vars)
 	while (list->args[i])
 	{
 		if (valid_var_name(list->args[i]))
-		{
 			remove_env_var(vars, list->args[i]);
-			remove_in_env_array(vars, list->args[i]);
-		}
 		else
 		{
 			ft_putstr_fd("unset: '", 2);

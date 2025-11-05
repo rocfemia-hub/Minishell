@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 01:40:32 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/05 06:39:20 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,22 @@ int g_signal; // variable global única
 void init_env(t_vars *vars)
 {
 	char cwd[1024];
-	char *pwd_str;
 
-	vars->env = ft_calloc(5, sizeof(char *));
-	if (!vars->env)
-		return;
 	getcwd(cwd, sizeof(cwd)); // getcwd me dice el directorio que estoy actualemte
-	pwd_str = ft_strjoin("PWD=", cwd);
-	vars->env[0] = pwd_str;
-	vars->env[1] = ft_strdup("SHLVL=1");
-	vars->env[2] = ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin");
-	vars->env[3] = ft_strdup("_=/usr/bin/env");
-	vars->env[4] = NULL;
+	add_update_env_var(vars, ft_strjoin("PWD=", cwd));
+	add_update_env_var(vars, ft_strdup("SHLVL=1"));
+	add_update_env_var(vars, ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin"));
+	add_update_env_var(vars, ft_strdup("_=/usr/bin/env"));
 }
 
 void init_vars(t_vars *vars, char **env)
 {
-	if(!env || !env[0])
-		init_env(vars);
-	else
-		vars->env = malloc_matrix(env);
 	vars->exit_status = 0;
 	vars->pwd = getcwd(NULL, 0);
-	env_to_list(vars, vars->env);
+	if (!env || !env[0])
+		init_env(vars);
+	else
+		env_to_list(vars, env);
 }
 
 void init_fds(t_com *list, t_vars *vars)
@@ -125,7 +118,6 @@ int main(int argc, char **argv, char **env)
 		{
 			if (!commands->redirects)
 			{
-				printf("Error: empty command\n");
 				(free(line), free_t_com_list(commands));
 				continue;
 
@@ -142,7 +134,7 @@ int main(int argc, char **argv, char **env)
 		free_t_com_list(commands);
 		commands = NULL; // reseteamos el puntero
 	}
-	free_array(vars.env);
+	//free_array(vars.env);
 	free(vars.pwd);
 	return (0);
 }
