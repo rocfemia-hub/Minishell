@@ -266,8 +266,10 @@ char	*find_redirect_position(char *arg, char *redirect);
 int		aux_parser_resdirects_sintax_error(t_com *commands);
 void	aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect);
 int		parser_redirects(t_com *commands, char *redirect, int type);
+void 	process_quote_char(char current_char, char *new_arg, int *k, char *quote);
 char	*clean_quotes_in_line(char *arg);
 int		is_redirect_token(char *arg, char *redirect);
+int 	aux_find(t_com *commands);
 void	find(t_com *commands);
 void	redirects(t_com *commands);
 

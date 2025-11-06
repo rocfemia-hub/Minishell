@@ -131,29 +131,35 @@ int parser_redirects(t_com *commands, char *redirect, int type)
 	return (1);
 }
 
+void process_quote_char(char current_char, char *new_arg, int *k, char *quote)
+{
+	if (*quote == 0)
+		*quote = current_char;
+	else if (*quote == current_char)
+		*quote = 0;
+	else
+		new_arg[(*k)++] = current_char;
+}
+
 char *clean_quotes_in_line(char *arg)
 {
-	int j = 0;
-	int k = 0;
+	int j;
+	int k;
 	char *new_arg;
-	char quote = 0;
+	char quote;
 
 	if (!arg)
 		return (NULL);
 	new_arg = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
 	if (!new_arg)
 		return (NULL);
+	j = 0;
+	k = 0;
+	quote = 0;
 	while (arg[j])
 	{
 		if (arg[j] == '\'' || arg[j] == '"')
-		{
-			if (quote == 0)
-				quote = arg[j];
-			else if (quote == arg[j])
-				quote = 0;
-			else
-				new_arg[k++] = arg[j];
-		}
+			process_quote_char(arg[j], new_arg, &k, &quote);
 		else
 			new_arg[k++] = arg[j];
 		j++;
@@ -186,36 +192,43 @@ int is_redirect_token(char *arg, char *redirect)
 	return (0);
 }
 
+int aux_find(t_com *commands)
+{
+	if (is_redirect_token(commands->args[commands->redirects->j], ">>"))
+	{
+		if (!parser_redirects(commands, ">>", 3))
+			return (0);
+		commands->redirects->j = -1;
+	}
+	else if (is_redirect_token(commands->args[commands->redirects->j], "<<"))
+	{
+		if (!parser_redirects(commands, "<<", 4))
+			return(0);
+		commands->redirects->j = -1;
+	}
+	else if (is_redirect_token(commands->args[commands->redirects->j], ">"))
+	{
+		if (!parser_redirects(commands, ">", 2))
+			return(0);
+		commands->redirects->j = -1;
+	}
+	else if (is_redirect_token(commands->args[commands->redirects->j], "<"))
+	{
+		if (!parser_redirects(commands, "<", 1))
+			return(0);
+		commands->redirects->j = -1;
+	}
+	return(1);
+}
+
 void find(t_com *commands)
-{ // look for < or >
+{
 	if (!commands->args || !commands->redirects || commands->redirects->j)
 		return;
 	while (commands->args[commands->redirects->j])
 	{
-		if (is_redirect_token(commands->args[commands->redirects->j], ">>"))
-		{
-			if (!parser_redirects(commands, ">>", 3))
-				return;
-			commands->redirects->j = -1;
-		}
-		else if (is_redirect_token(commands->args[commands->redirects->j], "<<"))
-		{
-			if (!parser_redirects(commands, "<<", 4))
-				return;
-			commands->redirects->j = -1;
-		}
-		else if (is_redirect_token(commands->args[commands->redirects->j], ">"))
-		{
-			if (!parser_redirects(commands, ">", 2))
-				return;
-			commands->redirects->j = -1;
-		}
-		else if (is_redirect_token(commands->args[commands->redirects->j], "<"))
-		{
-			if (!parser_redirects(commands, "<", 1))
-				return;
-			commands->redirects->j = -1;
-		}
+		if (!aux_find(commands))
+			return;
 		commands->redirects->j++;
 	}
 }
