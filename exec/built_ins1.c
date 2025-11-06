@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 06:10:05 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 13:23:18 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	pwd_function(t_com *list, t_vars *vars)
 	ssize_t	bytes_written;
 
 	if (vars->pwd == NULL)
-		return (write(2, "minishell: ", 11), perror("pwd"));
+		return (vars->exit_status = 1, write(2, "minishell: ", 11), perror("pwd"));
 	bytes_written = write(list->fd_out, vars->pwd, ft_strlen(vars->pwd));
 	if (bytes_written != -1)
 		write(list->fd_out, "\n", 1);
@@ -66,6 +66,7 @@ void	exit_function(t_com *list, t_vars *vars)
 		}
 	}
 	write(2, "exit: too many arguments\n", 25);
+	return (vars->exit_status = 1, (void)0);
 }
 
 void	cd_function(t_com *list, t_vars *vars)
@@ -76,15 +77,12 @@ void	cd_function(t_com *list, t_vars *vars)
 	{
 		target_dir = get_env_var(vars, "HOME");
 		if (!target_dir)
-			return (write(2, "cd: HOME not set\n", 17), (void)0);
+			return (vars->exit_status = 1, write(2, "cd: HOME not set\n", 17), (void)0);
 	}
-	else if (list->args[0])
+	else if (list->args[0]) // && !list->args[1]
 		target_dir = list->args[0];
 	else
-	{
-		write(2, "cd: too many arguments\n", 23);
-		return ;
-	}
+		return (vars->exit_status = 1, write(2, "cd: too many arguments\n", 23), (void)0);
 	if (chdir(target_dir) == -1)
 	{
 		if (errno == EACCES)
@@ -93,9 +91,9 @@ void	cd_function(t_com *list, t_vars *vars)
 			write(2, "minishell: cd: No such file or directory\n", 41);
 		else
 			write(2, "minishell: cd: Error changing directory\n", 40);
-		return ;
+		return (vars->exit_status = 1, (void)0);
 	}
 	if (!cd_aux_funcion(list, vars))
-		return ;
+		return (vars->exit_status = 1, (void)0);
 	vars->exit_status = 0;
 }
