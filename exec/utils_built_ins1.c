@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 07:11:28 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 13:45:09 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	print_export_vars(t_com *list, t_vars *vars)
 		free(line);
 		env_list = env_list->next;
 	}
+	vars->exit_status = 0;
 }
 
 void	remove_env_var(t_vars *vars, char *name)
