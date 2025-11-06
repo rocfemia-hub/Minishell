@@ -116,7 +116,8 @@ t_env *find_env_var(t_vars *vars, char *env_name)
 	
 	while (env_list)
 	{
-		if (ft_strncmp(env_list->env_name, env_name, ft_strlen(env_list->env_name)) == 0)
+		if (ft_strncmp(env_list->env_name, env_name, ft_strlen(env_list->env_name)) == 0
+			&& ft_strlen(env_list->env_name) == ft_strlen(env_name))
 			return (env_list);
 		env_list = env_list->next;
 	}

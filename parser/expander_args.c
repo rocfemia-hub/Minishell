@@ -99,7 +99,7 @@ void	expand_args(t_com *commands)
 	old_args = commands->args;
 	token_args = process_aux_args(commands->args, token_args, commands->vars);
 	commands->args = token_args;
-	commands->expanded = 1;  // marcar que ya se expandió
+	commands->expanded = 1;
 	if (old_args)
 		ft_free_free(old_args);
 }

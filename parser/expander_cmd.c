@@ -50,6 +50,7 @@ char	*aux_cmd(t_clean_cmd *data, t_vars *vars)
 	char	*result;
 
 	i = 0;
+	result = NULL;
 	while (data->cmd[i])
 	{
 		if (data->cmd[i] == '\'')
@@ -62,7 +63,7 @@ char	*aux_cmd(t_clean_cmd *data, t_vars *vars)
 			token = handle_plain_text(data->cmd, &i, vars);
 		if (token)
 		{
-			result = ft_strdup(token);
+			result = str_append(result, token);
 			free(token);
 		}
 	}

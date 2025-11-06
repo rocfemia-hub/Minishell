@@ -66,15 +66,18 @@ void type_command(char *line, t_com *commands)
     if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))) // hay posible expansion en el comando
     {
         if (expand_cmd(&data, commands->vars)) // si hay $ en el comando
-            init_struct(line, data.cmd, data.end_index, commands);
+            init_struct(line, data.cmd, saved_index, commands);
         else // si la expansion del comando es vacio, cojo lo siguiente como comando
         {
             free(data.cmd);
             data.cmd = only_cmd(line, &data);
-            temp = data.cmd;
-            data.cmd = clean_cmd(data.cmd);
-            free(temp);
-            init_struct(line, data.cmd, data.only_cmd_i, commands);
+            if (data.cmd)
+            {
+                temp = data.cmd;
+                data.cmd = clean_cmd(data.cmd);
+                free(temp);
+                init_struct(line, data.cmd, data.only_cmd_i, commands);
+            }
         }
     }
     else // cuando no hay expansion
@@ -136,6 +139,6 @@ t_com *token(char *line, t_vars *vars)
         error(commands);
         return (NULL);
     }
-    // print_list(commands);
+    // print_list(commands); 
     return (commands);
 }
