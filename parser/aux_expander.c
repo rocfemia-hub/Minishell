@@ -51,8 +51,7 @@ char	*extract_varname(char *line, int start, int *vlen)
 	return (varname);
 }
 
-static char	*handle_var_expansion(t_vars *vars, char *line,
-	int start, int *vlen)
+static char	*handle_var_expansion(t_vars *vars, char *line, int start, int *vlen)
 {
 	char	*varname;
 	char	*value;
@@ -63,6 +62,15 @@ static char	*handle_var_expansion(t_vars *vars, char *line,
 	free(varname);
 	token = ft_strdup(value);
 	return (token);
+}
+
+char *aux_handle_dollar(int *i, int start)
+{
+	char *token;
+
+	token = ft_strdup("");
+	*i = start;
+	return(token);
 }
 
 char	*handle_dollar(char *line, int *i, t_vars *vars)
@@ -84,10 +92,7 @@ char	*handle_dollar(char *line, int *i, t_vars *vars)
 		*i = start + vlen;
 	}
 	else if (line[start] == '"' || line[start] == '\'')
-	{
-		token = ft_strdup("");
-		*i = start;
-	}
+		token = aux_handle_dollar(i, start);
 	else
 	{
 		token = ft_strdup("$");

@@ -140,7 +140,6 @@ char *clean_quotes_in_line(char *arg)
 
 	if (!arg)
 		return (NULL);
-
 	new_arg = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
 	if (!new_arg)
 		return (NULL);

@@ -78,7 +78,7 @@ char *expand_var_in_quotes_args(char *line, int *k, int *start, char *token, t_v
 }
 
 char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars)
-{ // GESTION DE COMILLAS DOBLES FUNCION AUXILIAR
+{
 	int k;
 	char *token;
 	char *tmp;
@@ -112,7 +112,7 @@ char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars)
 }
 
 char *handle_double_quotes(char *line, int *i, t_vars *vars)
-{ // GESTION COMILLAS DOBLES
+{
 	int end;
 	char *token;
 

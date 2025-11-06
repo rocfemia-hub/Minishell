@@ -92,9 +92,7 @@ void handle_redirect_array(char ***arr, int *flag, char *file, t_com *commands)
 		*arr = ft_calloc(2, sizeof(char *));
 	else
 		*arr = realloc_redirect_flags(*arr);
-	
-	// Siempre expandir el nombre del archivo
-	expanded = expand_redirect_filename(file, commands->vars);
+	expanded = expand_redirect_filename(file, commands->vars); //expasion del nombre del archivo
 	if (expanded)
 		(*arr)[*flag] = expanded;
 	else
@@ -127,4 +125,3 @@ void fill_type_redirect(t_com *commands, int type)
 		free(temp);
 	}
 }
-

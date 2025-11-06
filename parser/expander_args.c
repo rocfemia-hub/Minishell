@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-char	*ft_strjoin_cmd(char **cmd)
+char *ft_strjoin_cmd(char **cmd)
 {
-	int		len;
-	char	*result;
-	int		i;
+	int len;
+	char *result;
+	int i;
 
 	len = 0;
 	i = -1;
@@ -34,10 +34,10 @@ char	*ft_strjoin_cmd(char **cmd)
 	return (result);
 }
 
-char	*handle_plain_text_args(char *line, int *i, t_vars *vars)
+char *handle_plain_text_args(char *line, int *i, t_vars *vars)
 {
-	int		start;
-	char	*token;
+	int start;
+	char *token;
 
 	if (!vars)
 		return (NULL);
@@ -49,9 +49,9 @@ char	*handle_plain_text_args(char *line, int *i, t_vars *vars)
 	return (token);
 }
 
-static int	has_quotes(char *arg)
+static int has_quotes(char *arg)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (arg[i])
@@ -63,12 +63,37 @@ static int	has_quotes(char *arg)
 	return (0);
 }
 
-char	**process_aux_args(char **args, char **token_args, t_vars *vars)
+char *process_single_arg(char *arg, t_vars *vars)
+{
+	char	*token;
+	char	*accumulated;
+	int		k;
+
+	accumulated = NULL;
+	k = 0;
+	while (arg[k])
+	{
+		if (arg[k] == '\'')
+			token = handle_single_quotes(arg, &k, vars);
+		else if (arg[k] == '"')
+			token = handle_double_quotes(arg, &k, vars);
+		else if (arg[k] == '$')
+			token = handle_dollar(arg, &k, vars);
+		else
+			token = handle_plain_text_args(arg, &k, vars);
+		if (token)
+		{
+			accumulated = str_append(accumulated, token);
+			free(token);
+		}
+	}
+	return (accumulated);
+}
+
+char **process_aux_args(char **args, char **token_args, t_vars *vars)
 {
 	int		i;
 	int		j;
-	int		k;
-	char	*token;
 	char	*accumulated;
 	int		had_quotes;
 
@@ -76,25 +101,9 @@ char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 	j = 0;
 	while (args[++i])
 	{
-		k = 0;
 		accumulated = NULL;
 		had_quotes = has_quotes(args[i]);
-		while (args[i][k])
-		{
-			if (args[i][k] == '\'')
-				token = handle_single_quotes(args[i], &k, vars);
-			else if (args[i][k] == '"')
-				token = handle_double_quotes(args[i], &k, vars);
-			else if (args[i][k] == '$')
-				token = handle_dollar(args[i], &k, vars);
-			else
-				token = handle_plain_text_args(args[i], &k, vars);
-			if (token)
-			{
-				accumulated = str_append(accumulated, token);
-				free(token);
-			}
-		}
+		accumulated = process_single_arg(args[i], vars);
 		if (accumulated && ft_strlen(accumulated) > 0)
 			token_args[j++] = accumulated;
 		else if (accumulated && had_quotes)
@@ -106,16 +115,16 @@ char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 	return (token_args);
 }
 
-void	expand_args(t_com *commands)
+void expand_args(t_com *commands)
 {
-	char	**token_args;
-	char	**old_args;
+	char **token_args;
+	char **old_args;
 
-	if(commands->redirects && commands->redirects->redirect_heredoc != 0)
+	if (commands->redirects && commands->redirects->redirect_heredoc != 0)
 		return;
 	token_args = ft_calloc((256 + 1), sizeof(char *));
 	if (!token_args)
-		return ;
+		return;
 	old_args = commands->args;
 	token_args = process_aux_args(commands->args, token_args, commands->vars);
 	commands->args = token_args;
