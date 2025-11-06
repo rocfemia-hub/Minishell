@@ -62,7 +62,7 @@ void type_command(char *line, t_com *commands)
     data.cmd = only_cmd(line, &data);
     if (!data.cmd)
         return;
-    saved_index = data.only_cmd_i;  // Guardar el índice correcto de only_cmd
+    saved_index = data.only_cmd_i;                      // Guardar el índice correcto de only_cmd
     if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))) // hay posible expansion en el comando
     {
         if (expand_cmd(&data, commands->vars)) // si hay $ en el comando
@@ -122,10 +122,64 @@ void init_commands(char *line, t_com *commands)
         type_command(line + start, current);
 }
 
+// int check_character(char *line, t_vars *vars)
+// {
+//     int i;
+//     char quote;
+
+//     i = 0;
+//     quote = 0;
+//     while (line[i] == 32)
+//         i++;
+//     if (line[i] == '|')
+//     {
+//         vars->exit_status = 2;
+//         printf("syntax error near unexpected token `|'\n");
+//         return (0);
+//     }
+//     while (line[i])
+//     {
+//         if ((line[i] == '"' || line[i] == '\''))
+//         {
+//             if (!quote)
+//                 quote = line[i];
+//             else if (quote == line[i])
+//                 quote = 0;
+//         }
+//         if (!quote && (line[i] == '|' || line[i] == '>' || line[i] == '<'))
+//         {
+//             char current = line[i];
+//             i++;
+//             if ((current == '>' && line[i] == '>') || (current == '<' && line[i] == '<'))
+//                 i++;
+//             while (line[i] == 32)
+//                 i++;
+//             if (line[i] == '|' || line[i] == '>' || line[i] == '<')
+//             {
+//                 vars->exit_status = 2;
+//                 printf("syntax error near unexpected token `%c'\n", line[i]);
+//                 return (0);
+//             }
+//             if (!line[i])
+//             {
+//                 vars->exit_status = 2;
+//                 printf("syntax error near unexpected token `newline'\n");
+//                 return (0);
+//             }
+//         }
+//         else
+//             i++;
+//     }
+//     return (1);
+// }
+
 t_com *token(char *line, t_vars *vars)
 {
     t_com *commands;
 
+    commands = NULL;
+    // if (!check_character(line, vars))
+    //     return (NULL);
     commands = create_struct(line, vars);
     commands->vars = vars;
     if (commands->error)
@@ -139,6 +193,6 @@ t_com *token(char *line, t_vars *vars)
         error(commands);
         return (NULL);
     }
-    // print_list(commands); 
+    // print_list(commands);
     return (commands);
 }

@@ -79,7 +79,7 @@ void	cd_function(t_com *list, t_vars *vars)
 		if (!target_dir)
 			return (vars->exit_status = 1, write(2, "cd: HOME not set\n", 17), (void)0);
 	}
-	else if (list->args[0]) // && !list->args[1]
+	else if (list->args[0] && !list->args[1])
 		target_dir = list->args[0];
 	else
 		return (vars->exit_status = 1, write(2, "cd: too many arguments\n", 23), (void)0);
