@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 15:57:57 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 16:52:23 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,17 +103,17 @@ int	execute(t_com *list, t_vars *vars)
 	{
 		if (ft_strlen(list->command) < 1)
 		{
-			printf("minishell: %s: command not found\n", list->command);
+			ft_printf(2, "minishell: %s: command not found\n", list->command);
 			return(list->vars->exit_status = 127, 0);	
 		}
 		if (ft_strnstr(list->command, ";", ft_strlen(list->command)))
 		{
-			printf("minishell: %s: command not found\n", list->command);
+			ft_printf(2, "minishell: %s: command not found\n", list->command);
 			return (list->vars->exit_status = 127, 0);
 		}
 		if (ft_strnstr(list->command, "\\", ft_strlen(list->command)))
 		{
-			printf("minishell: %s: command not found\n", list->command);
+			ft_printf(2, "minishell: %s: command not found\n", list->command);
 			return (list->vars->exit_status = 127, 0);
 		}
 		if (execute_error_control(list) == 0)

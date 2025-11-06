@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:34 by roo               #+#    #+#             */
-/*   Updated: 2025/10/08 13:19:10 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 16:48:44 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void error(t_com *commands)
 {
-    printf("%s\n", commands->error);
+    ft_printf(2, "minishell: %s\n", commands->error);
     free_t_com_list(commands);
     return;
 }

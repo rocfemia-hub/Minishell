@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 06:54:30 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 16:48:40 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@ int aux_parser_redirects(t_com *commands, char *redirect, int type)
 
 	if (!commands->args[commands->redirects->j + 1])
 	{
-		commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+		commands->error = ft_strdup("syntax error near unexpected token `newline'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}
 	if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1) || ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
 	{
 		if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1))
-			commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
+			commands->error = ft_strdup("syntax error near unexpected token `>'");
 		else if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1)) 
-			commands->error = ft_strdup("bash: syntax error near unexpected token `<'");
+			commands->error = ft_strdup("syntax error near unexpected token `<'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}
@@ -70,13 +70,13 @@ int parser_redirects(t_com *commands, char *redirect, int type)
 
 	if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
 	{
-		commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
+		commands->error = ft_strdup("syntax error near unexpected token `>'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}
 	else if (ft_strnstr(commands->args[commands->redirects->j], "<<<", 3)) // error hola< y <<<
 	{
-		commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+		commands->error = ft_strdup("syntax error near unexpected token `newline'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}
