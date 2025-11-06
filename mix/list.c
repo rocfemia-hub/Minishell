@@ -69,7 +69,7 @@ void print_list(t_com *list)
 		}
 		else
 			printf("command_arg: (null)\n");
-		
+		printf("flag_built: %d, ", list->flag_built);
 		// Verificar si redirects existe antes de acceder
 		if (list->redirects)
 		{

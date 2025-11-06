@@ -122,7 +122,7 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
         redirects(commands);
         clean_quotes_in_args(commands);
     }
-    if (commands->command)
+    if (commands->command && ft_strlen(commands->command) > 0)
     {
         if (!ft_strncmp(commands->command, "echo", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "pwd", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "cd", ft_strlen(commands->command)) ||
             !ft_strncmp(commands->command, "exit", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "env", ft_strlen(commands->command)) || !ft_strncmp(commands->command, "export", ft_strlen(commands->command)) ||

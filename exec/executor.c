@@ -101,6 +101,11 @@ int	execute(t_com *list, t_vars *vars)
 	list->path_command = get_path(list->command, list->vars);
 	if (list->command && vars)
 	{
+		if (ft_strlen(list->command) < 1)
+		{
+			printf("minishell: %s: command not found\n", list->command);
+			return(0);	
+		}
 		if (ft_strnstr(list->command, ";", ft_strlen(list->command)))
 		{
 			printf("minishell: %s: command not found\n", list->command);
