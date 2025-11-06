@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: jainavas <jainavas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:51 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 15:56:14 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 17:39:00 by jainavas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,22 +105,14 @@ void init_struct(char *line, char *cmd, int end, t_com *commands)
     if (has_expandable_dollar(line + end))
     {
         commands->args = ft_split_parser(line + end);
-        if (is_redirect_token(line + end, "<<"))
-        {
-            redirects(commands);
-            expand_args(commands);
-        }
-        else
-        {
-            expand_args(commands);
-            redirects(commands);
-        }
+        redirects(commands);
+        expand_args(commands);
     }
     else
     {
         keep_quotes_args(commands, line + end);
         redirects(commands);
-        clean_quotes_in_args(commands);
+        clean_reinserted_quotes_in_args(commands);
     }
     if (commands->command && ft_strlen(commands->command) > 0)
     {

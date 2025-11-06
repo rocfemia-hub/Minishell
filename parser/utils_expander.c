@@ -25,7 +25,10 @@ char *handle_single_quotes(char *line, int *i, t_vars *vars)
 	while (line[*i] && line[*i] != '\'')
 		(*i)++;
 	len = *i - start;
-	token = ft_substr(line, start, len);
+	if (len == 0)
+		token = ft_strdup("");
+	else
+		token = ft_substr(line, start, len);
 	if (line[*i] == '\'')
 		(*i)++; 
 	return (token);
@@ -96,6 +99,8 @@ char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars)
 		token = str_append(token, tmp);
 		free(tmp);
 	}
+	if (!token)
+		token = ft_strdup("");
 	return(token);
 }
 

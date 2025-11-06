@@ -57,16 +57,48 @@ char **copy_redirect_matrix(char **args, int start, int end)
 	return (new_arg);
 }
 
+char *expand_redirect_filename(char *file, t_vars *vars)
+{
+	int i;
+	char *token;
+	char *result;
+
+	i = 0;
+	result = NULL;
+	while (file[i])
+	{
+		if (file[i] == '\'')
+			token = handle_single_quotes(file, &i, vars);
+		else if (file[i] == '"')
+			token = handle_double_quotes(file, &i, vars);
+		else if (file[i] == '$')
+			token = handle_dollar(file, &i, vars);
+		else
+			token = handle_plain_text_args(file, &i, vars);
+		if (token)
+		{
+			result = str_append(result, token);
+			free(token);
+		}
+	}
+	return (result);
+}
+
 void handle_redirect_array(char ***arr, int *flag, char *file, t_com *commands)
 { // triple puntero para modificar el valor fuera de la funcion local
+	char *expanded;
+
 	if (!*arr)
 		*arr = ft_calloc(2, sizeof(char *));
 	else
 		*arr = realloc_redirect_flags(*arr);
-	if (commands->expanded)
-		(*arr)[*flag] = ft_strdup(file);
+	
+	// Siempre expandir el nombre del archivo
+	expanded = expand_redirect_filename(file, commands->vars);
+	if (expanded)
+		(*arr)[*flag] = expanded;
 	else
-		(*arr)[*flag] = clean_quotes_in_line(ft_strdup(file));
+		(*arr)[*flag] = ft_strdup("");
 	(*flag)++;
 }
 

@@ -49,6 +49,20 @@ char	*handle_plain_text_args(char *line, int *i, t_vars *vars)
 	return (token);
 }
 
+static int	has_quotes(char *arg)
+{
+	int	i;
+
+	i = 0;
+	while (arg[i])
+	{
+		if (arg[i] == '\'' || arg[i] == '"')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 {
 	int		i;
@@ -56,6 +70,7 @@ char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 	int		k;
 	char	*token;
 	char	*accumulated;
+	int		had_quotes;
 
 	i = -1;
 	j = 0;
@@ -63,6 +78,7 @@ char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 	{
 		k = 0;
 		accumulated = NULL;
+		had_quotes = has_quotes(args[i]);
 		while (args[i][k])
 		{
 			if (args[i][k] == '\'')
@@ -79,8 +95,12 @@ char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 				free(token);
 			}
 		}
-		if (accumulated)
+		if (accumulated && ft_strlen(accumulated) > 0)
 			token_args[j++] = accumulated;
+		else if (accumulated && had_quotes)
+			token_args[j++] = accumulated;
+		else if (accumulated)
+			free(accumulated);
 	}
 	token_args[j] = NULL;
 	return (token_args);

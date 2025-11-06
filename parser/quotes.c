@@ -67,38 +67,64 @@ void keep_quotes_args(t_com *commands, char *line)
     commands->args = args;
 }
 
-
-void clean_quotes_in_args(t_com *commands)
+void clean_reinserted_quotes_in_args(t_com *commands)
 {
-    int i = 0;
-    int j, k;
-    char *arg;
-    char *new_arg;
-    char quote;
+    int   i;
+    int   j;
+    int   k;
+    char  *arg;
+    char  *new_arg;
+    int   len;
 
+    i = 0;
     while (commands->args && commands->args[i])
     {
         arg = commands->args[i];
-        new_arg = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
+        len = ft_strlen(arg);
+        new_arg = ft_calloc(len + 1, sizeof(char));
         if (!new_arg)
             return ;
         j = 0;
         k = 0;
-        quote = 0;
         while (arg[j])
         {
-            if ((arg[j] == '\'' || arg[j] == '"'))
+            if (arg[j] == '\'' || arg[j] == '"')
             {
-                if (!quote)
-                    quote = arg[j];
-                else if (quote == arg[j]) 
-                    quote = 0;
-                else
-                    new_arg[k++] = arg[j];
+                char q = arg[j];
+                int  m = j + 1;
+                while (arg[m] && arg[m] != q)
+                    m++;
+                if (arg[m] == q)
+                {
+                    int has_redir = 0;
+                    int t = j + 1;
+                    while (t < m)
+                    {
+                        if (arg[t] == '>' || arg[t] == '<')
+                        {
+                            has_redir = 1;
+                            break;
+                        }
+                        t++;
+                    }
+                    if (has_redir)
+                    {
+
+                        int u = j + 1;
+                        while (u < m)
+                            new_arg[k++] = arg[u++];
+                        j = m + 1;
+                        continue;
+                    }
+                    new_arg[k++] = arg[j++];
+                    while (j <= m)
+                        new_arg[k++] = arg[j++];
+                    continue;
+                }
+                new_arg[k++] = arg[j++];
             }
             else
-                new_arg[k++] = arg[j];
-            j++;
+                new_arg[k++] = arg[j++];
         }
         new_arg[k] = '\0';
         free(commands->args[i]);

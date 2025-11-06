@@ -26,6 +26,11 @@ void	execute_control(t_com *list, t_vars *vars)
 			vars->exit_status = 1;
 			return (clean_fds(tmp_list));
 		}
+		if (!tmp_list->command || ft_strlen(tmp_list->command) == 0) // Si no hay comando (solo redirecciones), no ejecutar nada
+		{
+			vars->exit_status = 0;
+			return (clean_fds(tmp_list));
+		}
 		if (tmp_list->flag_built == 1)
 			commands_control(tmp_list, vars);
 		else
@@ -101,9 +106,6 @@ int	execute(t_com *list, t_vars *vars)
 	list->path_command = get_path(list->command, list->vars);
 	if (list->command && vars)
 	{
-		if (ft_strlen(list->command) < 1)
-			return (ft_printf(2, "minishell: %s: command not found\n",
-					list->command), list->vars->exit_status = 127, 0);
 		if (ft_strnstr(list->command, ";", ft_strlen(list->command)))
 			return (ft_printf(2, "minishell: %s: command not found\n",
 					list->command), list->vars->exit_status = 127, 0);

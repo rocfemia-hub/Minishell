@@ -211,13 +211,14 @@ char *only_cmd(char *line, t_clean_cmd *data);
 void	type_command(char *line, t_com *commands);
 void	init_commands(char *line, t_com *commands);
 t_com *token(char *line, t_vars *vars);
+int	validate_syntax(char *line);
 
 //FT_SPLIT_PARSER
 char **ft_split_parser(char const *s);
 
 // QUOTES
 void keep_quotes_args(t_com *commands, char *line);
-void clean_quotes_in_args(t_com *commands);
+void clean_reinserted_quotes_in_args(t_com *commands);
 char	*clean_cmd(char *line);
 int		pipes_counter(char *line);
 int look_for_char(char *line, char c);

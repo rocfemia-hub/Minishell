@@ -36,10 +36,17 @@ char	*extract_varname(char *line, int start, int *vlen)
 	char	*varname;
 
 	*vlen = 0;
-	while (line[start + *vlen]
-		&& (ft_isalnum((unsigned char)line[start + *vlen])
-			|| line[start + *vlen] == '_'))
+	if (line[start] && (ft_isalpha((unsigned char)line[start])
+		|| line[start] == '_'))
+	{
 		(*vlen)++;
+		while (line[start + *vlen]
+			&& (ft_isalnum((unsigned char)line[start + *vlen])
+				|| line[start + *vlen] == '_'))
+			(*vlen)++;
+	}
+	else if (line[start] && ft_isdigit((unsigned char)line[start]))
+		(*vlen) = 1;
 	varname = ft_substr(line, start, *vlen);
 	return (varname);
 }
