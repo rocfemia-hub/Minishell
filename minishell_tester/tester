@@ -12,6 +12,9 @@ else
 		"builtins"
 		"pipes"
 		"redirects"
+		"bible"
+		"os_specific"
+		"syntax"
 		"extras"
 	)
 fi

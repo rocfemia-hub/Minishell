@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 13:23:18 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 16:37:12 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,17 @@ void	pwd_function(t_com *list, t_vars *vars)
 void	exit_function(t_com *list, t_vars *vars)
 {
 	if (!list->args[0] || !vars)
+	{
+		write(1, "exit\n", 5);	
 		exit(0);
+	}
 	if (list->args[0] && !list->args[1])
 	{
 		if (valid_number(list->args[0]))
+		{
+			write(1, "exit\n", 5);	
 			exit(ft_atoi(list->args[0]));
+		}
 		else
 		{
 			write(2, "exit: numeric argument required\n", 32);
