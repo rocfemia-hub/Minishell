@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 20:28:52 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 17:55:24 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,42 +155,24 @@ void	found_delimiter(t_com *list, int fd)
 	while (1)
 	{
 		line = read_line_heredoc();
-		if (g_signal == SIGINT)
-		{
-			if (line)
-				free(line);
-			setup_signals_interactive();
-			restore_terminal_heredoc();
-			return ;
-		}
-		if (!line)
-		{
-			if (g_signal == SIGINT)
-			{
-				setup_signals_interactive();
-				restore_terminal_heredoc();
-				return ;
-			}
-			ft_putstr_fd("\n", 2);
-			ft_putstr_fd("minishell: warning: here-document delimited by end-of-file (wanted `", 2);
-			ft_putstr_fd(list->redirects->delimiter, 2);
-			ft_putstr_fd("')\n", 2);
-			list->vars->exit_status = 0;
-			break ;
-		}
-		if (ft_strncmp(line, list->redirects->delimiter, ft_strlen(list->redirects->delimiter) + 1) == 0)
-		{
+		if (line && g_signal == SIGINT)
 			free(line);
-			break ;
-		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		else if (!line && g_signal == SIGINT)
+			return (setup_signals_interactive(), rest_termi_hrdc(), (void)0);
+		else if (g_signal == SIGINT)
+			return (setup_signals_interactive(), rest_termi_hrdc(), (void)0);
+		else if (!line)
+			return (ft_printf(2, "minishell: warning: here-document delimited by \
+					end-of-file (wanted `%s')\n", list->redirects->delimiter),
+				list->vars->exit_status = 0, setup_signals_interactive(),
+				rest_termi_hrdc(), (void)0);
+		if (ft_strncmp(line, list->redirects->delimiter,
+				ft_strlen(list->redirects->delimiter) + 1) == 0)
+			return (free(line), setup_signals_interactive(),
+				rest_termi_hrdc(), (void)0);
+		ft_printf(fd, "%s\n", line);
 		free(line);
 	}
-
-	setup_signals_interactive();
-	restore_terminal_heredoc();
-	return ;
 }
 
 void	apply_redirections(t_com *list)
@@ -217,7 +199,8 @@ void	apply_redirections(t_com *list)
 		close(list->fd_out);
 		list->fd_out = 1;
 	}
-	if (list->previous && list->previous->redirects->err && !list->redirects->redirect_in)
+	if (list->previous && list->previous->redirects->err
+		&& !list->redirects->redirect_in)
 		close(list->fd_in);
 }
 

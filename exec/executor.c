@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 16:52:23 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 18:17:38 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	commands_control(t_com *list, t_vars *vars)
 		else if (ft_strnstr(list->command, "env", 4))
 			env_function(list, vars);
 		else if (ft_strnstr(list->command, "cd", 3))
-			cd_function(list, vars);
+			cd_function(list, vars, NULL);
 		else if (ft_strnstr(list->command, "export", 7))
 			export_function(list, vars);
 		else if (ft_strnstr(list->command, "unset", 6))
@@ -102,20 +102,14 @@ int	execute(t_com *list, t_vars *vars)
 	if (list->command && vars)
 	{
 		if (ft_strlen(list->command) < 1)
-		{
-			ft_printf(2, "minishell: %s: command not found\n", list->command);
-			return(list->vars->exit_status = 127, 0);	
-		}
+			return (ft_printf(2, "minishell: %s: command not found\n",
+					list->command), list->vars->exit_status = 127, 0);
 		if (ft_strnstr(list->command, ";", ft_strlen(list->command)))
-		{
-			ft_printf(2, "minishell: %s: command not found\n", list->command);
-			return (list->vars->exit_status = 127, 0);
-		}
+			return (ft_printf(2, "minishell: %s: command not found\n",
+					list->command), list->vars->exit_status = 127, 0);
 		if (ft_strnstr(list->command, "\\", ft_strlen(list->command)))
-		{
-			ft_printf(2, "minishell: %s: command not found\n", list->command);
-			return (list->vars->exit_status = 127, 0);
-		}
+			return (ft_printf(2, "minishell: %s: command not found\n",
+					list->command), list->vars->exit_status = 127, 0);
 		if (execute_error_control(list) == 0)
 			return (0);
 		if (pids_funcion(list, status) == 0)

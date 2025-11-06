@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 13:45:09 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 18:14:43 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,5 @@ int	cd_aux_funcion(t_com *list, t_vars *vars)
 		ft_free_free(list->args);
 		list->args = NULL;
 	}
-	return (1);
+	return (vars->exit_status = 0, 1);
 }

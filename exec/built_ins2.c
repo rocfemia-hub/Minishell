@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 13:42:52 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 18:06:33 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,23 +44,21 @@ void	export_function(t_com *list, t_vars *vars)
 	int	i;
 	int	has_error;
 
-	i = 0;
+	i = -1;
 	has_error = 0;
 	if (!list->args || !*list->args)
 		return (free(list->args), (list->args = NULL),
 			print_export_vars(list, vars));
-	while (list->args && list->args[i])
+	while (list->args && list->args[++i])
 	{
 		if (!valid_var_name(list->args[i]))
 		{
-			ft_putstr_fd("export: '", 2);
-			ft_putstr_fd(list->args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
+			ft_printf(2, "export: '%s': not a valid identifier\n",
+				list->args[i]);
 			has_error = 1;
 		}
 		else
 			add_update_env_var(vars, list->args[i]);
-		i++;
 	}
 	ft_free_free(list->args);
 	list->args = NULL;
@@ -85,9 +83,8 @@ void	unset_function(t_com *list, t_vars *vars)
 			remove_env_var(vars, list->args[i]);
 		else
 		{
-			ft_putstr_fd("unset: '", 2);
-			ft_putstr_fd(list->args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
+			ft_printf(2, "unset: '%s': not a valid identifier\n",
+				list->args[i]);
 			has_error = 1;
 		}
 		i++;

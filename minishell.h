@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 07:13:22 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 18:17:18 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ void	setup_signals_noninteractive(void);
 void	setup_signals_heredoc(void);
 void	setup_signals_default(void);
 void	setup_terminal_heredoc(void);
-void	restore_terminal_heredoc(void);
+void	rest_termi_hrdc(void);
 
 /*EXEC*/ 
 
@@ -168,7 +168,7 @@ void	close_pipes(t_com *list, t_com *current_cmd);
 void	echo_function(t_com *list, t_vars *vars);
 void	pwd_function(t_com *list, t_vars *vars);
 void	exit_function(t_com *list, t_vars *vars);
-void	cd_function(t_com *list, t_vars *vars);
+void	cd_function(t_com *list, t_vars *vars, char *target_dir);
 
 void	env_function(t_com *list, t_vars *vars);
 void	export_function(t_com *list, t_vars *vars);

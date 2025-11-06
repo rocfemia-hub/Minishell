@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 16:37:12 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 18:16:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ void	pwd_function(t_com *list, t_vars *vars)
 	ssize_t	bytes_written;
 
 	if (vars->pwd == NULL)
-		return (vars->exit_status = 1, write(2, "minishell: ", 11), perror("pwd"));
+		return (vars->exit_status = 1, write(2, "minishell: ", 11),
+			perror("pwd"));
 	bytes_written = write(list->fd_out, vars->pwd, ft_strlen(vars->pwd));
 	if (bytes_written != -1)
 		write(list->fd_out, "\n", 1);
@@ -55,14 +56,14 @@ void	exit_function(t_com *list, t_vars *vars)
 {
 	if (!list->args[0] || !vars)
 	{
-		write(1, "exit\n", 5);	
+		write(1, "exit\n", 5);
 		exit(0);
 	}
 	if (list->args[0] && !list->args[1])
 	{
 		if (valid_number(list->args[0]))
 		{
-			write(1, "exit\n", 5);	
+			write(1, "exit\n", 5);
 			exit(ft_atoi(list->args[0]));
 		}
 		else
@@ -75,20 +76,20 @@ void	exit_function(t_com *list, t_vars *vars)
 	return (vars->exit_status = 1, (void)0);
 }
 
-void	cd_function(t_com *list, t_vars *vars)
+void	cd_function(t_com *list, t_vars *vars, char	*target_dir)
 {
-	char	*target_dir;
-
 	if (!list->args || !list->args[0])
 	{
 		target_dir = get_env_var(vars, "HOME");
 		if (!target_dir)
-			return (vars->exit_status = 1, write(2, "cd: HOME not set\n", 17), (void)0);
+			return (vars->exit_status = 1,
+				write(2, "cd: HOME not set\n", 17), (void)0);
 	}
 	else if (list->args[0] && !list->args[1])
 		target_dir = list->args[0];
 	else
-		return (vars->exit_status = 1, write(2, "cd: too many arguments\n", 23), (void)0);
+		return (vars->exit_status = 1,
+			write(2, "cd: too many arguments\n", 23), (void)0);
 	if (chdir(target_dir) == -1)
 	{
 		if (errno == EACCES)
@@ -101,5 +102,4 @@ void	cd_function(t_com *list, t_vars *vars)
 	}
 	if (!cd_aux_funcion(list, vars))
 		return (vars->exit_status = 1, (void)0);
-	vars->exit_status = 0;
 }

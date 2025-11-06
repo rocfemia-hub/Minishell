@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:39:55 by roo               #+#    #+#             */
-/*   Updated: 2025/10/30 00:00:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/06 17:54:23 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	setup_terminal_heredoc(void)
 }
 
 // Restaurar configuración original del terminal
-void	restore_terminal_heredoc(void)
+void	rest_termi_hrdc(void)
 {
 	if (*get_termios_saved())
 	{
