@@ -26,7 +26,7 @@ int aux_parser_redirects(t_com *commands, char *redirect, int type)
 	{
 		if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1))
 			commands->error = ft_strdup("syntax error near unexpected token `>'");
-		else if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1)) 
+		else if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
 			commands->error = ft_strdup("syntax error near unexpected token `<'");
 		commands->vars->exit_status = 2;
 		return (0);
@@ -61,13 +61,8 @@ char *find_redirect_position(char *arg, char *redirect)
 	return (NULL);
 }
 
-int parser_redirects(t_com *commands, char *redirect, int type)
+int aux_parser_resdirects_sintax_error(t_com *commands)
 {
-	char *tmp_file;
-	char *redirect_pos;
-	char *before_redirect;
-	int pos;
-
 	if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
 	{
 		commands->error = ft_strdup("syntax error near unexpected token `>'");
@@ -80,30 +75,48 @@ int parser_redirects(t_com *commands, char *redirect, int type)
 		commands->vars->exit_status = 2;
 		return (0);
 	}
+	return (1);
+}
+
+void aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect)
+{
+	char *tmp_file;
+	int pos;
+	char *before_redirect;
+
+	pos = 0;
+	tmp_file = ft_strdup(redirect_pos + ft_strlen(redirect));	 // archivo al que redirecciona
+	pos = redirect_pos - commands->args[commands->redirects->j]; // posicion del redirect en el string
+	if (pos > 0)												 // hay texto antes de la redireccion "hola>adios"
+	{
+		before_redirect = ft_calloc(pos + 1, sizeof(char));
+		ft_strlcpy(before_redirect, commands->args[commands->redirects->j], pos + 1);
+		free(commands->args[commands->redirects->j]);
+		commands->args[commands->redirects->j] = before_redirect; // reemplazar "hola>adios" por "hola"
+		fill_type_redirect(commands, type);
+		commands->args = copy_redirect_matrix(commands->args, -1, -1);
+		fill_cmd(commands, redirect, tmp_file);
+	}
+	else // la redireccion esta al inicio ">adios"
+	{
+		fill_type_redirect(commands, type);
+		commands->args = copy_redirect_matrix(commands->args, commands->redirects->j, commands->redirects->j);
+		fill_cmd(commands, redirect, tmp_file);
+	}
+}
+
+int parser_redirects(t_com *commands, char *redirect, int type)
+{
+	char *tmp_file;
+	char *redirect_pos;
+
+	if (!aux_parser_resdirects_sintax_error(commands))
+		return (0);
 	else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect)) // si la redireccion esta asi ">adios" o "hola>adios"
 	{
 		redirect_pos = find_redirect_position(commands->args[commands->redirects->j], redirect);
 		if (redirect_pos)
-		{
-			tmp_file = ft_strdup(redirect_pos + ft_strlen(redirect)); // archivo al que redirecciona
-			pos = redirect_pos - commands->args[commands->redirects->j];               // posicion del redirect en el string
-			if (pos > 0)                                                               // hay texto antes de la redireccion "hola>adios"
-			{
-				before_redirect = ft_calloc(pos + 1, sizeof(char));
-				ft_strlcpy(before_redirect, commands->args[commands->redirects->j], pos + 1);
-				free(commands->args[commands->redirects->j]);
-				commands->args[commands->redirects->j] = before_redirect; // reemplazar "hola>adios" por "hola"
-				fill_type_redirect(commands, type);
-				commands->args = copy_redirect_matrix(commands->args, -1, -1);
-				fill_cmd(commands, redirect, tmp_file);
-			}
-			else // la redireccion esta al inicio ">adios"
-			{
-				fill_type_redirect(commands, type);
-				commands->args = copy_redirect_matrix(commands->args, commands->redirects->j, commands->redirects->j);
-				fill_cmd(commands, redirect, tmp_file);
-			}
-		}
+			aux_redirects(commands, redirect_pos, type, redirect);
 		else
 		{
 			tmp_file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect));
@@ -131,7 +144,6 @@ char *clean_quotes_in_line(char *arg)
 	new_arg = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
 	if (!new_arg)
 		return (NULL);
-
 	while (arg[j])
 	{
 		if (arg[j] == '\'' || arg[j] == '"')

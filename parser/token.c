@@ -52,6 +52,21 @@ char *only_cmd(char *line, t_clean_cmd *data)
     return (ft_substr(line, data->start, data->end - data->start));
 }
 
+static void handle_no_expansion(char *line, t_clean_cmd *data, t_com *commands)
+{
+    char *temp;
+
+    free(data->cmd);
+    data->cmd = only_cmd(line, data);
+    if (data->cmd)
+    {
+        temp = data->cmd;
+        data->cmd = clean_cmd(data->cmd);
+        free(temp);
+        init_struct(line, data->cmd, data->only_cmd_i, commands);
+    }
+}
+
 void type_command(char *line, t_com *commands)
 {
     t_clean_cmd data;
@@ -62,25 +77,15 @@ void type_command(char *line, t_com *commands)
     data.cmd = only_cmd(line, &data);
     if (!data.cmd)
         return;
-    saved_index = data.only_cmd_i;                      // Guardar el índice correcto de only_cmd
-    if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))) // hay posible expansion en el comando
+    saved_index = data.only_cmd_i;
+    if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
     {
-        if (expand_cmd(&data, commands->vars)) // si hay $ en el comando
+        if (expand_cmd(&data, commands->vars))
             init_struct(line, data.cmd, saved_index, commands);
-        else // si la expansion del comando es vacio, cojo lo siguiente como comando
-        {
-            free(data.cmd);
-            data.cmd = only_cmd(line, &data);
-            if (data.cmd)
-            {
-                temp = data.cmd;
-                data.cmd = clean_cmd(data.cmd);
-                free(temp);
-                init_struct(line, data.cmd, data.only_cmd_i, commands);
-            }
-        }
+        else
+            handle_no_expansion(line, &data, commands);
     }
-    else // cuando no hay expansion
+    else
     {
         temp = data.cmd;
         data.cmd = clean_cmd(data.cmd);
@@ -145,6 +150,5 @@ t_com *token(char *line, t_vars *vars)
         error(commands);
         return (NULL);
     }
-    // print_list(commands);
     return (commands);
 }

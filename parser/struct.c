@@ -28,15 +28,9 @@ char **ft_strjoin_cmd_arg(t_com *commands)
         while (commands->args[++j])
             len++;
     aux = ft_calloc(len + 1, sizeof(char *));
-    j = -1;
-    if (commands->command)
-    {
-        aux[0] = ft_strdup(commands->command);
-        if (commands->args)
-            while (commands->args[++j])
-                aux[++i] = ft_strdup(commands->args[j]);
-    }
-    else if (commands->args)
+    if (commands->command && (aux[i++] = ft_strdup(commands->command)))
+        j = -1;
+    if (commands->args)
         while (commands->args[++j])
             aux[i++] = ft_strdup(commands->args[j]);
     return (aux);
@@ -66,14 +60,14 @@ int has_expandable_dollar(char *line)
 }
 
 t_com *create_struct(char *line, t_vars *vars)
-{ // create nodes list
+{
     int i;
     int pipes;
     t_com *new;
     t_com *head;
 
     i = 0;
-    pipes = look_for_char(line, 124); // counter pipes
+    pipes = look_for_char(line, 124);
     if (pipes < 0)
     {
         head = lstnew(i);
@@ -84,10 +78,9 @@ t_com *create_struct(char *line, t_vars *vars)
     }
     head = lstnew(i);
     head->vars = vars;
-    while (++i <= pipes) // create nodes
+    while (++i <= pipes)
     {
-        new = lstnew(i);
-        if (!new)
+        if (!(new = lstnew(i)))
             return (NULL);
         new->vars = vars;
         lstadd_back(&head, new);

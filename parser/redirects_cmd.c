@@ -66,26 +66,14 @@ void fill_cmd(t_com *commands, char *redirect, char *file)
 	free(file);
 }
 
-int clean_redirects_cmd(t_com *commands, char *redirect, int type)
+void aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
 {
-	char	*tmp_file;
-	char	*tmp_cmd;
-	int		i;
+	char *tmp_file;
+	int i;
+	char *tmp_cmd;
 
 	i = 0;
-	if (ft_strnstr(commands->command, ">>>", 3)) // error >>>
-	{
-		commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
-		commands->vars->exit_status = 2;
-		return (0);
-	}
-	else if (ft_strnstr(commands->command, "<<<", 3)) // error hola< y <<<
-	{
-		commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
-		commands->vars->exit_status = 2;
-		return (0);
-	}
-	else if (ft_strlen(commands->command) > ft_strlen(redirect)) // cat>Makefile
+	if (ft_strlen(commands->command) > ft_strlen(redirect)) // cat>Makefile
 	{
 		while (commands->command[i] && ft_strncmp(commands->command + i, redirect, ft_strlen(redirect)) != 0)
 			i++;
@@ -105,30 +93,54 @@ int clean_redirects_cmd(t_com *commands, char *redirect, int type)
 		commands->args = realloc_redirect_args(commands->args);
 		fill_type_redirect(commands, type);
 	}
+}
+
+int clean_redirects_cmd(t_com *commands, char *redirect, int type)
+{
+	if (ft_strnstr(commands->command, ">>>", 3)) // error >>>
+	{
+		commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
+		commands->vars->exit_status = 2;
+		return (0);
+	}
+	else if (ft_strnstr(commands->command, "<<<", 3)) // error hola< y <<<
+	{
+		commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+		commands->vars->exit_status = 2;
+		return (0);
+	}
+	else
+		aux_clean_redirects_cmd(commands, redirect, type);
 	return (1);
+}
+
+int aux_redirects_cmd(t_com *commands)
+{
+	if (commands->args[0] || ft_strlen(commands->command) > 2)
+	{
+		if (is_redirect_token(commands->command, "<<"))
+			if (!clean_redirects_cmd(commands, "<<", 4))
+				return (0);
+		if (is_redirect_token(commands->command, ">>"))
+			if (!clean_redirects_cmd(commands, ">>", 3))
+				return (0);
+		look_for_cmd(commands);
+		return (1);
+	}
+	else
+	{
+		commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
+		commands->vars->exit_status = 2;
+		return (0);
+	}
 }
 
 int redirects_cmd(t_com *commands)
 {
 	if (is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">>"))
 	{
-		if (commands->args[0] || ft_strlen(commands->command) > 2)
-		{
-			if (is_redirect_token(commands->command, "<<"))
-				if (!clean_redirects_cmd(commands, "<<", 4))
-					return (0);
-			if (is_redirect_token(commands->command, ">>"))
-				if (!clean_redirects_cmd(commands, ">>", 3))
-					return (0);
-			look_for_cmd(commands);
-			return (1);
-		}
-		else
-		{
-			commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
-			commands->vars->exit_status = 2;
-			return (0);
-		}
+		if(!aux_redirects_cmd(commands))
+			return(0);
 	}
 	if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, ">"))
 	{
