@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 18:14:43 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 14:05:57 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,22 +53,15 @@ int	valid_number(char *str)
 void	print_export_vars(t_com *list, t_vars *vars)
 {
 	t_env	*env_list;
-	char	*line;
-	char	*tmp_line;
 
 	env_list = vars->env_list;
 	while (env_list)
 	{
-		write(list->fd_out, "declare -x ", 11);
 		if (ft_strlen(env_list->env_inf) != 0)
-			tmp_line = ft_strjoin(env_list->env_name, "=");
+			ft_printf(list->fd_out, "declare -x %s=\"%s\"\n",
+				env_list->env_name, env_list->env_inf);
 		else
-			tmp_line = ft_strdup(env_list->env_name);
-		line = ft_strjoin(tmp_line, env_list->env_inf);
-		free(tmp_line);
-		write(list->fd_out, line, ft_strlen(line));
-		write(list->fd_out, "\n", 1);
-		free(line);
+			ft_printf(list->fd_out, "declare -x %s\n", env_list->env_name);
 		env_list = env_list->next;
 	}
 	vars->exit_status = 0;
