@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 18:17:18 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 15:12:35 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,25 +145,6 @@ void	rest_termi_hrdc(void);
 
 /*EXEC*/ 
 
-
-// EXECUTOR
-void	execute_control(t_com *list, t_vars *vars);
-void	commands_control(t_com *list, t_vars *vars);
-char	*get_path(char *cmd, t_vars *vars);
-int 	execute(t_com *list, t_vars *vars);
-int		execute_error_control(t_com *list);
-int		pids_funcion(t_com *list, int status);
-void	execute_signals(t_com *list, int status);
-
-// PIPELINES
-void	setup_pipeline(t_com *list);
-void	execute_pipeline(t_com *list);
-void	execute_pipelines2(t_com *list, pid_t *pids);
-void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i);
-void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i);
-void	pids2_pipelines(t_com *list, t_com *tmp_list);
-void	close_pipes(t_com *list, t_com *current_cmd);
-
 // BUILT-INS
 void	echo_function(t_com *list, t_vars *vars);
 void	pwd_function(t_com *list, t_vars *vars);
@@ -191,13 +172,38 @@ t_env	*create_env_list(char *env_string);
 void	add_env_var_to_list(t_vars *vars, char *name, char *value);
 t_env	*find_env_var(t_vars *vars, char *env_name);
 
-// REDIRECTIONS
+// EXEC_CONTROL
+void	execute_control(t_com *list, t_vars *vars);
+void	commands_control(t_com *list, t_vars *vars);
+int		builtins_control(t_com *list, t_vars *vars);
 int		redirections_control(t_com *list, int j, int q, int k);
+
+// EXECUTOR
+int 	execute(t_com *list, t_vars *vars);
+int		execute_error_control(t_com *list);
+char	*get_path(char *cmd, t_vars *vars);
+void	execute_signals(t_com *list, int status);
+
+// HERERDOC
+void	heredoc_execution(t_com *list);
+void	found_delimiter(t_com *list, int fd);
+
+// PIDS
+int		pids_funcion(t_com *list, int status);
+void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i);
+void	pids2_pipelines(t_com *list, t_com *tmp_list);
+
+// PIPELINES
+void	setup_pipeline(t_com *list);
+void	execute_pipeline(t_com *list);
+void	execute_pipelines2(t_com *list, pid_t *pids);
+void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i);
+void	close_pipes(t_com *list, t_com *current_cmd);
+
+// REDIRECTIONS
 int		infile_redirection(t_com *list, int i);
 int		outfile_redirection(t_com *list, int i);
 int		append_redirection(t_com *list, int i);
-void	heredoc_execution(t_com *list);
-void	found_delimiter(t_com *list, int fd);
 void	apply_redirections(t_com *list);
 void	clean_fds(t_com *list);
 

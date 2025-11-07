@@ -6,7 +6,7 @@ BLUE = \033[34m
 RESET = \033[0m
 
 SRC = mix/list.c mix/main.c mix/error.c mix/free.c mix/split_mini.c mix/signals.c\
-      exec/built_ins1.c exec/built_ins2.c exec/executor.c exec/utils_built_ins1.c exec/utils_built_ins2.c exec/utils_built_ins3.c exec/redirections.c exec/pipelines.c\
+      exec/built_ins1.c exec/built_ins2.c exec/builtins_utils1.c exec/builtins_utils2.c exec/builtins_utils3.c exec/exec_control.c exec/executor.c exec/heredoc.c exec/pids.c exec/pipelines.c exec/redirections.c\
       parser/token.c parser/aux_token.c parser/quotes.c parser/keep_quotes.c parser/utils_quotes.c parser/struct.c parser/expander_cmd.c parser/expander_args.c parser/aux_expander.c parser/utils_expander.c parser/redirects.c parser/utils_redirects.c parser/ft_split_parser.c parser/redirects_cmd.c parser/syntax_validator.c \
 
 OBJS = ${SRC:.c=.o}

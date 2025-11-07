@@ -6,71 +6,11 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 14:16:27 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 14:53:49 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	execute_control(t_com *list, t_vars *vars)
-{
-	t_com	*tmp_list;
-
-	setup_signals_noninteractive();
-	list->redirects->redirected = 0;
-	tmp_list = list;
-	if (tmp_list->next == NULL)
-	{
-		if (!redirections_control(tmp_list, 0, 0, 0))
-		{
-			vars->exit_status = 1;
-			return (clean_fds(tmp_list));
-		}
-		if (!tmp_list->command || ft_strlen(tmp_list->command) == 0) // Si no hay comando (solo redirecciones), no ejecutar nada
-		{
-			vars->exit_status = 0;
-			return (clean_fds(tmp_list));
-		}
-		if (tmp_list->flag_built == 1)
-			commands_control(tmp_list, vars);
-		else
-			execute(tmp_list, vars);
-		clean_fds(tmp_list);
-	}
-	else
-	{
-		setup_pipeline(list);
-		execute_pipeline(list);
-	}
-}
-
-void	commands_control(t_com *list, t_vars *vars)
-{
-	if (!list || !list->command)
-		return ;
-	if (!redirections_control(list, 0, 0, 0))
-		return ;
-	if (list->flag_built == 1)
-	{
-		if (ft_strnstr(list->command, "echo", 5))
-			echo_function(list, vars);
-		else if (ft_strnstr(list->command, "pwd", 4))
-			pwd_function(list, vars);
-		else if (ft_strnstr(list->command, "exit", 5))
-			exit_function(list, vars);
-		else if (ft_strnstr(list->command, "env", 4))
-			env_function(list, vars);
-		else if (ft_strnstr(list->command, "cd", 3))
-			cd_function(list, vars, NULL);
-		else if (ft_strnstr(list->command, "export", 7))
-			export_function(list, vars);
-		else if (ft_strnstr(list->command, "unset", 6))
-			unset_function(list, vars);
-		clean_fds(list);
-	}
-	else
-		execute(list, vars);
-}
 
 char	*get_path(char *cmd, t_vars *vars)
 {
@@ -146,33 +86,6 @@ int	execute_error_control(t_com *list)
 			return (ft_printf(2, "minishell: %s: Permission denied\n",
 					list->command), list->vars->exit_status = 126, 0);
 	}
-	return (1);
-}
-
-int	pids_funcion(t_com *list, int status)
-{
-	int		pid;
-	char	**env;
-
-	env = list_to_env(list->vars->env_list);
-	pid = fork();
-	if (pid == -1)
-		return (write(2, "minishell: ", 11), perror("fork"), 0);
-	if (pid == 0)
-	{
-		setup_signals_default();
-		apply_redirections(list);
-		if (execve(list->path_command, list->command_arg, env) == 0)
-		{
-			write(2, "minishell: ", 11);
-			perror("execve");
-			list->vars->exit_status = 127;
-			exit(127);
-		}
-	}
-	waitpid(pid, &status, 0);
-	execute_signals(list, status);
-	ft_free_free(env);
 	return (1);
 }
 

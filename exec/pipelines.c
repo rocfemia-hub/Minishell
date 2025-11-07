@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 03:37:12 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 14:59:41 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,54 +79,6 @@ void	execute_pipelines2(t_com *list, pid_t *pids)
 		}
 		pids_pipelines(list, tmp_list, pids, i++);
 		tmp_list = tmp_list->next;
-	}
-}
-
-void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == -1)
-		return (write(2, "minishell: ", 11), perror("fork"), free(pids));
-	if (pid == 0)
-		pids2_pipelines(list, tmp_list);
-	else
-	{
-		if (tmp_list->fd_in != STDIN_FILENO)
-			close(tmp_list->fd_in);
-		if (tmp_list->fd_out != STDOUT_FILENO)
-			close(tmp_list->fd_out);
-		pids[i] = pid;
-	}
-}
-
-void	pids2_pipelines(t_com *list, t_com *tmp_list)
-{
-	setup_signals_default();
-	apply_redirections(tmp_list);
-	close_pipes(list, tmp_list);
-	if (tmp_list->flag_built)
-	{
-		commands_control(tmp_list, tmp_list->vars);
-		exit(0);
-	}
-	else
-	{
-		tmp_list->path_command = get_path(tmp_list->command,
-				tmp_list->vars);
-		if (!tmp_list->path_command)
-		{
-			ft_printf(2, "minishell: %s: command not found\n",
-				tmp_list->command);
-			exit(127);
-		}
-		if (execve(tmp_list->path_command, tmp_list->command_arg,
-				list_to_env(tmp_list->vars->env_list)) == -1)
-		{
-			(write(2, "minishell: ", 11), perror("execve"));
-			exit(127);
-		}
 	}
 }
 
