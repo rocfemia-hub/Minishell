@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 16:01:37 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 20:14:17 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,6 @@ typedef struct s_com
 
 
 // MAIN
-void 	init_env(t_vars *vars);
-int		line_break(char *line);
-int		matrix_len(char **matrix);
-char	**malloc_matrix(char **matrix); // NO SE USA
-void	init_vars(t_vars *vars, char **env);
-void	init_fds(t_com *list, t_vars *vars);
 
 //LISTAS
 t_com	*lstnew(int index);
@@ -158,47 +152,40 @@ void	unset_function(t_com *list, t_vars *vars);
 // UTILS_BUILT-INS
 int		valid_n_option(char *str);
 int		valid_number(char *str);
-void	print_export_vars(t_com *list, t_vars *vars);
-void	remove_env_var(t_vars *vars, char *name);
-int		cd_aux_funcion(t_com *list, t_vars *vars);
-
-void	add_update_env_var(t_vars *vars, char *var_str);
-char	*get_var_name(char *var_assignment); // NO SE USA
 int		valid_var_name(char *var);
-void	increment_shlvl(t_vars *vars);
+int		cd_aux_funcion(t_com *list, t_vars *vars);
+void	print_export_vars(t_com *list, t_vars *vars);
+
+t_env	*create_env_list(char *env_string);
+t_env	*find_env_var(t_vars *vars, char *env_name);
+void	add_update_env_var(t_vars *vars, char *var_str);
+void	remove_env_var(t_vars *vars, char *name);
 
 char	**list_to_env(t_env *env_list);
 void	env_to_list(t_vars *vars, char **env);
-t_env	*create_env_list(char *env_string);
-void	add_env_var_to_list(t_vars *vars, char *name, char *value);
-t_env	*find_env_var(t_vars *vars, char *env_name);
+void	increment_shlvl(t_vars *vars);
+int		line_break(char *line);
 
 // EXEC_CONTROL
 void	execute_control(t_com *list, t_vars *vars);
 void	commands_control(t_com *list, t_vars *vars);
-int		builtins_control(t_com *list, t_vars *vars);
 int		redirections_control(t_com *list, int j, int q, int k);
 
 // EXECUTOR
-int 	execute(t_com *list, t_vars *vars);
-int		execute_error_control(t_com *list);
 char	*get_path(char *cmd, t_vars *vars);
+int 	execute(t_com *list, t_vars *vars);
 void	execute_signals(t_com *list, int status);
 
 // HERERDOC
 void	heredoc_execution(t_com *list);
-void	found_delimiter(t_com *list, int fd);
 
 // PIDS
 int		pids_funcion(t_com *list, int status);
 void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i);
-void	pids2_pipelines(t_com *list, t_com *tmp_list);
 
 // PIPELINES
-void	setup_pipeline(t_com *list);
 void	execute_pipeline(t_com *list);
-void	execute_pipelines2(t_com *list, pid_t *pids);
-void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i);
+void	setup_pipeline(t_com *list);
 void	close_pipes(t_com *list, t_com *current_cmd);
 
 // REDIRECTIONS
@@ -206,7 +193,6 @@ int		infile_redirection(t_com *list, int i);
 int		outfile_redirection(t_com *list, int i);
 int		append_redirection(t_com *list, int i);
 void	apply_redirections(t_com *list);
-void	clean_fds(t_com *list);
 
 
 /*PARSER*/ 

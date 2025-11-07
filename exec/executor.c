@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 14:53:49 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 19:53:35 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,30 +38,7 @@ char	*get_path(char *cmd, t_vars *vars)
 	return (ft_free_free(paths), result);
 }
 
-int	execute(t_com *list, t_vars *vars)
-{
-	int	status;
-
-	status = 0;
-	list->path_command = get_path(list->command, list->vars);
-	if (list->command && vars)
-	{
-		if (ft_strnstr(list->command, ";", ft_strlen(list->command)))
-			return (ft_printf(2, "minishell: %s: command not found\n",
-					list->command), list->vars->exit_status = 127, 0);
-		if (ft_strnstr(list->command, "\\", ft_strlen(list->command)))
-			return (ft_printf(2, "minishell: %s: command not found\n",
-					list->command), list->vars->exit_status = 127, 0);
-		if (execute_error_control(list) == 0)
-			return (0);
-		if (pids_funcion(list, status) == 0)
-			return (0);
-		return (0);
-	}
-	return (0);
-}
-
-int	execute_error_control(t_com *list)
+static int	execute_error_control(t_com *list)
 {
 	DIR	*dir;
 	int	has_slash;
@@ -87,6 +64,29 @@ int	execute_error_control(t_com *list)
 					list->command), list->vars->exit_status = 126, 0);
 	}
 	return (1);
+}
+
+int	execute(t_com *list, t_vars *vars)
+{
+	int	status;
+
+	status = 0;
+	list->path_command = get_path(list->command, list->vars);
+	if (list->command && vars)
+	{
+		if (ft_strnstr(list->command, ";", ft_strlen(list->command)))
+			return (ft_printf(2, "minishell: %s: command not found\n",
+					list->command), list->vars->exit_status = 127, 0);
+		if (ft_strnstr(list->command, "\\", ft_strlen(list->command)))
+			return (ft_printf(2, "minishell: %s: command not found\n",
+					list->command), list->vars->exit_status = 127, 0);
+		if (execute_error_control(list) == 0)
+			return (0);
+		if (pids_funcion(list, status) == 0)
+			return (0);
+		return (0);
+	}
+	return (0);
 }
 
 void	execute_signals(t_com *list, int status)

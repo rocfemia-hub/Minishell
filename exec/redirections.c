@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/17 18:48:52 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 14:57:27 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 20:06:23 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,22 +92,4 @@ void	apply_redirections(t_com *list)
 	if (list->previous && list->previous->redirects->err
 		&& !list->redirects->redirect_in)
 		close(list->fd_in);
-}
-
-void	clean_fds(t_com *list)
-{
-	if (list->fd_in != STDIN_FILENO)
-		close(list->fd_in);
-	if (list->fd_out != STDOUT_FILENO)
-	{
-		close(list->fd_out);
-	}
-	list->fd_in = STDIN_FILENO;
-	list->fd_out = STDOUT_FILENO;
-	if (list->redirects && list->redirects->heredoc_file)
-	{
-		unlink(list->redirects->heredoc_file);
-		free(list->redirects->heredoc_file);
-		list->redirects->heredoc_file = NULL;
-	}
 }

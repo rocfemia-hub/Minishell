@@ -6,55 +6,40 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 14:59:41 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 20:14:12 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	setup_pipeline(t_com *list)
+static void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i)
 {
-	t_com	*tmp_list;
-	int		pipe_fd[2];
+	int		status;
+	int		sig;
 
-	tmp_list = list;
-	while (tmp_list && tmp_list->next)
+	while (i < num_cmds)
 	{
-		if (pipe(pipe_fd) == -1)
-			return (write(2, "minishell: ", 11), perror("pipe"));
-		if (tmp_list->fd_out == STDOUT_FILENO)
-			tmp_list->fd_out = pipe_fd[WRITE_FD];
-		else
-			close(pipe_fd[WRITE_FD]);
-		if (tmp_list->next->fd_in == STDIN_FILENO)
-			tmp_list->next->fd_in = pipe_fd[READ_FD];
-		else
-			close(pipe_fd[READ_FD]);
-		tmp_list = tmp_list->next;
+		waitpid(pids[i], &status, 0);
+		if (WIFSIGNALED(status))
+		{
+			sig = WTERMSIG(status);
+			if (sig == SIGINT)
+				list->vars->exit_status = 130;
+			else if (sig == SIGQUIT)
+			{
+				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+				list->vars->exit_status = 131;
+			}
+			else
+				list->vars->exit_status = 128 + sig;
+		}
+		else if (i == num_cmds - 1 && WIFEXITED(status))
+			list->vars->exit_status = WEXITSTATUS(status);
+		i++;
 	}
 }
 
-void	execute_pipeline(t_com *list)
-{
-	t_com	*tmp_list;
-	pid_t	*pids;
-	int		num_cmds;
-
-	tmp_list = list;
-	num_cmds = 0;
-	while (tmp_list)
-	{
-		num_cmds++;
-		tmp_list = tmp_list->next;
-	}
-	pids = malloc(sizeof(pid_t) * num_cmds);
-	list->redirects->err = 0;
-	execute_pipelines2(list, pids);
-	pipelines_signals(list, pids, num_cmds, 0);
-	free(pids);
-}
-
-void	execute_pipelines2(t_com *list, pid_t *pids)
+static void	execute_pipelines2(t_com *list, pid_t *pids)
 {
 	t_com	*tmp_list;
 	int		i;
@@ -82,6 +67,48 @@ void	execute_pipelines2(t_com *list, pid_t *pids)
 	}
 }
 
+void	execute_pipeline(t_com *list)
+{
+	t_com	*tmp_list;
+	pid_t	*pids;
+	int		num_cmds;
+
+	tmp_list = list;
+	num_cmds = 0;
+	while (tmp_list)
+	{
+		num_cmds++;
+		tmp_list = tmp_list->next;
+	}
+	pids = malloc(sizeof(pid_t) * num_cmds);
+	list->redirects->err = 0;
+	execute_pipelines2(list, pids);
+	pipelines_signals(list, pids, num_cmds, 0);
+	free(pids);
+}
+
+void	setup_pipeline(t_com *list)
+{
+	t_com	*tmp_list;
+	int		pipe_fd[2];
+
+	tmp_list = list;
+	while (tmp_list && tmp_list->next)
+	{
+		if (pipe(pipe_fd) == -1)
+			return (write(2, "minishell: ", 11), perror("pipe"));
+		if (tmp_list->fd_out == STDOUT_FILENO)
+			tmp_list->fd_out = pipe_fd[WRITE_FD];
+		else
+			close(pipe_fd[WRITE_FD]);
+		if (tmp_list->next->fd_in == STDIN_FILENO)
+			tmp_list->next->fd_in = pipe_fd[READ_FD];
+		else
+			close(pipe_fd[READ_FD]);
+		tmp_list = tmp_list->next;
+	}
+}
+
 void	close_pipes(t_com *list, t_com *current_cmd)
 {
 	t_com	*tmp_list;
@@ -97,32 +124,5 @@ void	close_pipes(t_com *list, t_com *current_cmd)
 				close(tmp_list->fd_out);
 		}
 		tmp_list = tmp_list->next;
-	}
-}
-
-void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i)
-{
-	int		status;
-	int		sig;
-
-	while (i < num_cmds)
-	{
-		waitpid(pids[i], &status, 0);
-		if (WIFSIGNALED(status))
-		{
-			sig = WTERMSIG(status);
-			if (sig == SIGINT)
-				list->vars->exit_status = 130;
-			else if (sig == SIGQUIT)
-			{
-				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
-				list->vars->exit_status = 131;
-			}
-			else
-				list->vars->exit_status = 128 + sig;
-		}
-		else if (i == num_cmds - 1 && WIFEXITED(status))
-			list->vars->exit_status = WEXITSTATUS(status);
-		i++;
 	}
 }

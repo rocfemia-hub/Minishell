@@ -1,45 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirections2.c                                    :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:56:54 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 14:57:30 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 19:56:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	heredoc_execution(t_com *list)
-{
-	char		*temp_file;
-	int			fd;
-	char		*num_str;
-	static int	heredoc_count = 0;
-
-	num_str = ft_itoa(heredoc_count++);
-	temp_file = ft_strjoin("/tmp/.heredoc_", num_str);
-	free(num_str);
-	fd = open(temp_file, O_CREAT | O_WRONLY | O_TRUNC, 0600);
-	if (fd == -1)
-	{
-		write(2, "minishell: ", 11);
-		perror("heredoc");
-		free(temp_file);
-		return ;
-	}
-	found_delimiter(list, fd);
-	close(fd);
-	if (g_signal == SIGINT)
-		return (unlink(temp_file), free(temp_file),
-			list->vars->exit_status = 130, (void) 0);
-	list->redirects->heredoc_file = temp_file;
-	list->fd_in = open(temp_file, O_RDONLY, 0777);
-}
-
-char	*read_line_heredoc(void)
+static char	*read_line_heredoc(void)
 {
 	char	*line;
 	char	buffer[1000];
@@ -64,7 +37,7 @@ char	*read_line_heredoc(void)
 	return (buffer[i] = '\0', line = ft_strdup(buffer), line);
 }
 
-void	found_delimiter(t_com *list, int fd)
+static void	found_delimiter(t_com *list, int fd)
 {
 	char	*line;
 
@@ -91,4 +64,31 @@ void	found_delimiter(t_com *list, int fd)
 		ft_printf(fd, "%s\n", line);
 		free(line);
 	}
+}
+
+void	heredoc_execution(t_com *list)
+{
+	char		*temp_file;
+	int			fd;
+	char		*num_str;
+	static int	heredoc_count = 0;
+
+	num_str = ft_itoa(heredoc_count++);
+	temp_file = ft_strjoin("/tmp/.heredoc_", num_str);
+	free(num_str);
+	fd = open(temp_file, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+	if (fd == -1)
+	{
+		write(2, "minishell: ", 11);
+		perror("heredoc");
+		free(temp_file);
+		return ;
+	}
+	found_delimiter(list, fd);
+	close(fd);
+	if (g_signal == SIGINT)
+		return (unlink(temp_file), free(temp_file),
+			list->vars->exit_status = 130, (void) 0);
+	list->redirects->heredoc_file = temp_file;
+	list->fd_in = open(temp_file, O_RDONLY, 0777);
 }

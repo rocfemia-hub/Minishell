@@ -6,20 +6,20 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:46 by roo               #+#    #+#             */
-/*   Updated: 2025/11/04 19:51:20 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 19:07:43 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_com *lstnew(int index) // he borrado el new->fd_out = 1; porque lo he declarado en otra función y hacía q la min explotara
+t_com *lstnew(int index)
 {
 	t_com *new;
 
 	new = (t_com *)ft_calloc(sizeof(t_com), 1);
 	if (!new)
 		return (NULL);
-	new->vars = NULL;  // No asignamos vars aquí, se asignará en init_fds
+	new->vars = NULL;
 	new->index = index;
 	return (new);
 }
@@ -43,7 +43,7 @@ void lstadd_back(t_com **lst, t_com *new)
 }
 
 void print_list(t_com *list)
-{ // funcion para debuguear
+{
 	while (list)
 	{
 		int i = 0;

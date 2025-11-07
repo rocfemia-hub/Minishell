@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:53:54 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 14:59:43 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 20:03:58 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,7 @@ int	pids_funcion(t_com *list, int status)
 	return (1);
 }
 
-void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == -1)
-		return (write(2, "minishell: ", 11), perror("fork"), free(pids));
-	if (pid == 0)
-		pids2_pipelines(list, tmp_list);
-	else
-	{
-		if (tmp_list->fd_in != STDIN_FILENO)
-			close(tmp_list->fd_in);
-		if (tmp_list->fd_out != STDOUT_FILENO)
-			close(tmp_list->fd_out);
-		pids[i] = pid;
-	}
-}
-
-void	pids2_pipelines(t_com *list, t_com *tmp_list)
+static void	pids2_pipelines(t_com *list, t_com *tmp_list)
 {
 	setup_signals_default();
 	apply_redirections(tmp_list);
@@ -84,5 +65,24 @@ void	pids2_pipelines(t_com *list, t_com *tmp_list)
 			(write(2, "minishell: ", 11), perror("execve"));
 			exit(127);
 		}
+	}
+}
+
+void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+		return (write(2, "minishell: ", 11), perror("fork"), free(pids));
+	if (pid == 0)
+		pids2_pipelines(list, tmp_list);
+	else
+	{
+		if (tmp_list->fd_in != STDIN_FILENO)
+			close(tmp_list->fd_in);
+		if (tmp_list->fd_out != STDOUT_FILENO)
+			close(tmp_list->fd_out);
+		pids[i] = pid;
 	}
 }

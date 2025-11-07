@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_built_ins1.c                                 :+:      :+:    :+:   */
+/*   builtins_utils1.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 14:05:57 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 19:40:30 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,47 +50,31 @@ int	valid_number(char *str)
 	return (1);
 }
 
-void	print_export_vars(t_com *list, t_vars *vars)
+int	valid_var_name(char *var)
 {
-	t_env	*env_list;
+	char	*equals_pos;
+	char	*name;
+	int		i;
 
-	env_list = vars->env_list;
-	while (env_list)
+	i = 0;
+	equals_pos = ft_strchr(var, '=');
+	if (equals_pos)
+		name = ft_substr(var, 0, equals_pos - var);
+	else
+		name = ft_strdup(var);
+	if (!((name[0] >= 'a' && name[0] <= 'z')
+			|| (name[0] >= 'A' && name[0] <= 'Z') || name[0] == '_'))
+		return (free(name), 0);
+	i = 1;
+	while (name[i])
 	{
-		if (ft_strlen(env_list->env_inf) != 0)
-			ft_printf(list->fd_out, "declare -x %s=\"%s\"\n",
-				env_list->env_name, env_list->env_inf);
-		else
-			ft_printf(list->fd_out, "declare -x %s\n", env_list->env_name);
-		env_list = env_list->next;
+		if (!((name[i] >= 'a' && name[i] <= 'z')
+				|| (name[i] >= 'A' && name[i] <= 'Z')
+				|| (name[i] >= '0' && name[i] <= '9') || name[i] == '_'))
+			return (free(name), 0);
+		i++;
 	}
-	vars->exit_status = 0;
-}
-
-void	remove_env_var(t_vars *vars, char *name)
-{
-	t_env	*env_list;
-	t_env	*prev;
-
-	env_list = vars->env_list;
-	prev = NULL;
-	while (env_list)
-	{
-		if (ft_strncmp(env_list->env_name, name,
-				ft_strlen(env_list->env_name)) == 0)
-		{
-			if (prev)
-				prev->next = env_list->next;
-			else
-				vars->env_list = env_list->next;
-			free(env_list->env_name);
-			free(env_list->env_inf);
-			free(env_list);
-			return ;
-		}
-		prev = env_list;
-		env_list = env_list->next;
-	}
+	return (free(name), 1);
 }
 
 int	cd_aux_funcion(t_com *list, t_vars *vars)
@@ -117,4 +101,21 @@ int	cd_aux_funcion(t_com *list, t_vars *vars)
 		list->args = NULL;
 	}
 	return (vars->exit_status = 0, 1);
+}
+
+void	print_export_vars(t_com *list, t_vars *vars)
+{
+	t_env	*env_list;
+
+	env_list = vars->env_list;
+	while (env_list)
+	{
+		if (ft_strlen(env_list->env_inf) != 0)
+			ft_printf(list->fd_out, "declare -x %s=\"%s\"\n",
+				env_list->env_name, env_list->env_inf);
+		else
+			ft_printf(list->fd_out, "declare -x %s\n", env_list->env_name);
+		env_list = env_list->next;
+	}
+	vars->exit_status = 0;
 }

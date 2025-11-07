@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_built_ins3.c                                 :+:      :+:    :+:   */
+/*   builtins_utils3.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:34 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 17:23:13 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 19:42:58 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,63 +65,36 @@ void	env_to_list(t_vars *vars, char **env)
 	}
 }
 
-t_env	*create_env_list(char *env_string)
+void	increment_shlvl(t_vars *vars)
 {
-	t_env	*new_var;
-	char	*equals_pos;
+	t_env	*shlvl;
+	char	*new;
+	int		current;
 
-	new_var = malloc(sizeof(t_env));
-	if (!new_var)
-		return (NULL);
-	equals_pos = ft_strchr(env_string, '=');
-	if (equals_pos)
+	shlvl = find_env_var(vars, "SHLVL");
+	if (shlvl)
 	{
-		new_var->env_name = ft_substr(env_string, 0, equals_pos - env_string);
-		new_var->env_inf = ft_strdup(equals_pos + 1);
+		current = ft_atoi(shlvl->env_inf);
+		current++;
 	}
 	else
-	{
-		new_var->env_name = ft_strdup(env_string);
-		new_var->env_inf = ft_strdup("");
-	}
-	new_var->next = NULL;
-	return (new_var);
+		current = 1;
+	new = ft_itoa(current);
+	add_update_env_var(vars, ft_strjoin("SHLVL=", new));
+	free(new);
 }
 
-void	add_env_var_to_list(t_vars *vars, char *name, char *value)
+int	line_break(char *line)
 {
-	t_env	*new_var;
-	t_env	*env_list;
+	int	i;
 
-	new_var = malloc(sizeof(t_env));
-	new_var->env_name = name;
-	new_var->env_inf = value;
-	new_var->next = NULL;
-	if (!vars->env_list)
-		vars->env_list = new_var;
+	i = 0;
+	if (ft_strlen(line) == 0)
+		return (0);
+	while (line && line[i] == 32)
+		i++;
+	if (!line[i])
+		return (0);
 	else
-	{
-		env_list = vars->env_list;
-		while (env_list->next)
-			env_list = env_list->next;
-		env_list->next = new_var;
-	}
-}
-
-t_env	*find_env_var(t_vars *vars, char *env_name)
-{
-	t_env	*env_list;
-
-	env_list = vars->env_list;
-	while (env_list)
-	{
-		if (ft_strncmp(env_list->env_name, env_name,
-				ft_strlen(env_list->env_name)) == 0)
-		{
-			if (ft_strlen(env_list->env_name) == ft_strlen(env_name))
-				return (env_list);
-		}
-		env_list = env_list->next;
-	}
-	return (NULL);
+		return (1);
 }

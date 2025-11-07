@@ -6,29 +6,29 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 16:22:24 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 19:25:51 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int g_signal; // variable global única
+int	g_signal;
 
-void init_env(t_vars *vars)
+static void	init_env(t_vars *vars)
 {
-	char cwd[1024];
+	char	cwd[1024];
 
-	getcwd(cwd, sizeof(cwd)); // getcwd me dice el directorio que estoy actualemte
+	getcwd(cwd, sizeof(cwd));
 	add_update_env_var(vars, ft_strjoin("PWD=", cwd));
 	add_update_env_var(vars, ft_strdup("SHLVL=1"));
 	add_update_env_var(vars, ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin"));
 	add_update_env_var(vars, ft_strdup("_=/usr/bin/env"));
 }
 
-void init_vars(t_vars *vars, char **env)
+static void	init_vars(t_vars *vars, char **env)
 {
 	t_env	*minishell_on;
-	
+
 	vars->exit_status = 0;
 	vars->pwd = getcwd(NULL, 0);
 	if (!env || !env[0])
@@ -37,115 +37,79 @@ void init_vars(t_vars *vars, char **env)
 	{
 		env_to_list(vars, env);
 		minishell_on = find_env_var(vars, "MINISHELL_ACTIVE");
-        if (minishell_on)
-            increment_shlvl(vars);
-        else
-        {
-            add_update_env_var(vars, ft_strdup("SHLVL=1"));
-            add_update_env_var(vars, ft_strdup("MINISHELL_ACTIVE=1"));
-        }
+		if (minishell_on)
+			increment_shlvl(vars);
+		else
+		{
+			add_update_env_var(vars, ft_strdup("SHLVL=1"));
+			add_update_env_var(vars, ft_strdup("MINISHELL_ACTIVE=1"));
+		}
 	}
 }
 
-void init_fds(t_com *list, t_vars *vars)
+static void	init_fds(t_com *list, t_vars *vars)
 {
-	while (list) // Valores por defecto
+	while (list)
 	{
-		list->fd_in = STDIN_FILENO;	  // 0
-		list->fd_out = STDOUT_FILENO; // 1
-		list->vars = vars;			  // Asignar vars a todos
-		if (list->next)				  // Si hay siguiente comando, necesitamos pipe
-			list->flag_pipe = 1;	  // Se configurará en create_pipes()
+		list->fd_in = STDIN_FILENO;
+		list->fd_out = STDOUT_FILENO;
+		list->vars = vars;
+		if (list->next)
+			list->flag_pipe = 1;
 		list = list->next;
 	}
 }
 
-int line_break(char *line)
+static int	gestion_line(t_com **commands, t_vars *vars)
 {
-	int i;
+	char	*line;
 
-	i = 0;
-	if (ft_strlen(line) == 0)
-		return (0);
-	while (line && line[i] == 32)
-		i++;
-	if (!line[i])
-		return (0);
-	else
-		return (1);
+	g_signal = 0;
+	line = readline("minishell-> ");
+	if (!line)
+	{
+		printf("exit\n");
+		exit(0);
+	}
+	if (g_signal == SIGINT)
+	{
+		vars->exit_status = 130;
+		g_signal = 0;
+	}
+	if (line[0] == '\0')
+		return (free(line), 0);
+	add_history(line);
+	if (!line_break(line))
+		return (free(line), 0);
+	*commands = token(line, vars);
+	free(line);
+	return (1);
 }
 
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
-	char *line;
-	t_com *commands;
-	t_vars vars; // nueva struct
+	t_com	*commands;
+	t_vars	vars;
 
 	if (argc < 1 && !argv)
-		return 1;
-	commands = NULL;			   // la verdad aqui no tengo del todo calro porque no se hace malloc
-	ft_bzero(&vars, sizeof(vars)); // malloc d la nueva struct
+		return (1);
+	commands = NULL;
+	ft_bzero(&vars, sizeof(vars));
 	init_vars(&vars, env);
-	setup_signals_interactive();   // Configurar señales para modo interactivo
+	setup_signals_interactive();
 	while (1)
 	{
-		g_signal = 0; // Reset signal status
-		line = readline("minishell-> ");		
-		if (!line) // Ctrl+D - EOF
-		{
-			rl_clear_history();		 // Liberar historial de readline
-			free_t_vars_list(&vars); // Liberar env_list
-			printf("exit\n");
-			break;
-		}
-		
-		if (g_signal == SIGINT) // Ctrl+C fue presionado
-		{
-			vars.exit_status = 130;
-			g_signal = 0; // Reset para que no interfiera con el próximo comando
-			if (line[0] == '\0') // Si es línea vacía por SIGINT
-			{
-				free(line);
-				continue;
-			}
-		}
-		if (line[0] == '\0')
-		{
-			free(line);
-			continue;
-		}
-		add_history(line); // añade al historial para poder usar las flechitas arriba y abajo
-		if (!line_break(line))
-		{
-			free(line);
-			continue;
-		}
-		commands = token(line, &vars);
-		if (!commands)				   // debug para comprobar que el comando sea valido
-		{
-			free(line);
-			continue;
-		}
-		if (!commands->command)
-		{
-			if (!commands->redirects)
-			{
-				(free(line), free_t_com_list(commands));
-				continue;
-
-			}
-		}
+		if (!gestion_line(&commands, &vars))
+			continue ;
 		init_fds(commands, &vars);
 		setup_pipeline(commands);
 		execute_control(commands, &vars);
-		setup_signals_interactive(); // Restaurar señales interactivas
+		setup_signals_interactive();
 		if (g_signal == SIGINT)
 			vars.exit_status = 130;
-		free(line);
 		free_t_com_list(commands);
-		commands = NULL; // reseteamos el puntero
+		commands = NULL;
 	}
-	//free_array(vars.env);
 	free(vars.pwd);
 	return (0);
 }
