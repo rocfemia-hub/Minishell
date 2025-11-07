@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-char *handle_single_quotes(char *line, int *i, t_vars *vars)
+char	*handle_single_quotes(char *line, int *i, t_vars *vars)
 {
-	int start;
-	char *token;
-	int len;
+	int		start;
+	char	*token;
+	int		len;
 
 	if (!vars)
 		return (NULL);
@@ -34,10 +34,11 @@ char *handle_single_quotes(char *line, int *i, t_vars *vars)
 	return (token);
 }
 
-char *aux_expand_var_in_quotes_args(char *token, t_vars *vars, int *k, int *start)
+char	*aux_expand_var_in_quotes_args(char *token, t_vars *vars, int *k,
+		int *start)
 {
-	char *value;
-	int vstart;
+	char	*value;
+	int		vstart;
 
 	vstart = *k + 1;
 	value = ft_itoa(vars->exit_status);
@@ -48,55 +49,84 @@ char *aux_expand_var_in_quotes_args(char *token, t_vars *vars, int *k, int *star
 	return (token);
 }
 
-char *expand_var_in_quotes_args(char *line, int *k, int *start, char *token, t_vars *vars)
+char	*handle_invalid_var(char *token)
 {
-	int vstart;
-	int vlen;
-	char *varname;
-	char *value;
+	token = str_append(token, "$");
+	return (token);
+}
 
-	vstart = *k + 1;
-	vlen = 0;
-	if (line[vstart] == '?')
-		return(aux_expand_var_in_quotes_args(token, vars, k, start));
-	if (!line[vstart] || !(ft_isalnum((unsigned char)line[vstart]) || line[vstart] == '_'))
-	{
-		token = str_append(token, "$");
-		*k = vstart;
-		*start = *k;
-		return (token);
-	}
-	while (line[vstart + vlen] && (ft_isalnum((unsigned char)line[vstart + vlen]) || line[vstart + vlen] == '_'))
-		vlen++;
-	varname = ft_substr(line, vstart, vlen);
+char	*extract_and_expand_var(char *line, int vstart, int *vlen,
+		t_vars *vars)
+{
+	char	*varname;
+	char	*value;
+
+	*vlen = 0;
+	while (line[vstart + *vlen] && (ft_isalnum((unsigned char)line[vstart
+				+ *vlen]) || line[vstart + *vlen] == '_'))
+		(*vlen)++;
+	varname = ft_substr(line, vstart, *vlen);
 	value = get_env_var(vars, varname);
 	free(varname);
+	return (value);
+}
+
+char	*expand_var_in_quotes_args(char *line, int *k, char *token,
+		t_vars *vars)
+{
+	int		vstart;
+	int		vlen;
+	char	*value;
+	int		start;
+
+	start = *k;
+	vstart = *k + 1;
+	if (line[vstart] == '?')
+		return (aux_expand_var_in_quotes_args(token, vars, k, &start));
+	if (!line[vstart] || !(ft_isalnum((unsigned char)line[vstart])
+			|| line[vstart] == '_'))
+	{
+		*k = vstart;
+		return (handle_invalid_var(token));
+	}
+	value = extract_and_expand_var(line, vstart, &vlen, vars);
 	token = str_append(token, value);
 	*k = vstart + vlen;
+	return (token);
+}
+
+char	*handle_dollar_in_quotes(char *line, int *k, int *start, t_vars *vars)
+{
+	char	*tmp;
+	char	*token;
+
+	token = NULL;
+	if (*k > *start)
+	{
+		tmp = ft_substr(line, *start, *k - *start);
+		token = str_append(token, tmp);
+		free(tmp);
+	}
+	*start = *k;
+	token = expand_var_in_quotes_args(line, k, token, vars);
 	*start = *k;
 	return (token);
 }
 
-char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars)
+char	*process_inside_double_quotes(char *line, int start, int end,
+		t_vars *vars)
 {
-	int k;
-	char *token;
-	char *tmp;
+	int		k;
+	char	*token;
+	char	*tmp;
 
 	token = NULL;
 	k = start;
 	while (k < end)
 	{
 		if (line[k] == '$')
-		{
-			if (k > start)
-			{
-				tmp = ft_substr(line, start, k - start);
-				token = str_append(token, tmp);
-				free(tmp);
-			}
-			token = expand_var_in_quotes_args(line, &k, &start, token, vars);
-		}
+			token = str_append(token, handle_dollar_in_quotes(line, &k,
+						&start, vars));
 		else
 			k++;
 	}
@@ -111,10 +141,10 @@ char *process_inside_double_quotes(char *line, int start, int end, t_vars *vars)
 	return (token);
 }
 
-char *handle_double_quotes(char *line, int *i, t_vars *vars)
+char	*handle_double_quotes(char *line, int *i, t_vars *vars)
 {
-	int end;
-	char *token;
+	int		end;
+	char	*token;
 
 	(*i)++;
 	end = *i;

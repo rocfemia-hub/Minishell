@@ -207,8 +207,10 @@ void	clean_fds(t_com *list);
 
 // TOKEN.C
 int		skip_spaces(char *line);
+void	aux_only_cmd(char *line, t_clean_cmd *data);
 char	*only_cmd(char *line, t_clean_cmd *data);
 void	type_command(char *line, t_com *commands);
+void	handle_quote(char c, char *quote);
 void	init_commands(char *line, t_com *commands);
 t_com	*token(char *line, t_vars *vars);
 
@@ -220,17 +222,31 @@ int		skip_space(char *s, int i);
 int		count_words_with_quotes(char *s);
 char	*extract_token(char *s, int *i);
 char	**ft_split_parser(char const *s);
+// UTILS_QUOTES.C
+int		look_for_char(char *line, char c);
+int	check_redir_in_quotes(char *arg, int start, int end);
+int	has_redirects(char *line);
+void	copy_without_quotes(char *arg, char *new_arg, int *j, int *k);
+
+// KEEP_QUOTES.C
+void	quotes_for_redir(char **arg, int *k, int start, char q);
+void	aux_keep_quotes_args(char *line, int *i, int *k, char **arg);
+void	process_single_word(char *line, int *i, char **args, int *j);
+void	keep_quotes_args(t_com *commands, char *line);
 
 // QUOTES.C
-void	keep_quotes_args(t_com *commands, char *line);
+void	process_arg_quotes(char *arg, char *new_arg);
 void	clean_reinserted_quotes_in_args(t_com *commands);
+void	process_quote_char_clean(char *temp, char *result, int *j, int *k);
+char	*remove_quotes_from_cmd(char *temp);
 char	*clean_cmd(char *line);
-int		look_for_char(char *line, char c);
 
 // STRUCT.C
 char	**ft_strjoin_cmd_arg(t_com *commands);
 int		has_expandable_dollar(char *line);
+t_com	*create_error_struct(int i, t_vars *vars);
 t_com	*create_struct(char *line, t_vars *vars);
+void	built_ins_init_struct(t_com *commands);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 
 // EXPANDER_CMD.C
@@ -249,7 +265,10 @@ void	expand_args(t_com *commands);
 // UTILS_EXPANDER.C
 char	*handle_single_quotes(char *line, int *i, t_vars *vars);
 char	*aux_expand_var_in_quotes_args(char *token, t_vars *vars, int *k, int *start);
-char	*expand_var_in_quotes_args(char *line, int *k, int *start, char *token, t_vars *vars);
+char	*handle_invalid_var(char *token);
+char	*extract_and_expand_var(char *line, int vstart, int *vlen, t_vars *vars);
+char	*expand_var_in_quotes_args(char *line, int *k, char *token, t_vars *vars);
+char	*handle_dollar_in_quotes(char *line, int *k, int *start, t_vars *vars);
 char	*process_inside_double_quotes(char *line, int start, int end, t_vars *vars);
 char	*handle_double_quotes(char *line, int *i, t_vars *vars);
 

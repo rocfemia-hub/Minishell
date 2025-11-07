@@ -12,9 +12,9 @@
 
 #include "../minishell.h"
 
-int aux_parser_redirects(t_com *commands, char *redirect, int type)
+int	aux_parser_redirects(t_com *commands, char *redirect, int type)
 {
-	char *tmp_file;
+	char	*tmp_file;
 
 	if (!commands->args[commands->redirects->j + 1])
 	{
@@ -38,10 +38,10 @@ int aux_parser_redirects(t_com *commands, char *redirect, int type)
 	return (1);
 }
 
-char *find_redirect_position(char *arg, char *redirect)
+char	*find_redirect_position(char *arg, char *redirect)
 {
-	int i;
-	int quote;
+	int	i;
+	int	quote;
 
 	i = 0;
 	quote = 0;
@@ -61,7 +61,7 @@ char *find_redirect_position(char *arg, char *redirect)
 	return (NULL);
 }
 
-int aux_parser_resdirects_sintax_error(t_com *commands)
+int	aux_parser_resdirects_sintax_error(t_com *commands)
 {
 	if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
 	{
@@ -78,16 +78,16 @@ int aux_parser_resdirects_sintax_error(t_com *commands)
 	return (1);
 }
 
-void aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect)
+void	aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect)
 {
-	char *tmp_file;
-	int pos;
-	char *before_redirect;
+	char	*tmp_file;
+	int		pos;
+	char	*before_redirect;
 
 	pos = 0;
-	tmp_file = ft_strdup(redirect_pos + ft_strlen(redirect));	 // archivo al que redirecciona
-	pos = redirect_pos - commands->args[commands->redirects->j]; // posicion del redirect en el string
-	if (pos > 0)												 // hay texto antes de la redireccion "hola>adios"
+	tmp_file = ft_strdup(redirect_pos + ft_strlen(redirect));
+	pos = redirect_pos - commands->args[commands->redirects->j];
+	if (pos > 0) // hay texto antes de la redireccion "hola>adios"
 	{
 		before_redirect = ft_calloc(pos + 1, sizeof(char));
 		ft_strlcpy(before_redirect, commands->args[commands->redirects->j], pos + 1);
@@ -105,10 +105,10 @@ void aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect
 	}
 }
 
-int parser_redirects(t_com *commands, char *redirect, int type)
+int	parser_redirects(t_com *commands, char *redirect, int type)
 {
-	char *tmp_file;
-	char *redirect_pos;
+	char	*tmp_file;
+	char	*redirect_pos;
 
 	if (!aux_parser_resdirects_sintax_error(commands))
 		return (0);
@@ -131,7 +131,7 @@ int parser_redirects(t_com *commands, char *redirect, int type)
 	return (1);
 }
 
-void process_quote_char(char current_char, char *new_arg, int *k, char *quote)
+void	process_quote_char(char current_char, char *new_arg, int *k, char *quote)
 {
 	if (*quote == 0)
 		*quote = current_char;
@@ -141,12 +141,12 @@ void process_quote_char(char current_char, char *new_arg, int *k, char *quote)
 		new_arg[(*k)++] = current_char;
 }
 
-char *clean_quotes_in_line(char *arg)
+char	*clean_quotes_in_line(char *arg)
 {
-	int j;
-	int k;
-	char *new_arg;
-	char quote;
+	int		j;
+	int		k;
+	char	*new_arg;
+	char	quote;
 
 	if (!arg)
 		return (NULL);
@@ -169,10 +169,10 @@ char *clean_quotes_in_line(char *arg)
 	return (new_arg);
 }
 
-int is_redirect_token(char *arg, char *redirect)
+int	is_redirect_token(char *arg, char *redirect)
 {
-	int i;
-	int quote;
+	int	i;
+	int	quote;
 
 	i = 0;
 	quote = 0;
@@ -192,7 +192,7 @@ int is_redirect_token(char *arg, char *redirect)
 	return (0);
 }
 
-int aux_find(t_com *commands)
+int	aux_find(t_com *commands)
 {
 	if (is_redirect_token(commands->args[commands->redirects->j], ">>"))
 	{
@@ -203,47 +203,47 @@ int aux_find(t_com *commands)
 	else if (is_redirect_token(commands->args[commands->redirects->j], "<<"))
 	{
 		if (!parser_redirects(commands, "<<", 4))
-			return(0);
+			return (0);
 		commands->redirects->j = -1;
 	}
 	else if (is_redirect_token(commands->args[commands->redirects->j], ">"))
 	{
 		if (!parser_redirects(commands, ">", 2))
-			return(0);
+			return (0);
 		commands->redirects->j = -1;
 	}
 	else if (is_redirect_token(commands->args[commands->redirects->j], "<"))
 	{
 		if (!parser_redirects(commands, "<", 1))
-			return(0);
+			return (0);
 		commands->redirects->j = -1;
 	}
-	return(1);
+	return (1);
 }
 
-void find(t_com *commands)
+void	find(t_com *commands)
 {
 	if (!commands->args || !commands->redirects || commands->redirects->j)
-		return;
+		return ;
 	while (commands->args[commands->redirects->j])
 	{
 		if (!aux_find(commands))
-			return;
+			return ;
 		commands->redirects->j++;
 	}
 }
 
-void redirects(t_com *commands)
+void	redirects(t_com *commands)
 {
-	char *temp;
+	char	*temp;
 
 	commands->redirects = ft_calloc(1, sizeof(t_red)); // redirect struct
 	if (!commands->redirects)
-		return;
+		return ;
 	if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">") || is_redirect_token(commands->command, ">>"))
 	{
 		if (!redirects_cmd(commands))
-			return;
+			return ;
 	}
 	else
 	{

@@ -76,7 +76,7 @@ int	expand_cmd(t_clean_cmd *data, t_vars *vars)
 	char	*expanded;
 
 	expanded = aux_cmd(data, vars);
-	if (ft_strlen(expanded) < 1) //SI LA EXPANSION NO EXISTE DEVUELVE 0 PARA QUE FUERA COJA EL SIGUIENTE COMANDO
+	if (ft_strlen(expanded) < 1)
 	{
 		free(expanded);
 		return (0);

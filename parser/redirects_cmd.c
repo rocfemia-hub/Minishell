@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   aux_expander.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/25 17:37:52 by roo               #+#    #+#             */
+/*   Updated: 2025/11/05 06:59:31 by roo              ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-char **realloc_redirect_args(char **flag)
+char	**realloc_redirect_args(char **flag)
 {
-	int i;
-	int j;
-	char **realloc_matrix;
+	int		i;
+	int		j;
+	char	**realloc_matrix;
 
 	j = 0;
 	while (flag[j])
@@ -23,14 +35,14 @@ char **realloc_redirect_args(char **flag)
 	return (realloc_matrix);
 }
 
-void look_for_cmd(t_com *commands)
+void	look_for_cmd(t_com *commands)
 {
-	char **temp;
-	int i;
+	char	**temp;
+	int		i;
 
 	i = 0;
 	if (!commands || !commands->args)
-		return;
+		return ;
 	while (commands->args[i])
 	{
 		if (is_redirect_token(commands->args[i], "<<") || is_redirect_token(commands->args[i], ">>") || is_redirect_token(commands->args[i], "<") || is_redirect_token(commands->args[i], ">"))
@@ -50,7 +62,7 @@ void look_for_cmd(t_com *commands)
 	}
 }
 
-void fill_cmd(t_com *commands, char *redirect, char *file)
+void	fill_cmd(t_com *commands, char *redirect, char *file)
 {
 	if (ft_strncmp(redirect, "<", 2) == 0)
 		handle_redirect_array(&commands->redirects->input_file, &commands->redirects->redirect_in, file, commands);
@@ -66,11 +78,11 @@ void fill_cmd(t_com *commands, char *redirect, char *file)
 	free(file);
 }
 
-void aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
+void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
 {
-	char *tmp_file;
-	int i;
-	char *tmp_cmd;
+	char	*tmp_file;
+	int		i;
+	char	*tmp_cmd;
 
 	i = 0;
 	if (ft_strlen(commands->command) > ft_strlen(redirect)) // cat>Makefile
@@ -95,15 +107,15 @@ void aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
 	}
 }
 
-int clean_redirects_cmd(t_com *commands, char *redirect, int type)
+int	clean_redirects_cmd(t_com *commands, char *redirect, int type)
 {
-	if (ft_strnstr(commands->command, ">>>", 3)) // error >>>
+	if (ft_strnstr(commands->command, ">>>", 3))
 	{
 		commands->error = ft_strdup("bash: syntax error near unexpected token `>'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}
-	else if (ft_strnstr(commands->command, "<<<", 3)) // error hola< y <<<
+	else if (ft_strnstr(commands->command, "<<<", 3))
 	{
 		commands->error = ft_strdup("bash: syntax error near unexpected token `newline'");
 		commands->vars->exit_status = 2;
@@ -114,7 +126,7 @@ int clean_redirects_cmd(t_com *commands, char *redirect, int type)
 	return (1);
 }
 
-int aux_redirects_cmd(t_com *commands)
+int	aux_redirects_cmd(t_com *commands)
 {
 	if (commands->args[0] || ft_strlen(commands->command) > 2)
 	{
@@ -135,12 +147,12 @@ int aux_redirects_cmd(t_com *commands)
 	}
 }
 
-int redirects_cmd(t_com *commands)
+int	redirects_cmd(t_com *commands)
 {
 	if (is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">>"))
 	{
-		if(!aux_redirects_cmd(commands))
-			return(0);
+		if (!aux_redirects_cmd(commands))
+			return (0);
 	}
 	if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, ">"))
 	{

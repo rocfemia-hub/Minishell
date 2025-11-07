@@ -37,7 +37,7 @@ char	*extract_varname(char *line, int start, int *vlen)
 
 	*vlen = 0;
 	if (line[start] && (ft_isalpha((unsigned char)line[start])
-		|| line[start] == '_'))
+			|| line[start] == '_'))
 	{
 		(*vlen)++;
 		while (line[start + *vlen]
@@ -64,13 +64,13 @@ static char	*handle_var_expansion(t_vars *vars, char *line, int start, int *vlen
 	return (token);
 }
 
-char *aux_handle_dollar(int *i, int start)
+char	*aux_handle_dollar(int *i, int start)
 {
-	char *token;
+	char	*token;
 
 	token = ft_strdup("");
 	*i = start;
-	return(token);
+	return (token);
 }
 
 char	*handle_dollar(char *line, int *i, t_vars *vars)

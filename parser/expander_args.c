@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-char *ft_strjoin_cmd(char **cmd)
+char	*ft_strjoin_cmd(char **cmd)
 {
-	int len;
-	char *result;
-	int i;
+	int		len;
+	char	*result;
+	int		i;
 
 	len = 0;
 	i = -1;
@@ -34,10 +34,10 @@ char *ft_strjoin_cmd(char **cmd)
 	return (result);
 }
 
-char *handle_plain_text_args(char *line, int *i, t_vars *vars)
+char	*handle_plain_text_args(char *line, int *i, t_vars *vars)
 {
-	int start;
-	char *token;
+	int		start;
+	char	*token;
 
 	if (!vars)
 		return (NULL);
@@ -49,9 +49,9 @@ char *handle_plain_text_args(char *line, int *i, t_vars *vars)
 	return (token);
 }
 
-static int has_quotes(char *arg)
+static int	has_quotes(char *arg)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (arg[i])
@@ -63,7 +63,7 @@ static int has_quotes(char *arg)
 	return (0);
 }
 
-char *process_single_arg(char *arg, t_vars *vars)
+char	*process_single_arg(char *arg, t_vars *vars)
 {
 	char	*token;
 	char	*accumulated;
@@ -90,7 +90,7 @@ char *process_single_arg(char *arg, t_vars *vars)
 	return (accumulated);
 }
 
-char **process_aux_args(char **args, char **token_args, t_vars *vars)
+char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 {
 	int		i;
 	int		j;
@@ -115,16 +115,16 @@ char **process_aux_args(char **args, char **token_args, t_vars *vars)
 	return (token_args);
 }
 
-void expand_args(t_com *commands)
+void	expand_args(t_com *commands)
 {
-	char **token_args;
-	char **old_args;
+	char	**token_args;
+	char	**old_args;
 
 	if (commands->redirects && commands->redirects->redirect_heredoc != 0)
-		return;
+		return ;
 	token_args = ft_calloc((256 + 1), sizeof(char *));
 	if (!token_args)
-		return;
+		return ;
 	old_args = commands->args;
 	token_args = process_aux_args(commands->args, token_args, commands->vars);
 	commands->args = token_args;

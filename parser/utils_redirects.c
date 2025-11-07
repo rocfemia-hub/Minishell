@@ -12,10 +12,10 @@
 
 #include "../minishell.h"
 
-char **realloc_redirect_flags(char **flag)
+char	**realloc_redirect_flags(char **flag)
 {
-	int j;
-	char **realloc_matrix;
+	int		j;
+	char	**realloc_matrix;
 
 	j = 0;
 	while (flag[j])
@@ -30,11 +30,11 @@ char **realloc_redirect_flags(char **flag)
 	return (realloc_matrix);
 }
 
-char **copy_redirect_matrix(char **args, int start, int end)
+char	**copy_redirect_matrix(char **args, int start, int end)
 {
-	int i;
-	int j;
-	char **new_arg;
+	int		i;
+	int		j;
+	char	**new_arg;
 
 	i = 0;
 	j = 0;
@@ -57,11 +57,11 @@ char **copy_redirect_matrix(char **args, int start, int end)
 	return (new_arg);
 }
 
-char *expand_redirect_filename(char *file, t_vars *vars)
+char	*expand_redirect_filename(char *file, t_vars *vars)
 {
-	int i;
-	char *token;
-	char *result;
+	int		i;
+	char	*token;
+	char	*result;
 
 	i = 0;
 	result = NULL;
@@ -84,15 +84,16 @@ char *expand_redirect_filename(char *file, t_vars *vars)
 	return (result);
 }
 
-void handle_redirect_array(char ***arr, int *flag, char *file, t_com *commands)
-{ // triple puntero para modificar el valor fuera de la funcion local
-	char *expanded;
+void	handle_redirect_array(char ***arr, int *flag, char *file,
+		t_com *commands)
+{
+	char	*expanded;
 
 	if (!*arr)
 		*arr = ft_calloc(2, sizeof(char *));
 	else
 		*arr = realloc_redirect_flags(*arr);
-	expanded = expand_redirect_filename(file, commands->vars); //expasion del nombre del archivo
+	expanded = expand_redirect_filename(file, commands->vars);
 	if (expanded)
 		(*arr)[*flag] = expanded;
 	else
@@ -100,11 +101,11 @@ void handle_redirect_array(char ***arr, int *flag, char *file, t_com *commands)
 	(*flag)++;
 }
 
-void fill_type_redirect(t_com *commands, int type)
+void	fill_type_redirect(t_com *commands, int type)
 {
-	int *temp;
-	int i;
-	int size;
+	int	*temp;
+	int	i;
+	int	size;
 
 	temp = commands->redirects->t_red;
 	if (!temp)
