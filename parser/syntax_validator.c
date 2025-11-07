@@ -51,7 +51,9 @@ static int	check_redirect_syntax(char *line, int i, char quote)
 	if (!line[j] || line[j] == '|' || is_redirect(line[j]))
 	{
 		if (!line[j] || line[j] == '|')
-			write(2, "minishell: syntax error near unexpected token `newline'\n", 57);
+			write(2,
+				"minishell: syntax error near unexpected token `newline'\n",
+				57);
 		else if (line[j] == '<')
 			write(2, "minishell: syntax error near unexpected token `<'\n", 51);
 		else

@@ -22,7 +22,7 @@ char	*extract_varname(char *line, int start, int *vlen)
 	{
 		(*vlen)++;
 		while (line[start + *vlen] && (ft_isalnum((unsigned char)line[start
-					+ *vlen]) || line[start + *vlen] == '_'))
+						+ *vlen]) || line[start + *vlen] == '_'))
 			(*vlen)++;
 	}
 	else if (line[start] && ft_isdigit((unsigned char)line[start]))

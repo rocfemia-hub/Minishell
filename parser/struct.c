@@ -40,7 +40,7 @@ t_com	*create_error_struct(int i, t_vars *vars)
 	t_com	*head;
 
 	head = lstnew(i);
-	head->error = ft_strdup("bash: open quote error");
+	head->error = ft_strdup("open quote error");
 	head->vars = vars;
 	vars->exit_status = 1;
 	return (head);

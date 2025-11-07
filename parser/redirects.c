@@ -18,7 +18,7 @@ int	aux_parser_redirects(t_com *commands, char *redirect, int type)
 
 	if (!commands->args[commands->redirects->j + 1])
 	{
-		commands->error = ft_strdup("syntax error near unexpected token `newline'");
+		commands->error = ft_strdup("near unexpected token `newline'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}
@@ -26,9 +26,9 @@ int	aux_parser_redirects(t_com *commands, char *redirect, int type)
 		|| ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
 	{
 		if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1))
-			commands->error = ft_strdup("syntax error near unexpected token `>'");
+			commands->error = ft_strdup("near unexpected token `>'");
 		else if (ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
-			commands->error = ft_strdup("syntax error near unexpected token `<'");
+			commands->error = ft_strdup("near unexpected token `<'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}
@@ -47,10 +47,11 @@ int	parser_redirects(t_com *commands, char *redirect, int type)
 
 	if (!aux_parser_resdirects_sintax_error(commands))
 		return (0);
-	else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect))
+	else if (ft_strlen(commands->args[commands->redirects->j])
+		> ft_strlen(redirect))
 	{
-		redirect_pos = find_redirect_position(commands->args[commands->redirects->j],
-				redirect);
+		redirect_pos = find_redirect_position(
+				commands->args[commands->redirects->j], redirect);
 		if (redirect_pos)
 			aux_redirects(commands, redirect_pos, type, redirect);
 		else
@@ -63,9 +64,8 @@ int	parser_redirects(t_com *commands, char *redirect, int type)
 			fill_cmd(commands, redirect, tmp_file);
 		}
 	}
-	else
-		if (!aux_parser_redirects(commands, redirect, type))
-			return (0);
+	else if (!aux_parser_redirects(commands, redirect, type))
+		return (0);
 	return (1);
 }
 

@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-void error(t_com *commands)
+void	error(t_com *commands)
 {
-    ft_printf(2, "minishell: %s\n", commands->error);
-    free_t_com_list(commands);
-    return;
+	ft_printf(2, "minishell: syntax error\n");
+	free_t_com_list(commands);
+	return ;
 }
 
 void printf_matrix(char **split) // debugueo de la matrix, escribiendola

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   aux_redirects.c                                     :+:      :+:    :+:   */
+/*   aux_redirects.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -69,13 +69,13 @@ int	aux_parser_resdirects_sintax_error(t_com *commands)
 {
 	if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3))
 	{
-		commands->error = ft_strdup("syntax error near unexpected token `>'");
+		commands->error = ft_strdup("near unexpected token `>'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}
 	else if (ft_strnstr(commands->args[commands->redirects->j], "<<<", 3))
 	{
-		commands->error = ft_strdup("syntax error near unexpected token `newline'");
+		commands->error = ft_strdup("near unexpected token `newline'");
 		commands->vars->exit_status = 2;
 		return (0);
 	}

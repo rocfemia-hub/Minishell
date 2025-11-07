@@ -20,7 +20,7 @@ char	*extract_and_expand_var(char *line, int vstart, int *vlen,
 
 	*vlen = 0;
 	while (line[vstart + *vlen] && (ft_isalnum((unsigned char)line[vstart
-			+ *vlen]) || line[vstart + *vlen] == '_'))
+					+ *vlen]) || line[vstart + *vlen] == '_'))
 		(*vlen)++;
 	varname = ft_substr(line, vstart, *vlen);
 	value = get_env_var(vars, varname);
