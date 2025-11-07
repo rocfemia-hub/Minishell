@@ -12,6 +12,11 @@
 
 #include "../minishell.h"
 
+int	is_redirect(char c)
+{
+	return (c == '<' || c == '>');
+}
+
 char	*find_redirect_position(char *arg, char *redirect)
 {
 	int	i;

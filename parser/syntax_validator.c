@@ -12,11 +12,6 @@
 
 #include "../minishell.h"
 
-static int	is_redirect(char c)
-{
-	return (c == '<' || c == '>');
-}
-
 static int	skip_whitespace(char *line, int i)
 {
 	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
@@ -40,6 +35,29 @@ static int	check_pipe_syntax(char *line, int i, char quote)
 	j = skip_whitespace(line, j);
 	if (!line[j] || line[j] == '|')
 		return (1);
+	return (0);
+}
+
+static int	check_redirect_syntax(char *line, int i, char quote)
+{
+	int	j;
+
+	if (quote)
+		return (0);
+	j = i + 1;
+	if (line[i] == line[j])
+		j++;
+	j = skip_whitespace(line, j);
+	if (!line[j] || line[j] == '|' || is_redirect(line[j]))
+	{
+		if (!line[j] || line[j] == '|')
+			write(2, "minishell: syntax error near unexpected token `newline'\n", 57);
+		else if (line[j] == '<')
+			write(2, "minishell: syntax error near unexpected token `<'\n", 51);
+		else
+			write(2, "minishell: syntax error near unexpected token `>'\n", 51);
+		return (1);
+	}
 	return (0);
 }
 
@@ -84,6 +102,8 @@ int	validate_syntax(char *line)
 			write(2, "minishell: syntax error near unexpected token `|'\n", 51);
 			return (1);
 		}
+		if (is_redirect(line[i]) && check_redirect_syntax(line, i, quote))
+			return (1);
 		if ((line[i] == '|' || is_redirect(line[i]))
 			&& check_redirect_pipe_mix(line, i, quote))
 			return (1);

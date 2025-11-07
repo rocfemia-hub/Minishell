@@ -212,28 +212,54 @@ void	clean_fds(t_com *list);
 /*PARSER*/ 
 
 
-// TOKEN.C
+// AUX_EXPANDER.C
+char	*extract_varname(char *line, int start, int *vlen);
+char	*aux_handle_dollar(int *i, int start);
+char	*handle_dollar(char *line, int *i, t_vars *vars);
+
+// AUX_REDIRECTS_CMD.C
+char	**realloc_redirect_args(char **flag);
+void	look_for_cmd(t_com *commands);
+
+// AUX_REDIRECTS.C
+int		is_redirect(char c);
+char	*find_redirect_position(char *arg, char *redirect);
+int		is_redirect_token(char *arg, char *redirect);
+int		aux_parser_resdirects_sintax_error(t_com *commands);
+void	aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect);
+
+// AUX_TOKEN.C
 int		skip_spaces(char *line);
 void	aux_only_cmd(char *line, t_clean_cmd *data);
-char	*only_cmd(char *line, t_clean_cmd *data);
-void	type_command(char *line, t_com *commands);
 void	handle_quote(char c, char *quote);
-void	init_commands(char *line, t_com *commands);
-t_com	*token(char *line, t_vars *vars);
+void	process_quote_char(char current_char, char *new_arg, int *k, char *quote);
+char	*clean_quotes_in_line(char *arg);
 
-// SYNTAX_VALIDATOR.C
-int		validate_syntax(char *line);
+// EXPANDER_ARGS.C
+char	*handle_plain_text_args(char *line, int *i, t_vars *vars);
+char	*process_single_arg(char *arg, t_vars *vars);
+char	**process_aux_args(char **args, char **token_args, t_vars *vars);
+void	expand_args(t_com *commands);
+
+// EXPANDER_CMD.C
+char	*ft_strjoin_cmd(char **cmd);
+char	*str_append(char *dest, const char *src);
+char	*handle_plain_text(char *cmd, int *i, t_vars *vars);
+char	*aux_cmd(t_clean_cmd *data, t_vars *vars);
+int		expand_cmd(t_clean_cmd *data, t_vars *vars);
+
+// EXPANDER.C
+char	*handle_inter(t_vars *vars);
+char	*get_env_var(t_vars *vars, char *var);
+char	*handle_single_quotes(char *line, int *i, t_vars *vars);
+char	*aux_expand_var_in_quotes_args(char *token, t_vars *vars, int *k, int *start);
+char	*handle_invalid_var(char *token);
 
 // FT_SPLIT_PARSER.C
 int		skip_space(char *s, int i);
 int		count_words_with_quotes(char *s);
 char	*extract_token(char *s, int *i);
 char	**ft_split_parser(char const *s);
-// UTILS_QUOTES.C
-int		look_for_char(char *line, char c);
-int	check_redir_in_quotes(char *arg, int start, int end);
-int	has_redirects(char *line);
-void	copy_without_quotes(char *arg, char *new_arg, int *j, int *k);
 
 // KEEP_QUOTES.C
 void	quotes_for_redir(char **arg, int *k, int start, char q);
@@ -248,56 +274,49 @@ void	process_quote_char_clean(char *temp, char *result, int *j, int *k);
 char	*remove_quotes_from_cmd(char *temp);
 char	*clean_cmd(char *line);
 
+// REDIRECTS_CMD.C
+void	fill_cmd(t_com *commands, char *redirect, char *file);
+void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type);
+int		clean_redirects_cmd(t_com *commands, char *redirect, int type);
+int		aux_redirects_cmd(t_com *commands);
+int		redirects_cmd(t_com *commands);
+
+// REDIRECTS.C
+int		aux_parser_redirects(t_com *commands, char *redirect, int type);
+int		parser_redirects(t_com *commands, char *redirect, int type);
+int		aux_find(t_com *commands);
+void	find(t_com *commands);
+void	redirects(t_com *commands);
+
 // STRUCT.C
-char	**ft_strjoin_cmd_arg(t_com *commands);
 int		has_expandable_dollar(char *line);
 t_com	*create_error_struct(int i, t_vars *vars);
 t_com	*create_struct(char *line, t_vars *vars);
 void	built_ins_init_struct(t_com *commands);
 void	init_struct(char *line, char *cmd, int end, t_com *commands);
 
-// EXPANDER_CMD.C
-char	*str_append(char *dest, const char *src);
-char	*handle_plain_text(char *cmd, int *i, t_vars *vars);
-char	*aux_cmd(t_clean_cmd *data, t_vars *vars);
-int		expand_cmd(t_clean_cmd *data, t_vars *vars);
+// SYNTAX_VALIDATOR.C
+int		validate_syntax(char *line);
 
-// EXPANDER_ARGS.C
-char	*ft_strjoin_cmd(char **cmd);
-char	*handle_plain_text_args(char *line, int *i, t_vars *vars);
-char	*process_single_arg(char *arg, t_vars *vars);
-char	**process_aux_args(char **args, char **token_args, t_vars *vars);
-void	expand_args(t_com *commands);
+// TOKEN.C
+char	*only_cmd(char *line, t_clean_cmd *data);
+void	type_command(char *line, t_com *commands);
+void	init_commands(char *line, t_com *commands);
+t_com	*token(char *line, t_vars *vars);
 
 // UTILS_EXPANDER.C
-char	*handle_single_quotes(char *line, int *i, t_vars *vars);
-char	*aux_expand_var_in_quotes_args(char *token, t_vars *vars, int *k, int *start);
-char	*handle_invalid_var(char *token);
 char	*extract_and_expand_var(char *line, int vstart, int *vlen, t_vars *vars);
 char	*expand_var_in_quotes_args(char *line, int *k, char *token, t_vars *vars);
 char	*handle_dollar_in_quotes(char *line, int *k, int *start, t_vars *vars);
 char	*process_inside_double_quotes(char *line, int start, int end, t_vars *vars);
 char	*handle_double_quotes(char *line, int *i, t_vars *vars);
 
-// AUX_EXPANDER.C
-char	*handle_inter(t_vars *vars);
-char	*get_env_var(t_vars *vars, char *var);
-char	*extract_varname(char *line, int start, int *vlen);
-char	*aux_handle_dollar(int *i, int start);
-char	*handle_dollar(char *line, int *i, t_vars *vars);
-
-// REDIRECTS.C
-int		aux_parser_redirects(t_com *commands, char *redirect, int type);
-char	*find_redirect_position(char *arg, char *redirect);
-int		aux_parser_resdirects_sintax_error(t_com *commands);
-void	aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect);
-int		parser_redirects(t_com *commands, char *redirect, int type);
-void 	process_quote_char(char current_char, char *new_arg, int *k, char *quote);
-char	*clean_quotes_in_line(char *arg);
-int		is_redirect_token(char *arg, char *redirect);
-int 	aux_find(t_com *commands);
-void	find(t_com *commands);
-void	redirects(t_com *commands);
+// UTILS_QUOTES.C
+int		look_for_char(char *line, char c);
+int		check_redir_in_quotes(char *arg, int start, int end);
+int		has_redirects(char *line);
+void	copy_without_quotes(char *arg, char *new_arg, int *j, int *k);
+char	**ft_strjoin_cmd_arg(t_com *commands);
 
 // UTILS_REDIRECTS.C
 char	**realloc_redirect_flags(char **flag);
@@ -305,14 +324,5 @@ char	**copy_redirect_matrix(char **args, int start, int end);
 char	*expand_redirect_filename(char *file, t_vars *vars);
 void	handle_redirect_array(char ***arr, int *flag, char *file, t_com *commands);
 void	fill_type_redirect(t_com *commands, int type);
-
-// REDIRECTS_CMD.C
-char	**realloc_redirect_args(char **flag);
-void	look_for_cmd(t_com *commands);
-void	fill_cmd(t_com *commands, char *redirect, char *file);
-void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type);
-int		clean_redirects_cmd(t_com *commands, char *redirect, int type);
-int		aux_redirects_cmd(t_com *commands);
-int		redirects_cmd(t_com *commands);
 
 #endif
