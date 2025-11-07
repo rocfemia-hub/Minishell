@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:34 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 16:48:44 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 20:24:54 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	error(t_com *commands)
 	return ;
 }
 
-void printf_matrix(char **split) // debugueo de la matrix, escribiendola
+/*void printf_matrix(char **split)
 {
     int i = 0;
 
@@ -28,4 +28,4 @@ void printf_matrix(char **split) // debugueo de la matrix, escribiendola
         printf("->%s\n", split[i]);
         i++;
     }
-}
+}*/

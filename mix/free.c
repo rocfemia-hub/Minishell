@@ -6,17 +6,17 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 20:17:12 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 05:29:07 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 20:30:38 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void free_t_env_list(t_env *list)
+/*static void	free_t_env_list(t_env *list)
 {
-	t_env *temp;
-	
-	while(list)
+	t_env	*temp;
+
+	while (list)
 	{
 		temp = list->next;
 		if (list->env_inf)
@@ -27,16 +27,17 @@ void free_t_env_list(t_env *list)
 		list = temp;
 	}
 }
-void free_t_vars_list(t_vars *list)
+
+static void	free_t_vars_list(t_vars *list)
 {
 	if (list->env_list)
 		free_t_env_list(list->env_list);
-}
+}*/
 
-void free_t_red_list(t_red *list)
+static void	free_t_red_list(t_red *list)
 {
 	if (!list)
-		return;
+		return ;
 	if (list->input_file)
 		ft_free_free(list->input_file);
 	if (list->output_file)
@@ -50,26 +51,26 @@ void free_t_red_list(t_red *list)
 	free(list);
 }
 
-void free_t_com_list(t_com *list)
+void	free_t_com_list(t_com *list)
 {
-	t_com *temp;
-	
+	t_com	*temp;
+
 	while (list)
 	{
 		temp = list->next;
-		if(list->command)
+		if (list->command)
 			free(list->command);
-		if(list->command_arg)
+		if (list->command_arg)
 			ft_free_free(list->command_arg);
-		if(list->args)
+		if (list->args)
 			ft_free_free(list->args);
-		if(list->path_command)
+		if (list->path_command)
 			free(list->path_command);
 		if (list->error)
 			free(list->error);
-		if(list->redirects)
+		if (list->redirects)
 			free_t_red_list(list->redirects);
 		free(list);
 		list = temp;
 	}
-}       
+}

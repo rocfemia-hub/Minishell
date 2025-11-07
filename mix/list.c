@@ -6,15 +6,15 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:46 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 19:07:43 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 20:35:23 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_com *lstnew(int index)
+t_com	*lstnew(int index)
 {
-	t_com *new;
+	t_com	*new;
 
 	new = (t_com *)ft_calloc(sizeof(t_com), 1);
 	if (!new)
@@ -24,17 +24,17 @@ t_com *lstnew(int index)
 	return (new);
 }
 
-void lstadd_back(t_com **lst, t_com *new)
+void	lstadd_back(t_com **lst, t_com *new)
 {
-	t_com *node;
+	t_com	*node;
 
 	if (!lst || !new)
-		return;
+		return ;
 	node = *lst;
 	if (!node)
 	{
 		*lst = new;
-		return;
+		return ;
 	}
 	while (node->next)
 		node = node->next;
@@ -42,11 +42,13 @@ void lstadd_back(t_com **lst, t_com *new)
 	new->previous = node;
 }
 
-void print_list(t_com *list)
+/*void print_list(t_com *list)
 {
+	int i;
+
 	while (list)
 	{
-		int i = 0;
+		i = 0;
 		printf("Index: %d, ", list->index);
 		if (list->command)
 			printf("command: %s, ", list->command);
@@ -113,4 +115,4 @@ void print_list(t_com *list)
 		
 		list = list->next;
 	}
-}
+}*/

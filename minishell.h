@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 20:14:17 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 20:36:10 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,16 +108,14 @@ typedef struct s_com
 //LISTAS
 t_com	*lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
-void 	print_list(t_com *list);
+//void 	print_list(t_com *list);
 
 //ERROR
-void	printf_matrix(char **split);
+//void	printf_matrix(char **split);
 void 	error(t_com *commands);
 
 //FREE
 void	free_t_com_list(t_com *list);
-void	free_t_red_list(t_red *list);
-void	free_t_vars_list(t_vars *list);
 
 // SPLIT_MINI.C
 char	**ft_split_mini(char const *s, char c);
