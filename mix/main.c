@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 15:50:53 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 16:22:24 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void init_env(t_vars *vars)
 
 void init_vars(t_vars *vars, char **env)
 {
+	t_env	*minishell_on;
+	
 	vars->exit_status = 0;
 	vars->pwd = getcwd(NULL, 0);
 	if (!env || !env[0])
@@ -34,7 +36,14 @@ void init_vars(t_vars *vars, char **env)
 	else
 	{
 		env_to_list(vars, env);
-		increment_shlvl(vars);
+		minishell_on = find_env_var(vars, "MINISHELL_ACTIVE");
+        if (minishell_on)
+            increment_shlvl(vars);
+        else
+        {
+            add_update_env_var(vars, ft_strdup("SHLVL=1"));
+            add_update_env_var(vars, ft_strdup("MINISHELL_ACTIVE=1"));
+        }
 	}
 }
 
