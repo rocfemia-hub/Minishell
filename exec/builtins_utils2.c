@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_built_ins2.c                                 :+:      :+:    :+:   */
+/*   builtins_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 18:21:58 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 16:05:01 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,23 @@ int	valid_var_name(char *var)
 		i++;
 	}
 	return (free(name), 1);
+}
+
+void	increment_shlvl(t_vars *vars)
+{
+	t_env	*shlvl;
+	char	*new;
+	int		current;
+	
+	shlvl = find_env_var(vars, "SHLVL");
+	if (shlvl)
+	{
+		current = ft_atoi(shlvl->env_inf);
+		current++;
+	}
+	else
+		current = 1;
+	new = ft_itoa(current);
+	add_update_env_var(vars, ft_strjoin("SHLVL=", new));
+	free(new);
 }

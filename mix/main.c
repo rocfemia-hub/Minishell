@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 06:39:20 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 15:50:53 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ void init_vars(t_vars *vars, char **env)
 	if (!env || !env[0])
 		init_env(vars);
 	else
+	{
 		env_to_list(vars, env);
+		increment_shlvl(vars);
+	}
 }
 
 void init_fds(t_com *list, t_vars *vars)

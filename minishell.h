@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 15:12:35 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 16:01:37 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ int		cd_aux_funcion(t_com *list, t_vars *vars);
 void	add_update_env_var(t_vars *vars, char *var_str);
 char	*get_var_name(char *var_assignment); // NO SE USA
 int		valid_var_name(char *var);
+void	increment_shlvl(t_vars *vars);
 
 char	**list_to_env(t_env *env_list);
 void	env_to_list(t_vars *vars, char **env);
