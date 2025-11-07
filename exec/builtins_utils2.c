@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 16:05:01 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/07 16:25:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	increment_shlvl(t_vars *vars)
 	t_env	*shlvl;
 	char	*new;
 	int		current;
-	
+
 	shlvl = find_env_var(vars, "SHLVL");
 	if (shlvl)
 	{
