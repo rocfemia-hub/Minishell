@@ -12,49 +12,6 @@
 
 #include "../minishell.h"
 
-char	*handle_single_quotes(char *line, int *i, t_vars *vars)
-{
-	int		start;
-	char	*token;
-	int		len;
-
-	if (!vars)
-		return (NULL);
-	(*i)++;
-	start = *i;
-	while (line[*i] && line[*i] != '\'')
-		(*i)++;
-	len = *i - start;
-	if (len == 0)
-		token = ft_strdup("");
-	else
-		token = ft_substr(line, start, len);
-	if (line[*i] == '\'')
-		(*i)++;
-	return (token);
-}
-
-char	*aux_expand_var_in_quotes_args(char *token, t_vars *vars, int *k,
-		int *start)
-{
-	char	*value;
-	int		vstart;
-
-	vstart = *k + 1;
-	value = ft_itoa(vars->exit_status);
-	token = str_append(token, value);
-	free(value);
-	*k = vstart + 1;
-	*start = *k;
-	return (token);
-}
-
-char	*handle_invalid_var(char *token)
-{
-	token = str_append(token, "$");
-	return (token);
-}
-
 char	*extract_and_expand_var(char *line, int vstart, int *vlen,
 		t_vars *vars)
 {
@@ -63,7 +20,7 @@ char	*extract_and_expand_var(char *line, int vstart, int *vlen,
 
 	*vlen = 0;
 	while (line[vstart + *vlen] && (ft_isalnum((unsigned char)line[vstart
-				+ *vlen]) || line[vstart + *vlen] == '_'))
+			+ *vlen]) || line[vstart + *vlen] == '_'))
 		(*vlen)++;
 	varname = ft_substr(line, vstart, *vlen);
 	value = get_env_var(vars, varname);

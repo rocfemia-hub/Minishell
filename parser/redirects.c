@@ -22,7 +22,8 @@ int	aux_parser_redirects(t_com *commands, char *redirect, int type)
 		commands->vars->exit_status = 2;
 		return (0);
 	}
-	if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1) || ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
+	if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1)
+		|| ft_strnstr(commands->args[commands->redirects->j + 1], "<", 1))
 	{
 		if (ft_strnstr(commands->args[commands->redirects->j + 1], ">", 1))
 			commands->error = ft_strdup("syntax error near unexpected token `>'");
@@ -33,76 +34,10 @@ int	aux_parser_redirects(t_com *commands, char *redirect, int type)
 	}
 	tmp_file = ft_strdup(commands->args[commands->redirects->j + 1]);
 	fill_type_redirect(commands, type);
-	commands->args = copy_redirect_matrix(commands->args, commands->redirects->j, commands->redirects->j + 1);
+	commands->args = copy_redirect_matrix(commands->args,
+			commands->redirects->j, commands->redirects->j + 1);
 	fill_cmd(commands, redirect, tmp_file);
 	return (1);
-}
-
-char	*find_redirect_position(char *arg, char *redirect)
-{
-	int	i;
-	int	quote;
-
-	i = 0;
-	quote = 0;
-	while (arg[i])
-	{
-		if (arg[i] == '\'' || arg[i] == '"')
-		{
-			if (quote == 0)
-				quote = arg[i];
-			else if (quote == arg[i])
-				quote = 0;
-		}
-		else if (!quote && ft_strncmp(arg + i, redirect, ft_strlen(redirect)) == 0)
-			return (arg + i);
-		i++;
-	}
-	return (NULL);
-}
-
-int	aux_parser_resdirects_sintax_error(t_com *commands)
-{
-	if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3)) // error >>>
-	{
-		commands->error = ft_strdup("syntax error near unexpected token `>'");
-		commands->vars->exit_status = 2;
-		return (0);
-	}
-	else if (ft_strnstr(commands->args[commands->redirects->j], "<<<", 3)) // error hola< y <<<
-	{
-		commands->error = ft_strdup("syntax error near unexpected token `newline'");
-		commands->vars->exit_status = 2;
-		return (0);
-	}
-	return (1);
-}
-
-void	aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect)
-{
-	char	*tmp_file;
-	int		pos;
-	char	*before_redirect;
-
-	pos = 0;
-	tmp_file = ft_strdup(redirect_pos + ft_strlen(redirect));
-	pos = redirect_pos - commands->args[commands->redirects->j];
-	if (pos > 0) // hay texto antes de la redireccion "hola>adios"
-	{
-		before_redirect = ft_calloc(pos + 1, sizeof(char));
-		ft_strlcpy(before_redirect, commands->args[commands->redirects->j], pos + 1);
-		free(commands->args[commands->redirects->j]);
-		commands->args[commands->redirects->j] = before_redirect; // reemplazar "hola>adios" por "hola"
-		fill_type_redirect(commands, type);
-		commands->args = copy_redirect_matrix(commands->args, -1, -1);
-		fill_cmd(commands, redirect, tmp_file);
-	}
-	else // la redireccion esta al inicio ">adios"
-	{
-		fill_type_redirect(commands, type);
-		commands->args = copy_redirect_matrix(commands->args, commands->redirects->j, commands->redirects->j);
-		fill_cmd(commands, redirect, tmp_file);
-	}
 }
 
 int	parser_redirects(t_com *commands, char *redirect, int type)
@@ -112,84 +47,26 @@ int	parser_redirects(t_com *commands, char *redirect, int type)
 
 	if (!aux_parser_resdirects_sintax_error(commands))
 		return (0);
-	else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect)) // si la redireccion esta asi ">adios" o "hola>adios"
+	else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect))
 	{
-		redirect_pos = find_redirect_position(commands->args[commands->redirects->j], redirect);
+		redirect_pos = find_redirect_position(commands->args[commands->redirects->j],
+				redirect);
 		if (redirect_pos)
 			aux_redirects(commands, redirect_pos, type, redirect);
 		else
 		{
-			tmp_file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect));
+			tmp_file = ft_strdup(commands->args[commands->redirects->j]
+					+ ft_strlen(redirect));
 			fill_type_redirect(commands, type);
-			commands->args = copy_redirect_matrix(commands->args, commands->redirects->j, commands->redirects->j);
+			commands->args = copy_redirect_matrix(commands->args,
+					commands->redirects->j, commands->redirects->j);
 			fill_cmd(commands, redirect, tmp_file);
 		}
 	}
-	else // el archivo esta separado del simbolo "hola > adios"
+	else
 		if (!aux_parser_redirects(commands, redirect, type))
 			return (0);
 	return (1);
-}
-
-void	process_quote_char(char current_char, char *new_arg, int *k, char *quote)
-{
-	if (*quote == 0)
-		*quote = current_char;
-	else if (*quote == current_char)
-		*quote = 0;
-	else
-		new_arg[(*k)++] = current_char;
-}
-
-char	*clean_quotes_in_line(char *arg)
-{
-	int		j;
-	int		k;
-	char	*new_arg;
-	char	quote;
-
-	if (!arg)
-		return (NULL);
-	new_arg = ft_calloc(ft_strlen(arg) + 1, sizeof(char));
-	if (!new_arg)
-		return (NULL);
-	j = 0;
-	k = 0;
-	quote = 0;
-	while (arg[j])
-	{
-		if (arg[j] == '\'' || arg[j] == '"')
-			process_quote_char(arg[j], new_arg, &k, &quote);
-		else
-			new_arg[k++] = arg[j];
-		j++;
-	}
-	new_arg[k] = '\0';
-	free(arg);
-	return (new_arg);
-}
-
-int	is_redirect_token(char *arg, char *redirect)
-{
-	int	i;
-	int	quote;
-
-	i = 0;
-	quote = 0;
-	while (arg[i])
-	{
-		if (arg[i] == '\'' || arg[i] == '"')
-		{
-			if (quote == 0)
-				quote = arg[i];
-			else if (quote == arg[i])
-				quote = 0;
-		}
-		else if (!quote && ft_strncmp(arg + i, redirect, ft_strlen(redirect)) == 0)
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 int	aux_find(t_com *commands)
@@ -237,10 +114,13 @@ void	redirects(t_com *commands)
 {
 	char	*temp;
 
-	commands->redirects = ft_calloc(1, sizeof(t_red)); // redirect struct
+	commands->redirects = ft_calloc(1, sizeof(t_red));
 	if (!commands->redirects)
 		return ;
-	if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">") || is_redirect_token(commands->command, ">>"))
+	if (is_redirect_token(commands->command, "<")
+		|| is_redirect_token(commands->command, "<<")
+		|| is_redirect_token(commands->command, ">")
+		|| is_redirect_token(commands->command, ">>"))
 	{
 		if (!redirects_cmd(commands))
 			return ;

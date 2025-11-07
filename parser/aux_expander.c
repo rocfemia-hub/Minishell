@@ -12,25 +12,6 @@
 
 #include "../minishell.h"
 
-char	*handle_inter(t_vars *vars)
-{
-	char	*nbr;
-
-	nbr = ft_itoa(vars->exit_status);
-	return (nbr);
-}
-
-char	*get_env_var(t_vars *vars, char *var)
-{
-	t_env	*node;
-
-	node = find_env_var(vars, var);
-	if (node != NULL)
-		return (node->env_inf);
-	else
-		return ("");
-}
-
 char	*extract_varname(char *line, int start, int *vlen)
 {
 	char	*varname;
@@ -40,9 +21,8 @@ char	*extract_varname(char *line, int start, int *vlen)
 			|| line[start] == '_'))
 	{
 		(*vlen)++;
-		while (line[start + *vlen]
-			&& (ft_isalnum((unsigned char)line[start + *vlen])
-				|| line[start + *vlen] == '_'))
+		while (line[start + *vlen] && (ft_isalnum((unsigned char)line[start
+					+ *vlen]) || line[start + *vlen] == '_'))
 			(*vlen)++;
 	}
 	else if (line[start] && ft_isdigit((unsigned char)line[start]))
@@ -51,7 +31,8 @@ char	*extract_varname(char *line, int start, int *vlen)
 	return (varname);
 }
 
-static char	*handle_var_expansion(t_vars *vars, char *line, int start, int *vlen)
+static char	*handle_var_expansion(t_vars *vars, char *line, int start,
+		int *vlen)
 {
 	char	*varname;
 	char	*value;

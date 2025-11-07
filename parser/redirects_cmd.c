@@ -12,56 +12,6 @@
 
 #include "../minishell.h"
 
-char	**realloc_redirect_args(char **flag)
-{
-	int		i;
-	int		j;
-	char	**realloc_matrix;
-
-	j = 0;
-	while (flag[j])
-		j++;
-	realloc_matrix = ft_calloc(j, sizeof(char *));
-	if (!realloc_matrix)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (flag[++i])
-	{
-		realloc_matrix[j] = ft_strdup(flag[i]);
-		j++;
-	}
-	ft_free_free(flag);
-	return (realloc_matrix);
-}
-
-void	look_for_cmd(t_com *commands)
-{
-	char	**temp;
-	int		i;
-
-	i = 0;
-	if (!commands || !commands->args)
-		return ;
-	while (commands->args[i])
-	{
-		if (is_redirect_token(commands->args[i], "<<") || is_redirect_token(commands->args[i], ">>") || is_redirect_token(commands->args[i], "<") || is_redirect_token(commands->args[i], ">"))
-			find(commands);
-		i++;
-	}
-	if (!commands->command || ft_strlen(commands->command) < 1)
-	{
-		if (commands->args[0])
-		{
-			if (commands->command)
-				free(commands->command);
-			commands->command = ft_strdup(commands->args[0]);
-			temp = realloc_redirect_args(commands->args);
-			commands->args = temp;
-		}
-	}
-}
-
 void	fill_cmd(t_com *commands, char *redirect, char *file)
 {
 	if (ft_strncmp(redirect, "<", 2) == 0)
@@ -85,7 +35,7 @@ void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
 	char	*tmp_cmd;
 
 	i = 0;
-	if (ft_strlen(commands->command) > ft_strlen(redirect)) // cat>Makefile
+	if (ft_strlen(commands->command) > ft_strlen(redirect))
 	{
 		while (commands->command[i] && ft_strncmp(commands->command + i, redirect, ft_strlen(redirect)) != 0)
 			i++;

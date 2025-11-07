@@ -90,3 +90,30 @@ void	copy_without_quotes(char *arg, char *new_arg, int *j, int *k)
 	}
 	new_arg[(*k)++] = arg[(*j)++];
 }
+
+char	**ft_strjoin_cmd_arg(t_com *commands)
+{
+	int		j;
+	int		len;
+	char	**aux;
+	int		i;
+
+	j = -1;
+	i = 0;
+	len = 0;
+	if (commands->command)
+		len = 1;
+	if (commands->args)
+		while (commands->args[++j])
+			len++;
+	aux = ft_calloc(len + 1, sizeof(char *));
+	if (commands->command)
+	{
+		aux[i++] = ft_strdup(commands->command);
+		j = -1;
+	}
+	if (commands->args)
+		while (commands->args[++j])
+			aux[i++] = ft_strdup(commands->args[j]);
+	return (aux);
+}
