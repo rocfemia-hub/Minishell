@@ -35,24 +35,28 @@ void	execute_control(t_com *list, t_vars *vars)
 	t_com	*tmp_list;
 
 	setup_signals_noninteractive();
-	list->redirects->redirected = 0;
+	if(list && list->redirects)
+		list->redirects->redirected = 0;
 	tmp_list = list;
-	if (tmp_list->next == NULL)
+	if (tmp_list)
 	{
-		if (!redirections_control(tmp_list, 0, 0, 0))
-			return (vars->exit_status = 1, clean_fds(tmp_list));
-		if (!tmp_list->command || ft_strlen(tmp_list->command) == 0)
-			return (vars->exit_status = 0, clean_fds(tmp_list));
-		if (tmp_list->flag_built == 1)
-			commands_control(tmp_list, vars);
+		if (tmp_list->next == NULL)
+		{
+			if (!redirections_control(tmp_list, 0, 0, 0))
+				return (vars->exit_status = 1, clean_fds(tmp_list));
+			if (!tmp_list->command || ft_strlen(tmp_list->command) == 0)
+				return (vars->exit_status = 0, clean_fds(tmp_list));
+			if (tmp_list->flag_built == 1)
+				commands_control(tmp_list, vars);
+			else
+				execute(tmp_list, vars);
+			clean_fds(tmp_list);
+		}
 		else
-			execute(tmp_list, vars);
-		clean_fds(tmp_list);
-	}
-	else
-	{
-		setup_pipeline(list);
-		execute_pipeline(list);
+		{
+			setup_pipeline(list);
+			execute_pipeline(list);
+		}
 	}
 }
 

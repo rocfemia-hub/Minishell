@@ -57,6 +57,8 @@ void	exit_function(t_com *list, t_vars *vars)
 	if (!list->args[0] || !vars)
 	{
 		write(1, "exit\n", 5);
+		if (vars)
+			exit(vars->exit_status);
 		exit(0);
 	}
 	if (list->args[0] && !list->args[1])

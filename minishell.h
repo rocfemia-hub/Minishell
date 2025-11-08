@@ -108,7 +108,7 @@ typedef struct s_com
 //LISTAS
 t_com	*lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
-//void 	print_list(t_com *list);
+// void 	print_list(t_com *list);
 
 //ERROR
 //void	printf_matrix(char **split);
@@ -124,16 +124,18 @@ void	free_array(char **p);
 //SIGNALS
 extern int g_signal;
 
-void	handle_sigint_interactive(int sig);
-void	handle_sigint_child(int sig);
-void	handle_sigquit_child(int sig);
-void	handle_sigint_heredoc(int sig);
-void	setup_signals_interactive(void);
-void	setup_signals_noninteractive(void);
-void	setup_signals_heredoc(void);
-void	setup_signals_default(void);
-void	setup_terminal_heredoc(void);
-void	rest_termi_hrdc(void);
+void			handle_sigint_interactive(int sig);
+void			handle_sigint_child(int sig);
+void			handle_sigquit_child(int sig);
+void			handle_sigint_heredoc(int sig);
+void			setup_signals_interactive(void);
+void			setup_signals_noninteractive(void);
+void			setup_signals_heredoc(void);
+void			setup_signals_default(void);
+void			setup_terminal_heredoc(void);
+void			rest_termi_hrdc(void);
+struct termios	*get_original_termios(void);
+int				*get_termios_saved(void);
 
 /*EXEC*/ 
 

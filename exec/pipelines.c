@@ -58,7 +58,15 @@ static void	execute_pipelines2(t_com *list, pid_t *pids)
 			if (!redirections_control(tmp_list, 0, 0, 0))
 			{
 				tmp_list->redirects->err = 1;
+				pids[i] = fork();
+				if (pids[i] == 0)
+					exit(1);
+				if (tmp_list->fd_in != STDIN_FILENO)
+					close(tmp_list->fd_in);
+				if (tmp_list->fd_out != STDOUT_FILENO)
+					close(tmp_list->fd_out);
 				tmp_list = tmp_list->next;
+				i++;
 				continue ;
 			}
 		}
@@ -81,7 +89,8 @@ void	execute_pipeline(t_com *list)
 		tmp_list = tmp_list->next;
 	}
 	pids = malloc(sizeof(pid_t) * num_cmds);
-	list->redirects->err = 0;
+	if (list && list->redirects)
+		list->redirects->err = 0;
 	execute_pipelines2(list, pids);
 	pipelines_signals(list, pids, num_cmds, 0);
 	free(pids);

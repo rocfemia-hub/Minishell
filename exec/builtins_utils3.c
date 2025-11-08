@@ -69,6 +69,7 @@ void	increment_shlvl(t_vars *vars)
 {
 	t_env	*shlvl;
 	char	*new;
+	char	*joined;
 	int		current;
 
 	shlvl = find_env_var(vars, "SHLVL");
@@ -80,7 +81,9 @@ void	increment_shlvl(t_vars *vars)
 	else
 		current = 1;
 	new = ft_itoa(current);
-	add_update_env_var(vars, ft_strjoin("SHLVL=", new));
+	joined = ft_strjoin("SHLVL=", new);
+	add_update_env_var(vars, joined);
+	free(joined);
 	free(new);
 }
 

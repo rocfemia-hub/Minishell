@@ -12,55 +12,38 @@
 
 #include "../minishell.h"
 
-// Handler para SIGINT en modo interactivo (main shell)
-void	handle_sigint_interactive(int sig)
+// Handler para SIGINT en procesos hijos
+void	handle_sigint_child(int sig)
 {
 	(void)sig;
 	g_signal = SIGINT;
 	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
 }
 
-// Variables estáticas para guardar configuración del terminal
-struct termios	*get_original_termios(void)
+// Configurar señales por defecto para procesos hijos
+void	setup_signals_default(void)
 {
-	static struct termios	original_termios;
+	struct sigaction sa;
 
-	return (&original_termios);
+	sa.sa_handler = SIG_DFL;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
 }
 
-int	*get_termios_saved(void)
-{
-	static int	termios_saved = 0;
-
-	return (&termios_saved);
-}
-
-// Restaurar configuración original del terminal
-void	rest_termi_hrdc(void)
-{
-	if (*get_termios_saved())
-	{
-		tcsetattr(STDIN_FILENO, TCSANOW, get_original_termios());
-		*get_termios_saved() = 0;
-	}
-} 
-
-// Configurar señales para modo interactivo (main shell)
-void	setup_signals_interactive(void)
+// Configurar señales para ejecución de comandos
+void	setup_signals_noninteractive(void)
 {
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
 
-	// Configurar SIGINT con sigaction
-	sa_int.sa_handler = handle_sigint_interactive;
+	sa_int.sa_handler = handle_sigint_child;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
-		// Sin SA_RESTART para que readline maneje correctamente la señal
 	sigaction(SIGINT, &sa_int, NULL);
-	// Ignorar SIGQUIT
 	sa_quit.sa_handler = SIG_IGN;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;

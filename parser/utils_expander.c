@@ -70,29 +70,31 @@ char	*handle_dollar_in_quotes(char *line, int *k, int *start, t_vars *vars)
 	return (token);
 }
 
+static char	*append_and_free(char *token, char *tmp)
+{
+	token = str_append(token, tmp);
+	free(tmp);
+	return (token);
+}
+
 char	*process_inside_double_quotes(char *line, int start, int end,
 		t_vars *vars)
 {
 	int		k;
 	char	*token;
-	char	*tmp;
 
 	token = NULL;
 	k = start;
 	while (k < end)
 	{
 		if (line[k] == '$')
-			token = str_append(token, handle_dollar_in_quotes(line, &k,
+			token = append_and_free(token, handle_dollar_in_quotes(line, &k,
 						&start, vars));
 		else
 			k++;
 	}
 	if (start < end)
-	{
-		tmp = ft_substr(line, start, end - start);
-		token = str_append(token, tmp);
-		free(tmp);
-	}
+		token = append_and_free(token, ft_substr(line, start, end - start));
 	if (!token)
 		token = ft_strdup("");
 	return (token);

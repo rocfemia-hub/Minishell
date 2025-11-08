@@ -130,5 +130,6 @@ t_com	*token(char *line, t_vars *vars)
 		error(commands);
 		return (NULL);
 	}
+	print_list(commands);
 	return (commands);
 }

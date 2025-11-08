@@ -47,7 +47,7 @@ static void	pids2_pipelines(t_com *list, t_com *tmp_list)
 	if (tmp_list->flag_built)
 	{
 		commands_control(tmp_list, tmp_list->vars);
-		exit(0);
+		exit(tmp_list->vars->exit_status);
 	}
 	else
 	{

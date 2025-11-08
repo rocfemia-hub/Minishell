@@ -17,17 +17,27 @@ int	g_signal;
 static void	init_env(t_vars *vars)
 {
 	char	cwd[1024];
+	char	*temp;
 
 	getcwd(cwd, sizeof(cwd));
-	add_update_env_var(vars, ft_strjoin("PWD=", cwd));
-	add_update_env_var(vars, ft_strdup("SHLVL=1"));
-	add_update_env_var(vars, ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin"));
-	add_update_env_var(vars, ft_strdup("_=/usr/bin/env"));
+	temp = ft_strjoin("PWD=", cwd);
+	add_update_env_var(vars, temp);
+	free(temp);
+	temp = ft_strdup("SHLVL=1");
+	add_update_env_var(vars, temp);
+	free(temp);
+	temp = ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin");
+	add_update_env_var(vars, temp);
+	free(temp);
+	temp = ft_strdup("_=/usr/bin/env");
+	add_update_env_var(vars, temp);
+	free(temp);
 }
 
 static void	init_vars(t_vars *vars, char **env)
 {
 	t_env	*minishell_on;
+	char	*temp;
 
 	vars->exit_status = 0;
 	vars->pwd = getcwd(NULL, 0);
@@ -41,8 +51,12 @@ static void	init_vars(t_vars *vars, char **env)
 			increment_shlvl(vars);
 		else
 		{
-			add_update_env_var(vars, ft_strdup("SHLVL=1"));
-			add_update_env_var(vars, ft_strdup("MINISHELL_ACTIVE=1"));
+			temp = ft_strdup("SHLVL=1");
+			add_update_env_var(vars, temp);
+			free(temp);
+			temp = ft_strdup("MINISHELL_ACTIVE=1");
+			add_update_env_var(vars, temp);
+			free(temp);
 		}
 	}
 }
@@ -69,7 +83,7 @@ static int	gestion_line(t_com **commands, t_vars *vars)
 	if (!line)
 	{
 		printf("exit\n");
-		exit(0);
+		exit(vars->exit_status);
 	}
 	if (g_signal == SIGINT)
 	{
@@ -82,6 +96,8 @@ static int	gestion_line(t_com **commands, t_vars *vars)
 	if (!line_break(line))
 		return (free(line), 0);
 	*commands = token(line, vars);
+	if (!commands)
+		return (0);
 	free(line);
 	return (1);
 }

@@ -50,14 +50,16 @@ static int	check_redirect_syntax(char *line, int i, char quote)
 	j = skip_whitespace(line, j);
 	if (!line[j] || line[j] == '|' || is_redirect(line[j]))
 	{
-		if (!line[j] || line[j] == '|')
+		if (!line[j])
 			write(2,
 				"minishell: syntax error near unexpected token `newline'\n",
-				57);
+				56);
+		else if (line[j] == '|')
+			write(2, "minishell: syntax error near unexpected token `|'\n", 50);
 		else if (line[j] == '<')
-			write(2, "minishell: syntax error near unexpected token `<'\n", 51);
+			write(2, "minishell: syntax error near unexpected token `<'\n", 50);
 		else
-			write(2, "minishell: syntax error near unexpected token `>'\n", 51);
+			write(2, "minishell: syntax error near unexpected token `>'\n", 50);
 		return (1);
 	}
 	return (0);
@@ -72,15 +74,15 @@ static int	check_redirect_pipe_mix(char *line, int i, char quote)
 	j = i + 1;
 	if (is_redirect(line[i]) && line[j] == '|')
 	{
-		write(2, "minishell: syntax error near unexpected token `|'\n", 51);
+		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
 		return (1);
 	}
 	if (line[i] == '|' && is_redirect(line[j]))
 	{
 		if (line[j] == '<')
-			write(2, "minishell: syntax error near unexpected token `<'\n", 51);
+			write(2, "minishell: syntax error near unexpected token `<'\n", 50);
 		else
-			write(2, "minishell: syntax error near unexpected token `>'\n", 51);
+			write(2, "minishell: syntax error near unexpected token `>'\n", 50);
 		return (1);
 	}
 	return (0);
@@ -93,6 +95,13 @@ int	validate_syntax(char *line)
 
 	i = 0;
 	quote = 0;
+	i = skip_whitespace(line, i);
+	if (line[i] == '|')
+	{
+		write(2, "minishell: syntax error near unexpected token `|'\n", 50);
+		return (1);
+	}
+	i = 0;
 	while (line[i])
 	{
 		if ((line[i] == '"' || line[i] == '\'') && !quote)
@@ -101,7 +110,7 @@ int	validate_syntax(char *line)
 			quote = 0;
 		if (line[i] == '|' && check_pipe_syntax(line, i, quote))
 		{
-			write(2, "minishell: syntax error near unexpected token `|'\n", 51);
+			write(2, "minishell: syntax error near unexpected token `|'\n", 50);
 			return (1);
 		}
 		if (is_redirect(line[i]) && check_redirect_syntax(line, i, quote))
