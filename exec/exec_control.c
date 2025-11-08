@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:51:09 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 20:06:36 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/08 22:17:59 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@ static void	clean_fds(t_com *list)
 	if (list->fd_in != STDIN_FILENO)
 		close(list->fd_in);
 	if (list->fd_out != STDOUT_FILENO)
-	{
 		close(list->fd_out);
-	}
 	list->fd_in = STDIN_FILENO;
 	list->fd_out = STDOUT_FILENO;
 	if (list->redirects && list->redirects->heredoc_file)
@@ -35,7 +33,7 @@ void	execute_control(t_com *list, t_vars *vars)
 	t_com	*tmp_list;
 
 	setup_signals_noninteractive();
-	if(list && list->redirects)
+	if (list && list->redirects)
 		list->redirects->redirected = 0;
 	tmp_list = list;
 	if (tmp_list)
@@ -45,7 +43,8 @@ void	execute_control(t_com *list, t_vars *vars)
 			if (!redirections_control(tmp_list, 0, 0, 0))
 				return (vars->exit_status = 1, clean_fds(tmp_list));
 			if (!tmp_list->command || ft_strlen(tmp_list->command) == 0)
-				return (vars->exit_status = 0, clean_fds(tmp_list));
+				return (ft_printf(2, "minishell: : command not found\n"),
+					vars->exit_status = 127, clean_fds(tmp_list));
 			if (tmp_list->flag_built == 1)
 				commands_control(tmp_list, vars);
 			else
@@ -53,10 +52,7 @@ void	execute_control(t_com *list, t_vars *vars)
 			clean_fds(tmp_list);
 		}
 		else
-		{
-			setup_pipeline(list);
-			execute_pipeline(list);
-		}
+			(setup_pipeline(list), execute_pipeline(list));
 	}
 }
 
