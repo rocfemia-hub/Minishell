@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 20:14:12 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/09 14:03:35 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,23 +98,21 @@ void	execute_pipeline(t_com *list)
 
 void	setup_pipeline(t_com *list)
 {
-	t_com	*tmp_list;
 	int		pipe_fd[2];
 
-	tmp_list = list;
-	while (tmp_list && tmp_list->next)
+	while (list && list->next)
 	{
 		if (pipe(pipe_fd) == -1)
 			return (write(2, "minishell: ", 11), perror("pipe"));
-		if (tmp_list->fd_out == STDOUT_FILENO)
-			tmp_list->fd_out = pipe_fd[WRITE_FD];
+		if (list->fd_out == STDOUT_FILENO)
+			list->fd_out = pipe_fd[WRITE_FD];
 		else
 			close(pipe_fd[WRITE_FD]);
-		if (tmp_list->next->fd_in == STDIN_FILENO)
-			tmp_list->next->fd_in = pipe_fd[READ_FD];
+		if (list->next->fd_in == STDIN_FILENO)
+			list->next->fd_in = pipe_fd[READ_FD];
 		else
 			close(pipe_fd[READ_FD]);
-		tmp_list = tmp_list->next;
+		list = list->next;
 	}
 }
 

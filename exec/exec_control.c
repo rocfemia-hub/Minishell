@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:51:09 by roo               #+#    #+#             */
-/*   Updated: 2025/11/08 22:17:59 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/09 14:06:42 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,24 @@ static void	clean_fds(t_com *list)
 
 void	execute_control(t_com *list, t_vars *vars)
 {
-	t_com	*tmp_list;
-
 	setup_signals_noninteractive();
 	if (list && list->redirects)
 		list->redirects->redirected = 0;
-	tmp_list = list;
-	if (tmp_list)
+	list = list;
+	if (list)
 	{
-		if (tmp_list->next == NULL)
+		if (list->next == NULL)
 		{
-			if (!redirections_control(tmp_list, 0, 0, 0))
-				return (vars->exit_status = 1, clean_fds(tmp_list));
-			if (!tmp_list->command || ft_strlen(tmp_list->command) == 0)
+			if (!redirections_control(list, 0, 0, 0))
+				return (vars->exit_status = 1, clean_fds(list));
+			if (!list->command || ft_strlen(list->command) == 0)
 				return (ft_printf(2, "minishell: : command not found\n"),
-					vars->exit_status = 127, clean_fds(tmp_list));
-			if (tmp_list->flag_built == 1)
-				commands_control(tmp_list, vars);
+					vars->exit_status = 127, clean_fds(list));
+			if (list->flag_built == 1)
+				commands_control(list, vars);
 			else
-				execute(tmp_list, vars);
-			clean_fds(tmp_list);
+				execute(list, vars);
+			clean_fds(list);
 		}
 		else
 			(setup_pipeline(list), execute_pipeline(list));

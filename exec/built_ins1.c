@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 18:16:39 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/09 13:58:12 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,28 +54,28 @@ void	pwd_function(t_com *list, t_vars *vars)
 
 void	exit_function(t_com *list, t_vars *vars)
 {
+	write(1, "exit\n", 5);
 	if (!list->args[0] || !vars)
 	{
-		write(1, "exit\n", 5);
 		if (vars)
 			exit(vars->exit_status);
 		exit(0);
 	}
-	if (list->args[0] && !list->args[1])
+	if (valid_number(list->args[0]))
 	{
-		if (valid_number(list->args[0]))
-		{
-			write(1, "exit\n", 5);
+		if (!list->args[1])
 			exit(ft_atoi(list->args[0]));
-		}
-		else
-		{
-			write(2, "exit: numeric argument required\n", 32);
-			exit(2);
-		}
 	}
-	write(2, "exit: too many arguments\n", 25);
-	return (vars->exit_status = 1, (void)0);
+	else
+	{
+		write(2, "exit: numeric argument required\n", 32);
+		exit(2);
+	}
+	if (list->args[1])
+	{
+		write(2, "exit: too many arguments\n", 25);
+		vars->exit_status = 1;
+	}
 }
 
 void	cd_function(t_com *list, t_vars *vars, char	*target_dir)
