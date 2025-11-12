@@ -93,9 +93,10 @@ char	*aux_cmd(t_clean_cmd *data, t_vars *vars)
 	return (result);
 }
 
-int	expand_cmd(t_clean_cmd *data, t_vars *vars)
+int	expand_cmd(t_clean_cmd *data, t_vars *vars, t_com *commands)
 {
-	char	*expanded;
+	char		*expanded;
+	t_clean_cmd	temp_data;
 
 	expanded = aux_cmd(data, vars);
 	if (ft_strlen(expanded) < 1)
@@ -104,6 +105,10 @@ int	expand_cmd(t_clean_cmd *data, t_vars *vars)
 		return (0);
 	}
 	free(data->cmd);
-	data->cmd = expanded;
+	ft_bzero(&temp_data, sizeof(t_clean_cmd));
+	temp_data.cmd = only_cmd(expanded, &temp_data);
+	init_struct(expanded, temp_data.cmd, temp_data.only_cmd_i, commands);
+	free(temp_data.cmd);
+	data->cmd = NULL;
 	return (1);
 }

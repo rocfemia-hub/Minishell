@@ -232,7 +232,7 @@ char	*ft_strjoin_cmd(char **cmd);
 char	*str_append(char *dest, const char *src);
 char	*handle_plain_text(char *cmd, int *i, t_vars *vars);
 char	*aux_cmd(t_clean_cmd *data, t_vars *vars);
-int		expand_cmd(t_clean_cmd *data, t_vars *vars);
+int		expand_cmd(t_clean_cmd *data, t_vars *vars, t_com *commands);
 
 // EXPANDER.C
 char	*handle_inter(t_vars *vars);

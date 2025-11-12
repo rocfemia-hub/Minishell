@@ -66,9 +66,7 @@ void	type_command(char *line, t_com *commands)
 	saved_index = data.only_cmd_i;
 	if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
 	{
-		if (expand_cmd(&data, commands->vars))
-			init_struct(line, data.cmd, saved_index, commands);
-		else
+		if (!expand_cmd(&data, commands->vars, commands))
 			handle_no_expansion(line, &data, commands);
 	}
 	else
