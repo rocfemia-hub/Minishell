@@ -81,3 +81,17 @@ char	*handle_dollar(char *line, int *i, t_vars *vars)
 	}
 	return (token);
 }
+
+void	add_split_args(char **token_args, int *j, char *accumulated)
+{
+	char	**split;
+	int		k;
+
+	split = ft_split_parser(accumulated);
+	if (!split)
+		return ;
+	k = -1;
+	while (split[++k])
+		token_args[(*j)++] = split[k];
+	free(split);
+}

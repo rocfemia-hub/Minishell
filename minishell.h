@@ -202,6 +202,8 @@ void	apply_redirections(t_com *list);
 char	*extract_varname(char *line, int start, int *vlen);
 char	*aux_handle_dollar(int *i, int start);
 char	*handle_dollar(char *line, int *i, t_vars *vars);
+void	add_split_args(char **token_args, int *j, char *accumulated);
+
 
 // AUX_REDIRECTS_CMD.C
 char	**realloc_redirect_args(char **flag);
