@@ -88,7 +88,7 @@ void	init_struct(char *line, char *cmd, int end, t_com *commands)
 	if (!cmd || !line)
 		return ;
 	commands->command = ft_substr(cmd, 0, ft_strlen(cmd));
-	while (line[end] == ' ')
+	while (line[end] == ' ' || line[end] == '\t')
 		end++;
 	if (has_expandable_dollar(line + end))
 	{

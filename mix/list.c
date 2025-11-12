@@ -42,7 +42,7 @@ void	lstadd_back(t_com **lst, t_com *new)
 	new->previous = node;
 }
 
-/*void print_list(t_com *list)
+void print_list(t_com *list)
 {
 	int i;
 
@@ -66,8 +66,8 @@ void	lstadd_back(t_com **lst, t_com *new)
 			printf("argumentos: (null)\n");
 		if (list->command_arg)
 		{
-			printf("command_arg\n");
-			//printf_matrix (list->command_arg);
+			printf("command_arg:\n");
+			printf_matrix (list->command_arg);
 		}
 		else
 			printf("command_arg: (null)\n");
@@ -115,4 +115,4 @@ void	lstadd_back(t_com **lst, t_com *new)
 		
 		list = list->next;
 	}
-}*/
+}

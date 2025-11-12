@@ -108,10 +108,10 @@ typedef struct s_com
 //LISTAS
 t_com	*lstnew(int index);
 void	lstadd_back(t_com **lst, t_com *new);
-// void 	print_list(t_com *list);
+void 	print_list(t_com *list);
 
 //ERROR
-//void	printf_matrix(char **split);
+void	printf_matrix(char **split);
 void 	error(t_com *commands);
 
 //FREE

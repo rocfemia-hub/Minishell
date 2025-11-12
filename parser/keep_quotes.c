@@ -51,7 +51,7 @@ void	process_single_word(char *line, int *i, char **args, int *j)
 	if (!arg)
 		return ;
 	k = 0;
-	while (line[*i] && line[*i] != ' ')
+	while (line[*i] && line[*i] != ' ' && line[*i] != '\t')
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
 			aux_keep_quotes_args(line, i, &k, &arg);

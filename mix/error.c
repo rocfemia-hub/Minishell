@@ -19,7 +19,7 @@ void	error(t_com *commands)
 	return ;
 }
 
-/*void printf_matrix(char **split)
+void printf_matrix(char **split)
 {
     int i = 0;
 
@@ -28,4 +28,4 @@ void	error(t_com *commands)
         printf("->%s\n", split[i]);
         i++;
     }
-}*/
+}

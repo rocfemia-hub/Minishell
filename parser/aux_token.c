@@ -17,7 +17,7 @@ int	skip_spaces(char *line)
 	int	i;
 
 	i = 0;
-	while (line[i] && line[i] == 32)
+	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
 		i++;
 	return (i);
 }
