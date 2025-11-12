@@ -2,6 +2,8 @@ NAME = minishell
 CC = cc
 CCFLAGS = -g3 -Wall -Wextra -Werror #-fsanitize=address
 
+RM = rm -rf
+
 BLUE = \033[34m
 RESET = \033[0m
 
@@ -27,6 +29,7 @@ objects/%.o: %.c
 
 clean:
 	@$(RM) -rf objects
+	@$(RM) exec/*.o parser/*.o mix/*.o
 	@$(MAKE) -C libft clean
 
 fclean: clean
