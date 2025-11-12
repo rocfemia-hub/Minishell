@@ -25,8 +25,8 @@ char	*only_cmd(char *line, t_clean_cmd *data)
 	{
 		if (line[data->only_cmd_i] == '\'' || line[data->only_cmd_i] == '"')
 			aux_only_cmd(line, data);
-		if (data->quote == 0 && (line[data->only_cmd_i] == ' ' 
-			|| line[data->only_cmd_i] == '\t'))
+		if (data->quote == 0 && (line[data->only_cmd_i] == ' '
+				|| line[data->only_cmd_i] == '\t'))
 		{
 			data->end = data->only_cmd_i;
 			break ;

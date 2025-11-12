@@ -83,3 +83,25 @@ void	keep_quotes_args(t_com *commands, char *line)
 	args[j] = NULL;
 	commands->args = args;
 }
+
+char	*ft_strjoin_cmd(char **cmd)
+{
+	int		len;
+	char	*result;
+	int		i;
+
+	len = 0;
+	i = -1;
+	if (!cmd || !cmd[0])
+		return (NULL);
+	while (cmd[++i])
+		len += ft_strlen(cmd[i]);
+	result = malloc(len + 1);
+	if (!result)
+		return (NULL);
+	result[0] = '\0';
+	i = -1;
+	while (cmd[++i])
+		ft_strlcat(result, cmd[i], ft_strlen(result) + ft_strlen(cmd[i]) + 1);
+	return (result);
+}

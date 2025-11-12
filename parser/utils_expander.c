@@ -52,24 +52,6 @@ char	*expand_var_in_quotes_args(char *line, int *k, char *token,
 	return (token);
 }
 
-char	*handle_dollar_in_quotes(char *line, int *k, int *start, t_vars *vars)
-{
-	char	*tmp;
-	char	*token;
-
-	token = NULL;
-	if (*k > *start)
-	{
-		tmp = ft_substr(line, *start, *k - *start);
-		token = str_append(token, tmp);
-		free(tmp);
-	}
-	*start = *k;
-	token = expand_var_in_quotes_args(line, k, token, vars);
-	*start = *k;
-	return (token);
-}
-
 static char	*append_and_free(char *token, char *tmp)
 {
 	token = str_append(token, tmp);

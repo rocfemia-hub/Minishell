@@ -216,6 +216,10 @@ int		is_redirect_token(char *arg, char *redirect);
 int		aux_parser_resdirects_sintax_error(t_com *commands);
 void	aux_redirects(t_com *commands, char *redirect_pos, int type, char *redirect);
 
+// AUX_SYNTAX.C
+int	skip_whitespace(char *line, int i);
+int	check_pipe_syntax(char *line, int i, char quote);
+
 // AUX_TOKEN.C
 int		skip_spaces(char *line);
 void	aux_only_cmd(char *line, t_clean_cmd *data);

@@ -12,26 +12,22 @@
 
 #include "../minishell.h"
 
-char	*ft_strjoin_cmd(char **cmd)
+char	*handle_dollar_in_quotes(char *line, int *k, int *start, t_vars *vars)
 {
-	int		len;
-	char	*result;
-	int		i;
+	char	*tmp;
+	char	*token;
 
-	len = 0;
-	i = -1;
-	if (!cmd || !cmd[0])
-		return (NULL);
-	while (cmd[++i])
-		len += ft_strlen(cmd[i]);
-	result = malloc(len + 1);
-	if (!result)
-		return (NULL);
-	result[0] = '\0';
-	i = -1;
-	while (cmd[++i])
-		ft_strlcat(result, cmd[i], ft_strlen(result) + ft_strlen(cmd[i]) + 1);
-	return (result);
+	token = NULL;
+	if (*k > *start)
+	{
+		tmp = ft_substr(line, *start, *k - *start);
+		token = str_append(token, tmp);
+		free(tmp);
+	}
+	*start = *k;
+	token = expand_var_in_quotes_args(line, k, token, vars);
+	*start = *k;
+	return (token);
 }
 
 char	*str_append(char *dest, const char *src)
