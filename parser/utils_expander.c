@@ -12,6 +12,25 @@
 
 #include "../minishell.h"
 
+char	*extract_varname(char *line, int start, int *vlen)
+{
+	char	*varname;
+
+	*vlen = 0;
+	if (line[start] && (ft_isalpha((unsigned char)line[start])
+			|| line[start] == '_'))
+	{
+		(*vlen)++;
+		while (line[start + *vlen] && (ft_isalnum((unsigned char)line[start
+						+ *vlen]) || line[start + *vlen] == '_'))
+			(*vlen)++;
+	}
+	else if (line[start] && ft_isdigit((unsigned char)line[start]))
+		(*vlen) = 1;
+	varname = ft_substr(line, start, *vlen);
+	return (varname);
+}
+
 char	*expand_var_in_quotes_args(char *line, int *k, char *token,
 		t_vars *vars)
 {

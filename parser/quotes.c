@@ -11,18 +11,25 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-//en este archivo se han añadido static porque no se usan en otros archivos
+
 static void	process_arg_quotes(char *arg, char *new_arg)
 {
-	int	j;
-	int	k;
+	int		j;
+	int		k;
+	char	quote;
 
 	j = 0;
 	k = 0;
+	quote = 0;
 	while (arg[j])
 	{
-		if (arg[j] == '\'' || arg[j] == '"')
-			copy_without_quotes(arg, new_arg, &j, &k);
+		if ((arg[j] == '\'' || arg[j] == '"') && !quote)
+			quote = arg[j++];
+		else if (quote && arg[j] == quote)
+		{
+			quote = 0;
+			j++;
+		}
 		else
 			new_arg[k++] = arg[j++];
 	}

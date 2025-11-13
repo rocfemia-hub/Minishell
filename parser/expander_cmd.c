@@ -77,7 +77,7 @@ char	*aux_cmd(t_clean_cmd *data, t_vars *vars)
 			token = handle_double_quotes(data->cmd, &i, vars);
 		else if (data->cmd[i] == '$')
 			token = handle_dollar(data->cmd, &i, vars);
-		else if (data->cmd[i] == '~') //para añadir virgulilla
+		else if (data->cmd[i] == '~')
 			token = handle_tilde(data->cmd, &i, vars);
 		else
 			token = handle_plain_text(data->cmd, &i, vars);
@@ -92,16 +92,16 @@ char	*aux_cmd(t_clean_cmd *data, t_vars *vars)
 
 int	expand_cmd(t_clean_cmd *data, t_vars *vars, t_com *commands)
 {
-	char	*expanded;
+	char		*expanded;
 	t_clean_cmd	temp_data;
 
 	expanded = aux_cmd(data, vars);
 	free(data->cmd);
 	data->cmd = expanded;
-	if (!expanded) //comprobar si falla
+	if (!expanded)
 		return (0);
 	ft_bzero(&temp_data, sizeof(t_clean_cmd));
-	if (!ft_strlen(expanded)) //para diferenciar expansion fallida con comillas o no
+	if (!ft_strlen(expanded))
 		temp_data.cmd = ft_strdup(expanded);
 	else
 		temp_data.cmd = only_cmd(expanded, &temp_data);

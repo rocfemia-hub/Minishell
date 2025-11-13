@@ -11,12 +11,12 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-//este archivo es nuevo, gestiona la virgulilla entera
+
 static char	*expand_tilde(const char *word, t_vars *vars)
 {
 	t_env	*home;
 	char	*path;
-	//esta funcion sustituye virgulilla por el path del home
+
 	if (!word || word[0] != '~')
 		return (ft_strdup(word));
 	if (word[1] == '/' || word[1] == '\0')
@@ -37,7 +37,7 @@ char	*handle_tilde(char *line, int *i, t_vars *vars)
 	int		start;
 	char	*word;
 	char	*expanded;
-	//esta funcion busca la virgulilla en cmds y args
+
 	start = *i;
 	(*i)++;
 	while (line[*i] && !ft_strchr(" \t\n'$\"", line[*i]))

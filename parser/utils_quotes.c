@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-//se cambian a estaticas
+
 int	look_for_char(char *line, char c)
 {
 	int		i;
@@ -39,56 +39,13 @@ int	look_for_char(char *line, char c)
 	return (count);
 }
 
-static int	check_redir_in_quotes(char *arg, int start, int end)
-{
-	int	t;
-
-	t = start;
-	while (t < end)
-	{
-		if (arg[t] == '>' || arg[t] == '<')
-			return (1);
-		t++;
-	}
-	return (0);
-}
-
 int	has_redirects(char *line)
 {
-	if (ft_strnstr(line, "<", ft_strlen(line))
-		|| ft_strnstr(line, "<<", ft_strlen(line))
-		|| ft_strnstr(line, ">", ft_strlen(line))
+	if (ft_strnstr(line, "<", ft_strlen(line)) || ft_strnstr(line, "<<",
+			ft_strlen(line)) || ft_strnstr(line, ">", ft_strlen(line))
 		|| ft_strnstr(line, ">>", ft_strlen(line)))
 		return (1);
 	return (0);
-}
-
-void	copy_without_quotes(char *arg, char *new_arg, int *j, int *k)
-{
-	char	q;
-	int		m;
-	int		u;
-
-	q = arg[*j];
-	m = *j + 1;
-	while (arg[m] && arg[m] != q)
-		m++;
-	if (arg[m] == q && check_redir_in_quotes(arg, *j + 1, m))
-	{
-		u = *j + 1;
-		while (u < m)
-			new_arg[(*k)++] = arg[u++];
-		*j = m + 1;
-		return ;
-	}
-	if (arg[m] == q)
-	{
-		new_arg[(*k)++] = arg[(*j)++];
-		while (*j <= m)
-			new_arg[(*k)++] = arg[(*j)++];
-		return ;
-	}
-	new_arg[(*k)++] = arg[(*j)++];
 }
 
 char	**ft_strjoin_cmd_arg(t_com *commands)
@@ -109,9 +66,24 @@ char	**ft_strjoin_cmd_arg(t_com *commands)
 	aux = ft_calloc(len + 1, sizeof(char *));
 	if (commands->command)
 		aux[i++] = ft_strdup(commands->command);
-	j = -1; //esto se hace siempreporque si no igual ya se ha modificado
+	j = -1;
 	if (commands->args)
 		while (commands->args[++j])
 			aux[i++] = ft_strdup(commands->args[j]);
 	return (aux);
+}
+
+void	quotes_for_redir(char **arg, int *k, int start, char q)
+{
+	int	m;
+
+	m = *k;
+	while (m > start)
+	{
+		(*arg)[m] = (*arg)[m - 1];
+		m--;
+	}
+	(*arg)[start] = q;
+	(*arg)[*k + 1] = q;
+	*k += 2;
 }

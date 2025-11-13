@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-//se cambian a estaticas
+
 static int	has_expandable_dollar(char *line)
 {
 	int		i;
@@ -29,7 +29,7 @@ static int	has_expandable_dollar(char *line)
 				quote = 0;
 		}
 		else if ((line[i] == '$' || line[i] == '~') && quote != '\'')
-			return (1); //añadiendo virgulilla
+			return (1);
 		i++;
 	}
 	return (0);
@@ -80,7 +80,7 @@ void	built_ins_init_struct(t_com *commands)
 		|| !ft_strncmp(commands->command, "export",
 			ft_strlen(commands->command)) || !ft_strncmp(commands->command,
 			"unset", ft_strlen(commands->command))
-		|| is_variable_assignment(commands->command)) //variables sin export (ABC=hola//echo ABC)
+		|| is_variable_assignment(commands->command))
 		commands->flag_built = 1;
 }
 
@@ -99,7 +99,7 @@ void	init_struct(char *line, char *cmd, int end, t_com *commands)
 	}
 	else
 	{
-		keep_quotes_args(commands, line + end);
+		commands->args = ft_split_parser(line + end);
 		redirects(commands);
 		clean_reinserted_quotes_in_args(commands);
 	}

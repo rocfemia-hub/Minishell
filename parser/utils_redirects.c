@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-//se cambian a estaticas
+
 static char	**realloc_redirect_flags(char **flag)
 {
 	int		j;

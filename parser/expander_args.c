@@ -43,7 +43,7 @@ char	*process_single_arg(char *arg, t_vars *vars)
 			token = handle_double_quotes(arg, &k, vars);
 		else if (arg[k] == '$')
 			token = handle_dollar(arg, &k, vars);
-		else if (arg[k] == '~') //agregar funcionamiento de virgulilla
+		else if (arg[k] == '~')
 			token = handle_tilde(arg, &k, vars);
 		else
 			token = handle_plain_text_args(arg, &k, vars);

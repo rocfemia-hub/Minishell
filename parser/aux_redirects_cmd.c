@@ -23,7 +23,7 @@ static void	handle_command_redirect(t_com *commands, char *redirect, int type)
 			redirect, ft_strlen(redirect)) != 0)
 		i++;
 	tmp_file = ft_strdup(commands->command + i + ft_strlen(redirect));
-	fill_cmd(commands, redirect, tmp_file);
+	fill_red(commands, redirect, tmp_file);
 	fill_type_redirect(commands, type);
 	tmp_cmd = commands->command;
 	commands->command = ft_substr(tmp_cmd, 0, i);
@@ -39,15 +39,15 @@ void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
 	else if (commands->args[0])
 	{
 		tmp_file = ft_strdup(commands->args[0]);
-		fill_cmd(commands, redirect, tmp_file);
+		fill_red(commands, redirect, tmp_file);
 		free(commands->command);
-		commands->command = NULL; //para arreglar comand not found de ayer
+		commands->command = NULL;
 		commands->args = realloc_redirect_args(commands->args);
 		fill_type_redirect(commands, type);
 	}
 }
 
-void	fill_cmd(t_com *commands, char *redirect, char *file)
+void	fill_red(t_com *commands, char *redirect, char *file)
 {
 	if (ft_strncmp(redirect, "<", 2) == 0)
 		handle_redirect_array(&commands->redirects->input_file,

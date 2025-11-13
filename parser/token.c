@@ -65,7 +65,7 @@ void	type_command(char *line, t_com *commands)
 		return ;
 	saved_index = data.only_cmd_i;
 	if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))
-		|| ft_strchr(data.cmd, '~')) //añadiendo virgulilla
+		|| ft_strchr(data.cmd, '~'))
 	{
 		if (!expand_cmd(&data, commands->vars, commands) || !data.cmd)
 			handle_no_expansion(line, &data, commands);

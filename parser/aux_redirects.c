@@ -12,19 +12,19 @@
 
 #include "../minishell.h"
 
-int	is_redirect(char c)
+int is_redirect(char c)
 {
 	return (c == '<' || c == '>');
 }
 
-char	*find_redirect_position(char *arg, char *redirect)
+char *find_redirect_position(char *arg, char *redirect)
 {
-	int	i;
-	int	quote;
+	int i;
+	int quote;
 
 	i = 0;
 	quote = 0;
-	while (arg && arg[i]) //comprobar existencia de arg
+	while (arg && arg[i])
 	{
 		if (arg[i] == '\'' || arg[i] == '"')
 		{
@@ -34,21 +34,21 @@ char	*find_redirect_position(char *arg, char *redirect)
 				quote = 0;
 		}
 		else if (!quote && ft_strncmp(arg + i, redirect,
-				ft_strlen(redirect)) == 0)
+									  ft_strlen(redirect)) == 0)
 			return (arg + i);
 		i++;
 	}
 	return (NULL);
 }
 
-int	is_redirect_token(char *arg, char *redirect)
+int is_redirect_token(char *arg, char *redirect)
 {
-	int	i;
-	int	quote;
+	int i;
+	int quote;
 
 	i = 0;
 	quote = 0;
-	while (arg && arg[i]) //comprobar existencia de arg
+	while (arg && arg[i])
 	{
 		if (arg[i] == '\'' || arg[i] == '"')
 		{
@@ -58,14 +58,14 @@ int	is_redirect_token(char *arg, char *redirect)
 				quote = 0;
 		}
 		else if (!quote && ft_strncmp(arg + i, redirect,
-				ft_strlen(redirect)) == 0)
+									  ft_strlen(redirect)) == 0)
 			return (1);
 		i++;
 	}
 	return (0);
 }
 
-int	aux_parser_resdirects_sintax_error(t_com *commands)
+int aux_parser_resdirects_sintax_error(t_com *commands)
 {
 	if (ft_strnstr(commands->args[commands->redirects->j], ">>>", 3))
 	{
@@ -82,12 +82,12 @@ int	aux_parser_resdirects_sintax_error(t_com *commands)
 	return (1);
 }
 
-void	aux_redirects(t_com *commands, char *redirect_pos, int type,
-		char *redirect)
+void aux_redirects(t_com *commands, char *redirect_pos, int type,
+				   char *redirect)
 {
-	char	*tmp_file;
-	int		pos;
-	char	*before_redirect;
+	char *tmp_file;
+	int pos;
+	char *before_redirect;
 
 	pos = 0;
 	tmp_file = ft_strdup(redirect_pos + ft_strlen(redirect));
@@ -95,19 +95,17 @@ void	aux_redirects(t_com *commands, char *redirect_pos, int type,
 	if (pos > 0)
 	{
 		before_redirect = ft_calloc(pos + 1, sizeof(char));
-		ft_strlcpy(before_redirect, commands->args[commands->redirects->j], pos
-			+ 1);
+		ft_strlcpy(before_redirect, commands->args[commands->redirects->j], pos + 1);
 		free(commands->args[commands->redirects->j]);
 		commands->args[commands->redirects->j] = before_redirect;
 		fill_type_redirect(commands, type);
-		commands->args = copy_redirect_matrix(commands->args, -1, -1);
-		fill_cmd(commands, redirect, tmp_file);
+		fill_red(commands, redirect, tmp_file);
 	}
 	else
 	{
 		fill_type_redirect(commands, type);
 		commands->args = copy_redirect_matrix(commands->args,
-				commands->redirects->j, commands->redirects->j);
-		fill_cmd(commands, redirect, tmp_file);
+											  commands->redirects->j, commands->redirects->j);
+		fill_red(commands, redirect, tmp_file);
 	}
 }
