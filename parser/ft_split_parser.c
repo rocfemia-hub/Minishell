@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:18 by roo               #+#    #+#             */
-/*   Updated: 2025/11/13 01:46:06 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 21:50:42 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,24 @@ static int	skip_quoted_section(char *s, int i)
 	return (i);
 }
 
-int	count_words_with_quotes(char *s)
+void	count_words_with_quotes(char *s, int i, int *words)
 {
-	int	i;
-	int	words;
+	char	c;
 
-	i = 0;
-	words = 0;
 	while (s[i])
 	{
 		i = skip_space(s, i);
 		if (!s[i])
 			break ;
-		words++;
-		while (s[i] && s[i] != ' ' && s[i] != '\t')
+		(*words)++;
+		if (is_redirect(s[i]))
+		{
+			c = s[i++];
+			if (s[i] == c)
+				i++;
+			continue ;
+		}
+		while (s[i] && !is_redirect(s[i]) && s[i] != ' ' && s[i] != '\t')
 		{
 			if (s[i] == '\'' || s[i] == '"')
 				i = skip_quoted_section(s, i);
@@ -52,29 +56,29 @@ int	count_words_with_quotes(char *s)
 				i++;
 		}
 	}
-	return (words);
 }
 
 char	*extract_token(char *s, int *i)
 {
+	char	c;
 	int		start;
-	char	quote;
 
 	*i = skip_space(s, *i);
 	if (!s[*i])
 		return (NULL);
+	if (is_redirect(s[*i]))
+	{
+		c = s[*i];
+		start = (*i)++;
+		if (s[*i] == c)
+			(*i)++;
+		return (ft_substr(s, start, *i - start));
+	}
 	start = *i;
-	while (s[*i] && s[*i] != ' ' && s[*i] != '\t')
+	while (s[*i] && !is_redirect(s[*i]) && s[*i] != ' ' && s[*i] != '\t')
 	{
 		if (s[*i] == '\'' || s[*i] == '"')
-		{
-			quote = s[*i];
-			(*i)++;
-			while (s[*i] && s[*i] != quote)
-				(*i)++;
-			if (s[*i])
-				(*i)++;
-		}
+			*i = skip_quoted_section(s, *i);
 		else
 			(*i)++;
 	}
@@ -90,7 +94,8 @@ char	**ft_split_parser(char const *s)
 
 	if (!s)
 		return (NULL);
-	words = count_words_with_quotes((char *)s);
+	words = 0;
+	count_words_with_quotes((char *)s, 0, &words);
 	p = ft_calloc(words + 1, sizeof(char *));
 	if (!p)
 		return (NULL);

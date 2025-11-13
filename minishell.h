@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 20:58:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/13 03:11:07 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 21:51:56 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ char *handle_invalid_var(char *token);
 
 // FT_SPLIT_PARSER.C ----- 5 FUNCIONES
 int skip_space(char *s, int i);
-int count_words_with_quotes(char *s);
+void count_words_with_quotes(char *s, int i, int *words);
 char *extract_token(char *s, int *i);
 char **ft_split_parser(char const *s);
 
