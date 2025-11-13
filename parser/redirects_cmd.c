@@ -12,6 +12,11 @@
 
 #include "../minishell.h"
 
+int is_redirect(char c)
+{
+	return (c == '<' || c == '>');
+}
+
 int	clean_redirects_cmd(t_com *commands, char *redirect, int type)
 {
 	if (ft_strnstr(commands->command, ">>>", 3))

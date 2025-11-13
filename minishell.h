@@ -212,10 +212,9 @@ char **realloc_redirect_args(char **flag);
 void look_for_cmd(t_com *commands);
 
 // AUX_REDIRECTS.C ----- 5 FUNCIONES
-int is_redirect(char c);
-char *find_redirect_position(char *arg, char *redirect);
 int is_redirect_token(char *arg, char *redirect);
 int aux_parser_resdirects_sintax_error(t_com *commands);
+void redirects_aux(t_com *commands, char *rest);
 void aux_redirects(t_com *commands, char *redirect_pos, int type,
 				   char *redirect);
 
@@ -266,7 +265,8 @@ void keep_quotes_args(t_com *commands, char *line);
 void clean_reinserted_quotes_in_args(t_com *commands);
 char *clean_cmd(char *line);
 
-// REDIRECTS_CMD.C ----- 4 FUNCIONES
+// REDIRECTS_CMD.C ----- 5 FUNCIONES
+int is_redirect(char c);
 int clean_redirects_cmd(t_com *commands, char *redirect,
 						int type);
 int aux_redirects_cmd(t_com *commands);
@@ -276,7 +276,7 @@ int redirects_cmd(t_com *commands);
 int aux_parser_redirects(t_com *commands, char *redirect,
 						 int type);
 int parser_redirects(t_com *commands, char *redirect, int type);
-int aux_find(t_com *commands);
+int aux_find(t_com *commands, char **pos, char *first);
 void find(t_com *commands);
 void redirects(t_com *commands);
 
@@ -305,11 +305,12 @@ char *process_inside_double_quotes(char *line, int start,
 								   int end, t_vars *vars);
 char *handle_double_quotes(char *line, int *i, t_vars *vars);
 
-// UTILS_QUOTES.C ----- 4 FUNCIONES
+// UTILS_QUOTES.C ----- 5 FUNCIONES
 int look_for_char(char *line, char c);
 int has_redirects(char *line);
 char **ft_strjoin_cmd_arg(t_com *commands);
 void quotes_for_redir(char **arg, int *k, int start, char q);
+char *find_redirect_position(char *arg, char *redirect);
 
 // UTILS_REDIRECTS.C ----- 5 FUNCIONES
 char **copy_redirect_matrix(char **args, int start, int end);
