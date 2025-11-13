@@ -6,63 +6,85 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 14:32:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 19:53:35 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/12 00:03:03 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static int	is_directory(const char *path)
+{
+	DIR	*dir;
+
+	if (!path || !*path || ft_strncmp(path, ".", 2) == 0
+		|| ft_strncmp(path, "..", 2) == 0)
+		return (0);
+	if (access(path, F_OK) == -1)
+		return (0);
+	dir = opendir(path);
+	if (dir)
+	{
+		closedir(dir);
+		return (1);
+	}
+	return (0);
+}
+
 char	*get_path(char *cmd, t_vars *vars)
 {
+	char	*result;
+	char	**paths;
 	int		i;
 	t_env	*node;
-	char	**paths;
-	char	*result;
 
-	if ((!cmd) || access(cmd, X_OK) == 0)
+	if (!cmd || !*cmd || strcmp(cmd, ".") == 0 || strcmp(cmd, "..") == 0)
+		return (NULL);
+	if (access(cmd, X_OK) == 0 && !is_directory(cmd))
 		return (ft_strdup(cmd));
 	node = find_env_var(vars, "PATH");
 	if (!node)
 		return (NULL);
-	paths = ft_split(node->env_inf, ':');
 	i = -1;
-	while (paths[++i])
+	paths = ft_split(node->env_inf, ':');
+	while (paths && paths[++i])
 	{
 		result = ft_strjoin(paths[i], "/");
 		result = ft_strjoin_gnl(result, cmd);
-		if (access(result, X_OK) == 0)
+		if (access(result, X_OK) == 0 && !is_directory(result))
 			break ;
 		free(result);
 		result = NULL;
 	}
-	return (ft_free_free(paths), result);
+	ft_free_free(paths);
+	return (result);
 }
 
 static int	execute_error_control(t_com *list)
 {
-	DIR	*dir;
-	int	has_slash;
+	char	*cmd;
+	char	*path;
 
-	has_slash = 0;
-	if (ft_strchr(list->command, '/'))
-		has_slash = 1;
-	if (list->path_command == NULL)
-	{
-		if (!has_slash)
-			return (ft_printf(2, "minishell: %s: command not found\n",
-					list->command), list->vars->exit_status = 127, 0);
-		if (access(list->command, F_OK) == -1)
-			return (ft_printf(2, "minishell: %s: No such file or directory\n",
-					list->command), list->vars->exit_status = 127, 0);
-		dir = opendir(list->command);
-		if (dir != NULL)
-			return (ft_printf(2, "minishell: %s: Is a directory\n",
-					list->command), list->vars->exit_status = 126,
-				closedir(dir), 0);
-		if (access(list->command, X_OK) == -1)
-			return (ft_printf(2, "minishell: %s: Permission denied\n",
-					list->command), list->vars->exit_status = 126, 0);
-	}
+	cmd = list->command;
+	if (!cmd || !*cmd || is_variable_assignment(cmd))
+		return (1);
+	path = cmd;
+	if (list->path_command)
+		path = list->path_command;
+	if (ft_strchr(cmd, ';') || ft_strchr(cmd, '\\'))
+		return (ft_printf(2, "minishell: %s: command not found\n", cmd),
+			list->vars->exit_status = 127, 0);
+	if (!list->path_command && !ft_strchr(cmd, '/'))
+		return (ft_printf(2, "minishell: %s: command not found\n", cmd),
+			list->vars->exit_status = 127, 0);
+	if (access(path, F_OK) == -1)
+		return (ft_printf(2, "minishell: %s: No such file or directory\n", cmd),
+			list->vars->exit_status = 127, 0);
+	if (is_directory(path))
+		return (ft_printf(2, "minishell: %s: Is a directory\n", cmd),
+			list->vars->exit_status = 126, 0);
+	if (access(path, X_OK) == -1)
+		return (ft_printf(2, "minishell: %s: Permission denied\n", cmd),
+			list->vars->exit_status = 126, 0);
 	return (1);
 }
 

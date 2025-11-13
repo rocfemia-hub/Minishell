@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:46 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 20:35:23 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/11 18:41:53 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	lstadd_back(t_com **lst, t_com *new)
 	new->previous = node;
 }
 
-void print_list(t_com *list)
+/*void print_list(t_com *list)
 {
 	int i;
 
@@ -66,8 +66,8 @@ void print_list(t_com *list)
 			printf("argumentos: (null)\n");
 		if (list->command_arg)
 		{
-			printf("command_arg:\n");
-			printf_matrix (list->command_arg);
+			printf("command_arg\n");
+			//printf_matrix (list->command_arg);
 		}
 		else
 			printf("command_arg: (null)\n");
@@ -77,21 +77,35 @@ void print_list(t_com *list)
 		{
 			printf("\033[34mprint_redirects:\033[0m\n");
 			if (list->redirects->delimiter)
-				printf("delimiter: %s, flag; %d\n", list->redirects->delimiter, list->redirects->redirect_heredoc);
+				printf("delimiter: %s, flag; %d\n", list->redirects->delimiter,
+					list->redirects->redirect_heredoc);
 			else
-				printf("delimiter: (null), flag: %d\n", list->redirects->redirect_heredoc);
-			if (list->redirects->append_file && list->redirects->append_file[0])
-				printf("append_file: %s, flag: %d\n", list->redirects->append_file[0], list->redirects->redirect_append);
+				printf("delimiter: (null), flag: %d\n", 
+				list->redirects->redirect_heredoc);
+			if (list->redirects->append_file && 
+				list->redirects->append_file[0])
+				printf("append_file: %s, flag: %d\n", 
+					list->redirects->append_file[0], 
+					list->redirects->redirect_append);
 			else
-				printf("append_file: (null), flag: %d\n", list->redirects->redirect_append);
-			if (list->redirects->input_file && list->redirects->input_file[0])
-				printf("input_file: %s, flag: %d\n", list->redirects->input_file[0], list->redirects->redirect_in);
+				printf("append_file: (null), flag: %d\n", 
+				list->redirects->redirect_append);
+			if (list->redirects->input_file && 
+				list->redirects->input_file[0])
+				printf("input_file: %s, flag: %d\n",
+					list->redirects->input_file[0], 
+					list->redirects->redirect_in);
 			else
-				printf("input_file: (null), flag: %d\n", list->redirects->redirect_in);
-			if (list->redirects->output_file && list->redirects->output_file[0])
-				printf("output_file: %s, flag: %d\n", list->redirects->output_file[0], list->redirects->redirect_out);
+				printf("input_file: (null), flag: %d\n",
+				list->redirects->redirect_in);
+			if (list->redirects->output_file &&
+				list->redirects->output_file[0])
+				printf("output_file: %s, flag: %d\n", 
+					list->redirects->output_file[0],
+					list->redirects->redirect_out);
 			else
-				printf("output_file: (null), flag: %d\n", list->redirects->redirect_out);
+				printf("output_file: (null), flag: %d\n", 
+					list->redirects->redirect_out);
 			if (list->redirects->t_red)
 			{
 				int j = 0;
@@ -115,4 +129,4 @@ void print_list(t_com *list)
 		
 		list = list->next;
 	}
-}
+}*/

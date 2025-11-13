@@ -6,13 +6,13 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:51 by roo               #+#    #+#             */
-/*   Updated: 2025/11/09 13:56:06 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 03:45:49 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	has_expandable_dollar(char *line)
+static int	has_expandable_dollar(char *line)
 {
 	int		i;
 	char	quote;
@@ -28,7 +28,7 @@ int	has_expandable_dollar(char *line)
 			else if (line[i] == quote)
 				quote = 0;
 		}
-		else if (line[i] == '$' && quote != '\'')
+		else if ((line[i] == '$' || line[i] == '~') && quote != '\'')
 			return (1);
 		i++;
 	}
@@ -79,7 +79,8 @@ void	built_ins_init_struct(t_com *commands)
 		|| !ft_strncmp(commands->command, "env", ft_strlen(commands->command))
 		|| !ft_strncmp(commands->command, "export",
 			ft_strlen(commands->command)) || !ft_strncmp(commands->command,
-			"unset", ft_strlen(commands->command)))
+			"unset", ft_strlen(commands->command))
+		|| is_variable_assignment(commands->command))
 		commands->flag_built = 1;
 }
 
@@ -98,7 +99,7 @@ void	init_struct(char *line, char *cmd, int end, t_com *commands)
 	}
 	else
 	{
-		keep_quotes_args(commands, line + end);
+		commands->args = ft_split_parser(line + end);
 		redirects(commands);
 		clean_reinserted_quotes_in_args(commands);
 	}

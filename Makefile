@@ -6,8 +6,8 @@ BLUE = \033[34m
 RESET = \033[0m
 
 SRC = mix/list.c mix/main.c mix/error.c mix/free.c mix/split_mini.c mix/signals.c mix/signals_child.c mix/signals_heredoc.c\
-      exec/built_ins1.c exec/built_ins2.c exec/builtins_utils1.c exec/builtins_utils2.c exec/builtins_utils3.c exec/exec_control.c exec/executor.c exec/heredoc.c exec/pids.c exec/pipelines.c exec/redirections.c\
-      parser/aux_expander.c parser/aux_redirects.c parser/aux_redirects_cmd.c parser/aux_token.c parser/expander.c parser/expander_args.c parser/expander_cmd.c parser/ft_split_parser.c parser/keep_quotes.c parser/quotes.c parser/redirects.c parser/redirects_cmd.c parser/struct.c parser/syntax.c parser/aux_syntax.c parser/token.c parser/utils_expander.c parser/utils_quotes.c parser/utils_redirects.c \
+      exec/built_ins1.c exec/built_ins2.c exec/builtins_utils1.c exec/builtins_utils2.c exec/builtins_utils3.c exec/builtins_utils4.c exec/builtins_utils5.c exec/exec_control.c exec/executor.c exec/heredoc.c exec/pids.c exec/pipelines.c exec/redirections.c\
+      parser/aux_expander.c parser/aux_redirects.c parser/aux_redirects_cmd.c parser/aux_token.c parser/expander.c parser/expander_args.c parser/expander_cmd.c parser/ft_split_parser.c parser/keep_quotes.c parser/quotes.c parser/redirects.c parser/redirects_cmd.c parser/struct.c parser/syntax.c parser/token.c parser/utils_expander.c parser/utils_quotes.c parser/utils_redirects.c parser/utils_tilde.c \
 
 OBJS = ${SRC:%.c=objects/%.o}
 

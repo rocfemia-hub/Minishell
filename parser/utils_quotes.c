@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   aux_quotes.c                                       :+:      :+:    :+:   */
+/*   utils_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 14:48:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:12:07 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,56 +39,13 @@ int	look_for_char(char *line, char c)
 	return (count);
 }
 
-int	check_redir_in_quotes(char *arg, int start, int end)
-{
-	int	t;
-
-	t = start;
-	while (t < end)
-	{
-		if (arg[t] == '>' || arg[t] == '<')
-			return (1);
-		t++;
-	}
-	return (0);
-}
-
 int	has_redirects(char *line)
 {
-	if (ft_strnstr(line, "<", ft_strlen(line))
-		|| ft_strnstr(line, "<<", ft_strlen(line))
-		|| ft_strnstr(line, ">", ft_strlen(line))
+	if (ft_strnstr(line, "<", ft_strlen(line)) || ft_strnstr(line, "<<",
+			ft_strlen(line)) || ft_strnstr(line, ">", ft_strlen(line))
 		|| ft_strnstr(line, ">>", ft_strlen(line)))
 		return (1);
 	return (0);
-}
-
-void	copy_without_quotes(char *arg, char *new_arg, int *j, int *k)
-{
-	char	q;
-	int		m;
-	int		u;
-
-	q = arg[*j];
-	m = *j + 1;
-	while (arg[m] && arg[m] != q)
-		m++;
-	if (arg[m] == q && check_redir_in_quotes(arg, *j + 1, m))
-	{
-		u = *j + 1;
-		while (u < m)
-			new_arg[(*k)++] = arg[u++];
-		*j = m + 1;
-		return ;
-	}
-	if (arg[m] == q)
-	{
-		new_arg[(*k)++] = arg[(*j)++];
-		while (*j <= m)
-			new_arg[(*k)++] = arg[(*j)++];
-		return ;
-	}
-	new_arg[(*k)++] = arg[(*j)++];
 }
 
 char	**ft_strjoin_cmd_arg(t_com *commands)
@@ -108,12 +65,49 @@ char	**ft_strjoin_cmd_arg(t_com *commands)
 			len++;
 	aux = ft_calloc(len + 1, sizeof(char *));
 	if (commands->command)
-	{
 		aux[i++] = ft_strdup(commands->command);
-		j = -1;
-	}
+	j = -1;
 	if (commands->args)
 		while (commands->args[++j])
 			aux[i++] = ft_strdup(commands->args[j]);
 	return (aux);
+}
+
+void	quotes_for_redir(char **arg, int *k, int start, char q)
+{
+	int	m;
+
+	m = *k;
+	while (m > start)
+	{
+		(*arg)[m] = (*arg)[m - 1];
+		m--;
+	}
+	(*arg)[start] = q;
+	(*arg)[*k + 1] = q;
+	*k += 2;
+}
+
+char *find_redirect_position(char *arg, char *redirect)
+{
+	int i;
+	int quote;
+
+	i = 0;
+	quote = 0;
+	while (arg && arg[i])
+	{
+		if (arg[i] == '\'' || arg[i] == '"')
+		{
+			if (quote == 0)
+				quote = arg[i];
+			else if (quote == arg[i])
+				quote = 0;
+		}
+		else if (!quote && ft_strncmp(arg + i, redirect,
+									  ft_strlen(redirect)) == 0)
+			return (arg + i);
+		i++;
+	}
+	return (NULL);
 }

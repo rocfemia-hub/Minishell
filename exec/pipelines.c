@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 12:57:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/09 14:03:35 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/11 18:37:02 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,27 +48,17 @@ static void	execute_pipelines2(t_com *list, pid_t *pids)
 	i = 0;
 	while (tmp_list)
 	{
-		if (!tmp_list->redirects)
+		if (!redirections_control(tmp_list, 0, 0, 0))
 		{
-			tmp_list->redirects = ft_calloc(1, sizeof(t_red));
-			tmp_list->redirects->redirected = 0;
-		}
-		if (tmp_list->redirects->redirected != 1)
-		{
-			if (!redirections_control(tmp_list, 0, 0, 0))
-			{
-				tmp_list->redirects->err = 1;
-				pids[i] = fork();
-				if (pids[i] == 0)
-					exit(1);
-				if (tmp_list->fd_in != STDIN_FILENO)
-					close(tmp_list->fd_in);
-				if (tmp_list->fd_out != STDOUT_FILENO)
-					close(tmp_list->fd_out);
-				tmp_list = tmp_list->next;
-				i++;
-				continue ;
-			}
+			pids[i] = fork();
+			if (pids[i++] == 0)
+				exit(1);
+			if (tmp_list->fd_in != STDIN_FILENO)
+				close(tmp_list->fd_in);
+			if (tmp_list->fd_out != STDOUT_FILENO)
+				close(tmp_list->fd_out);
+			tmp_list = tmp_list->next;
+			continue ;
 		}
 		pids_pipelines(list, tmp_list, pids, i++);
 		tmp_list = tmp_list->next;
@@ -89,8 +79,8 @@ void	execute_pipeline(t_com *list)
 		tmp_list = tmp_list->next;
 	}
 	pids = malloc(sizeof(pid_t) * num_cmds);
-	if (list && list->redirects)
-		list->redirects->err = 0;
+	if (!pids)
+		return ;
 	execute_pipelines2(list, pids);
 	pipelines_signals(list, pids, num_cmds, 0);
 	free(pids);

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:30 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 07:01:28 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 02:34:30 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*process_single_arg(char *arg, t_vars *vars)
 			token = handle_double_quotes(arg, &k, vars);
 		else if (arg[k] == '$')
 			token = handle_dollar(arg, &k, vars);
+		else if (arg[k] == '~')
+			token = handle_tilde(arg, &k, vars);
 		else
 			token = handle_plain_text_args(arg, &k, vars);
 		if (token)

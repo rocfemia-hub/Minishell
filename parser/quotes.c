@@ -6,23 +6,30 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 14:48:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:00:41 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	process_arg_quotes(char *arg, char *new_arg)
+static void	process_arg_quotes(char *arg, char *new_arg)
 {
-	int	j;
-	int	k;
+	int		j;
+	int		k;
+	char	quote;
 
 	j = 0;
 	k = 0;
+	quote = 0;
 	while (arg[j])
 	{
-		if (arg[j] == '\'' || arg[j] == '"')
-			copy_without_quotes(arg, new_arg, &j, &k);
+		if ((arg[j] == '\'' || arg[j] == '"') && !quote)
+			quote = arg[j++];
+		else if (quote && arg[j] == quote)
+		{
+			quote = 0;
+			j++;
+		}
 		else
 			new_arg[k++] = arg[j++];
 	}
@@ -51,7 +58,7 @@ void	clean_reinserted_quotes_in_args(t_com *commands)
 	}
 }
 
-void	process_quote_char_clean(char *temp, char *result, int *j, int *k)
+static void	process_quote_char_clean(char *temp, char *result, int *j, int *k)
 {
 	static char	quote;
 
@@ -71,7 +78,7 @@ void	process_quote_char_clean(char *temp, char *result, int *j, int *k)
 		result[(*k)++] = temp[(*j)++];
 }
 
-char	*remove_quotes_from_cmd(char *temp)
+static char	*remove_quotes_from_cmd(char *temp)
 {
 	char	*result;
 	int		j;

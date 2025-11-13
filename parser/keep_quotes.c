@@ -6,25 +6,62 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 14:48:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 03:39:59 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	quotes_for_redir(char **arg, int *k, int start, char q)
+static void	flush_buffer(char *arg, int flush, char **args, int *j)
 {
-	int	m;
-
-	m = *k;
-	while (m > start)
+	if (flush)
 	{
-		(*arg)[m] = (*arg)[m - 1];
-		m--;
+		args[(*j)++] = ft_strdup(arg);
+		arg[0] = '\0';
 	}
-	(*arg)[start] = q;
-	(*arg)[*k + 1] = q;
-	*k += 2;
+}
+
+static void	add_redir_token(char *line, int *i, char **args, int *j)
+{
+	if (line[*i + 1] == line[*i])
+	{
+		args[(*j)++] = ft_strdup((char [3]){line[*i], line[*i], '\0'});
+		*i += 2;
+	}
+	else
+	{
+		args[(*j)++] = ft_strdup((char [2]){line[*i], '\0'});
+		(*i)++;
+	}
+}
+
+void	process_single_word(char *line, int *i, char **args, int *j)
+{
+	char	*arg;
+	int		k;
+	int		is_word;
+
+	arg = ft_calloc(ft_strlen(line) + 3, sizeof(char));
+	if (!arg)
+		return ;
+	k = 0;
+	is_word = 0;
+	while (line[*i] && line[*i] != ' ' && line[*i] != '\t')
+	{
+		if (line[*i] == '<' || line[*i] == '>')
+		{
+			k = 0;
+			flush_buffer(arg, (k > 0 || is_word), args, j);
+			add_redir_token(line, i, args, j);
+			continue ;
+		}
+		is_word = 1;
+		if (line[*i] == '\'' || line[*i] == '"')
+			aux_keep_quotes_args(line, i, &k, &arg);
+		else
+			arg[k++] = line[(*i)++];
+	}
+	(flush_buffer(arg, (k > 0 || is_word), args, j), free(arg));
 }
 
 void	aux_keep_quotes_args(char *line, int *i, int *k, char **arg)
@@ -40,26 +77,6 @@ void	aux_keep_quotes_args(char *line, int *i, int *k, char **arg)
 		(*i)++;
 	if (ft_strchr(*arg + start, '>') || ft_strchr(*arg + start, '<'))
 		quotes_for_redir(arg, k, start, q);
-}
-
-void	process_single_word(char *line, int *i, char **args, int *j)
-{
-	char	*arg;
-	int		k;
-
-	arg = ft_calloc(ft_strlen(line) + 3, sizeof(char));
-	if (!arg)
-		return ;
-	k = 0;
-	while (line[*i] && line[*i] != ' ' && line[*i] != '\t')
-	{
-		if (line[*i] == '\'' || line[*i] == '"')
-			aux_keep_quotes_args(line, i, &k, &arg);
-		else
-			arg[k++] = line[(*i)++];
-	}
-	arg[k] = '\0';
-	args[(*j)++] = arg;
 }
 
 void	keep_quotes_args(t_com *commands, char *line)
@@ -82,26 +99,4 @@ void	keep_quotes_args(t_com *commands, char *line)
 	}
 	args[j] = NULL;
 	commands->args = args;
-}
-
-char	*ft_strjoin_cmd(char **cmd)
-{
-	int		len;
-	char	*result;
-	int		i;
-
-	len = 0;
-	i = -1;
-	if (!cmd || !cmd[0])
-		return (NULL);
-	while (cmd[++i])
-		len += ft_strlen(cmd[i]);
-	result = malloc(len + 1);
-	if (!result)
-		return (NULL);
-	result[0] = '\0';
-	i = -1;
-	while (cmd[++i])
-		ft_strlcat(result, cmd[i], ft_strlen(result) + ft_strlen(cmd[i]) + 1);
-	return (result);
 }

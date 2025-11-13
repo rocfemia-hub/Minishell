@@ -1,39 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   aux_syntax.c                                       :+:      :+:    :+:   */
+/*   builtins_utils5.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 00:00:00 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 00:00:00 by roo              ###   ########.fr       */
+/*   Created: 2025/11/12 22:49:46 by roo               #+#    #+#             */
+/*   Updated: 2025/11/12 22:51:08 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	skip_whitespace(char *line, int i)
+void	print_env_var(t_com *list, t_env *env)
 {
-	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
-		i++;
-	return (i);
-}
+	char	*line;
 
-int	check_pipe_syntax(char *line, int i, char quote)
-{
-	int	j;
-
-	if (quote)
-		return (0);
-	j = i + 1;
-	if (line[j] == '|')
-	{
-		j++;
-		if (line[j] == '|')
-			return (1);
-	}
-	j = skip_whitespace(line, j);
-	if (!line[j] || line[j] == '|')
-		return (1);
-	return (0);
+	line = ft_strjoin(env->env_name, "=");
+	if (env->env_inf)
+		line = ft_strjoin_gnl(line, env->env_inf);
+	write(list->fd_out, line, ft_strlen(line));
+	write(list->fd_out, "\n", 1);
+	free(line);
 }

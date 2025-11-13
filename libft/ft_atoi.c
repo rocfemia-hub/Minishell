@@ -30,10 +30,6 @@ int	ft_atoi(const char *nptr)
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
 		result = result * 10 + nptr[i] - '0';
-		if (result * sig > INT_MAX)
-			return (-1);
-		if (result * sig < INT_MIN)
-			return (0);
 		i++;
 	}
 	return (result * sig);

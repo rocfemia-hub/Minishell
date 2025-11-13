@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:34 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 07:02:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 02:52:28 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ char	*aux_cmd(t_clean_cmd *data, t_vars *vars)
 			token = handle_double_quotes(data->cmd, &i, vars);
 		else if (data->cmd[i] == '$')
 			token = handle_dollar(data->cmd, &i, vars);
+		else if (data->cmd[i] == '~')
+			token = handle_tilde(data->cmd, &i, vars);
 		else
 			token = handle_plain_text(data->cmd, &i, vars);
 		if (token)
@@ -85,7 +87,6 @@ char	*aux_cmd(t_clean_cmd *data, t_vars *vars)
 			free(token);
 		}
 	}
-	data->end_index = i;
 	return (result);
 }
 
@@ -95,16 +96,16 @@ int	expand_cmd(t_clean_cmd *data, t_vars *vars, t_com *commands)
 	t_clean_cmd	temp_data;
 
 	expanded = aux_cmd(data, vars);
-	if (ft_strlen(expanded) < 1)
-	{
-		free(expanded);
-		return (0);
-	}
 	free(data->cmd);
+	data->cmd = expanded;
+	if (!expanded)
+		return (0);
 	ft_bzero(&temp_data, sizeof(t_clean_cmd));
-	temp_data.cmd = only_cmd(expanded, &temp_data);
+	if (!ft_strlen(expanded))
+		temp_data.cmd = ft_strdup(expanded);
+	else
+		temp_data.cmd = only_cmd(expanded, &temp_data);
 	init_struct(expanded, temp_data.cmd, temp_data.only_cmd_i, commands);
 	free(temp_data.cmd);
-	data->cmd = NULL;
 	return (1);
 }

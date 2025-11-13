@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   aux_expander_cmd.c                                 :+:      :+:    :+:   */
+/*   aux_redirects_cmd.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:52 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 06:59:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 19:53:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,15 @@ static void	handle_command_redirect(t_com *commands, char *redirect, int type)
 			redirect, ft_strlen(redirect)) != 0)
 		i++;
 	tmp_file = ft_strdup(commands->command + i + ft_strlen(redirect));
-	fill_cmd(commands, redirect, tmp_file);
+	fill_red(commands, redirect, tmp_file);
 	fill_type_redirect(commands, type);
 	tmp_cmd = commands->command;
 	commands->command = ft_substr(tmp_cmd, 0, i);
+	if (ft_strlen(commands->command) == 0)
+	{
+		free(commands->command);
+		commands->command = NULL;
+	}
 	free(tmp_cmd);
 }
 
@@ -39,15 +44,15 @@ void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
 	else if (commands->args[0])
 	{
 		tmp_file = ft_strdup(commands->args[0]);
-		fill_cmd(commands, redirect, tmp_file);
+		fill_red(commands, redirect, tmp_file);
 		free(commands->command);
-		commands->command = ft_strdup("");
+		commands->command = NULL;
 		commands->args = realloc_redirect_args(commands->args);
 		fill_type_redirect(commands, type);
 	}
 }
 
-void	fill_cmd(t_com *commands, char *redirect, char *file)
+void	fill_red(t_com *commands, char *redirect, char *file)
 {
 	if (ft_strncmp(redirect, "<", 2) == 0)
 		handle_redirect_array(&commands->redirects->input_file,

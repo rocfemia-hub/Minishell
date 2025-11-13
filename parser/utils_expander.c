@@ -6,26 +6,29 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:56 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 06:54:08 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 02:53:18 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*extract_and_expand_var(char *line, int vstart, int *vlen,
-		t_vars *vars)
+char	*extract_varname(char *line, int start, int *vlen)
 {
 	char	*varname;
-	char	*value;
 
 	*vlen = 0;
-	while (line[vstart + *vlen] && (ft_isalnum((unsigned char)line[vstart
-					+ *vlen]) || line[vstart + *vlen] == '_'))
+	if (line[start] && (ft_isalpha((unsigned char)line[start])
+			|| line[start] == '_'))
+	{
 		(*vlen)++;
-	varname = ft_substr(line, vstart, *vlen);
-	value = get_env_var(vars, varname);
-	free(varname);
-	return (value);
+		while (line[start + *vlen] && (ft_isalnum((unsigned char)line[start
+						+ *vlen]) || line[start + *vlen] == '_'))
+			(*vlen)++;
+	}
+	else if (line[start] && ft_isdigit((unsigned char)line[start]))
+		(*vlen) = 1;
+	varname = ft_substr(line, start, *vlen);
+	return (varname);
 }
 
 char	*expand_var_in_quotes_args(char *line, int *k, char *token,

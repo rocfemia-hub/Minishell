@@ -89,7 +89,4 @@ void	apply_redirections(t_com *list)
 		close(list->fd_out);
 		list->fd_out = 1;
 	}
-	if (list->previous && list->previous->redirects->err
-		&& !list->redirects->redirect_in)
-		close(list->fd_in);
 }

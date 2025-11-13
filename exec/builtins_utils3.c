@@ -6,37 +6,43 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:34 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 19:42:58 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/11 18:30:49 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static int	list_size(t_env *list)
+{
+	int	i;
+
+	i = 0;
+	while (list)
+	{
+		list = list->next;
+		i++;
+	}
+	return (i);
+}
+
 char	**list_to_env(t_env *env_list)
 {
-	t_env	*node;
 	char	**env;
 	char	*tmp;
 	int		i;
 
 	i = 0;
-	node = env_list;
-	while (node)
-	{
-		node = node->next;
-		i++;
-	}
-	env = ft_calloc(i + 1, sizeof(char *));
+	env = ft_calloc(list_size(env_list) + 1, sizeof(char *));
 	if (!env)
 		return (NULL);
 	i = 0;
-	node = env_list;
-	while (node)
+	while (env_list)
 	{
-		tmp = ft_strjoin(node->env_name, "=");
-		env[i++] = ft_strjoin(tmp, node->env_inf);
+		tmp = ft_strjoin(env_list->env_name, "=");
+		if (env_list->env_inf)
+			env[i++] = ft_strjoin(tmp, env_list->env_inf);
 		free(tmp);
-		node = node->next;
+		env_list = env_list->next;
 	}
 	return (env);
 }
@@ -82,7 +88,7 @@ void	increment_shlvl(t_vars *vars)
 		current = 1;
 	new = ft_itoa(current);
 	joined = ft_strjoin("SHLVL=", new);
-	add_update_env_var(vars, joined);
+	add_update_env_var(vars, joined, 0);
 	free(joined);
 	free(new);
 }

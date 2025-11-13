@@ -36,32 +36,30 @@ int	aux_parser_redirects(t_com *commands, char *redirect, int type)
 	fill_type_redirect(commands, type);
 	commands->args = copy_redirect_matrix(commands->args,
 			commands->redirects->j, commands->redirects->j + 1);
-	fill_cmd(commands, redirect, tmp_file);
+	fill_red(commands, redirect, tmp_file);
 	return (1);
 }
 
-int	parser_redirects(t_com *commands, char *redirect, int type)
+int parser_redirects(t_com *commands, char *redirect, int type)
 {
-	char	*tmp_file;
-	char	*redirect_pos;
+	char *tmp_file;
+	char *redirect_pos;
 
-	if (!aux_parser_resdirects_sintax_error(commands))
-		return (0);
-	else if (ft_strlen(commands->args[commands->redirects->j])
-		> ft_strlen(redirect))
+	if (!commands->args[commands->redirects->j])
+		return (1);
+	else if (ft_strlen(commands->args[commands->redirects->j]) > ft_strlen(redirect))
 	{
 		redirect_pos = find_redirect_position(
-				commands->args[commands->redirects->j], redirect);
+			commands->args[commands->redirects->j], redirect);
 		if (redirect_pos)
 			aux_redirects(commands, redirect_pos, type, redirect);
 		else
 		{
-			tmp_file = ft_strdup(commands->args[commands->redirects->j]
-					+ ft_strlen(redirect));
+			tmp_file = ft_strdup(commands->args[commands->redirects->j] + ft_strlen(redirect));
 			fill_type_redirect(commands, type);
 			commands->args = copy_redirect_matrix(commands->args,
-					commands->redirects->j, commands->redirects->j);
-			fill_cmd(commands, redirect, tmp_file);
+												  commands->redirects->j, commands->redirects->j);
+			fill_red(commands, redirect, tmp_file);
 		}
 	}
 	else if (!aux_parser_redirects(commands, redirect, type))
@@ -69,61 +67,66 @@ int	parser_redirects(t_com *commands, char *redirect, int type)
 	return (1);
 }
 
-int	aux_find(t_com *commands)
+int aux_find(t_com *commands, char **pos, char *first)
 {
-	if (is_redirect_token(commands->args[commands->redirects->j], ">>"))
+	int i;
+	int first_idx;
+
+	first_idx = -1;
+	i = -1;
+	while (++i < 4)
 	{
-		if (!parser_redirects(commands, ">>", 3))
-			return (0);
-		commands->redirects->j = -1;
+		if (pos[i] && (!first || pos[i] < first || (pos[i] == first && i > first_idx)))
+		{
+			first = pos[i];
+			first_idx = i;
+		}
 	}
-	else if (is_redirect_token(commands->args[commands->redirects->j], "<<"))
-	{
-		if (!parser_redirects(commands, "<<", 4))
-			return (0);
-		commands->redirects->j = -1;
-	}
-	else if (is_redirect_token(commands->args[commands->redirects->j], ">"))
-	{
-		if (!parser_redirects(commands, ">", 2))
-			return (0);
-		commands->redirects->j = -1;
-	}
-	else if (is_redirect_token(commands->args[commands->redirects->j], "<"))
-	{
-		if (!parser_redirects(commands, "<", 1))
-			return (0);
-		commands->redirects->j = -1;
-	}
+	if (!first)
+		return (1);
+	if (first_idx == 2 && !parser_redirects(commands, "<<", 4))
+		return (0);
+	else if (first_idx == 3 && !parser_redirects(commands, ">>", 3))
+		return (0);
+	else if (first_idx == 0 && !parser_redirects(commands, "<", 1))
+		return (0);
+	else if (first_idx == 1 && !parser_redirects(commands, ">", 2))
+		return (0);
+	commands->redirects->j = -1;
 	return (1);
 }
 
-void	find(t_com *commands)
+void find(t_com *commands)
 {
+	char *pos[4];
+	char *first;
+
+	first = NULL;
 	if (!commands->args || !commands->redirects || commands->redirects->j)
-		return ;
+		return;
 	while (commands->args[commands->redirects->j])
 	{
-		if (!aux_find(commands))
-			return ;
+		pos[0] = find_redirect_position(commands->args[commands->redirects->j], "<");
+		pos[1] = find_redirect_position(commands->args[commands->redirects->j], ">");
+		pos[2] = find_redirect_position(commands->args[commands->redirects->j], "<<");
+		pos[3] = find_redirect_position(commands->args[commands->redirects->j], ">>");
+		if (!aux_find(commands, pos, first))
+			return;
 		commands->redirects->j++;
 	}
 }
 
-void	redirects(t_com *commands)
+void redirects(t_com *commands)
 {
-	char	*temp;
+	char *temp;
 
 	commands->redirects = ft_calloc(1, sizeof(t_red));
 	if (!commands->redirects)
-		return ;
-	if (is_redirect_token(commands->command, "<")
-		|| is_redirect_token(commands->command, "<<")
-		|| is_redirect_token(commands->command, ">")
-		|| is_redirect_token(commands->command, ">>"))
+		return;
+	if (is_redirect_token(commands->command, "<") || is_redirect_token(commands->command, "<<") || is_redirect_token(commands->command, ">") || is_redirect_token(commands->command, ">>"))
 	{
 		if (!redirects_cmd(commands))
-			return ;
+			return;
 	}
 	else
 	{

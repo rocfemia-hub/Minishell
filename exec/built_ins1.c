@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:33 by roo               #+#    #+#             */
-/*   Updated: 2025/11/09 13:58:12 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/12 22:50:17 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,13 @@ void	pwd_function(t_com *list, t_vars *vars)
 void	exit_function(t_com *list, t_vars *vars)
 {
 	write(1, "exit\n", 5);
-	if (!list->args[0] || !vars)
+	if (!list->args || !list->args[0])
 	{
 		if (vars)
 			exit(vars->exit_status);
 		exit(0);
 	}
-	if (valid_number(list->args[0]))
-	{
-		if (!list->args[1])
-			exit(ft_atoi(list->args[0]));
-	}
-	else
+	if (!valid_number(list->args[0]) || !number_in_range(list->args[0]))
 	{
 		write(2, "exit: numeric argument required\n", 32);
 		exit(2);
@@ -75,7 +70,9 @@ void	exit_function(t_com *list, t_vars *vars)
 	{
 		write(2, "exit: too many arguments\n", 25);
 		vars->exit_status = 1;
+		return ;
 	}
+	exit((unsigned char)ft_atoi(list->args[0]));
 }
 
 void	cd_function(t_com *list, t_vars *vars, char	*target_dir)
@@ -98,8 +95,8 @@ void	cd_function(t_com *list, t_vars *vars, char	*target_dir)
 			write(2, "minishell: cd: Permission denied\n", 33);
 		else if (errno == ENOENT)
 			write(2, "minishell: cd: No such file or directory\n", 41);
-		else
-			write(2, "minishell: cd: Error changing directory\n", 40);
+		else if (errno == ENOTDIR)
+			write(2, "minishell: cd: Not a directory\n", 31);
 		return (vars->exit_status = 1, (void)0);
 	}
 	if (!cd_aux_funcion(list, vars))

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:51:09 by roo               #+#    #+#             */
-/*   Updated: 2025/11/09 14:06:42 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:37:00 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,15 @@ static void	clean_fds(t_com *list)
 void	execute_control(t_com *list, t_vars *vars)
 {
 	setup_signals_noninteractive();
-	if (list && list->redirects)
-		list->redirects->redirected = 0;
-	list = list;
 	if (list)
 	{
 		if (list->next == NULL)
 		{
+			if (!list->command && !list->redirects)
+				return (vars->exit_status = 0, (void)0);
 			if (!redirections_control(list, 0, 0, 0))
 				return (vars->exit_status = 1, clean_fds(list));
-			if (!list->command || ft_strlen(list->command) == 0)
+			if (list->command && ft_strlen(list->command) == 0)
 				return (ft_printf(2, "minishell: : command not found\n"),
 					vars->exit_status = 127, clean_fds(list));
 			if (list->flag_built == 1)
@@ -66,7 +65,8 @@ static int	builtins_control(t_com *list, t_vars *vars)
 		return (env_function(list, vars), 1);
 	else if (ft_strnstr(list->command, "cd", 3))
 		return (cd_function(list, vars, NULL), 1);
-	else if (ft_strnstr(list->command, "export", 7))
+	else if (is_variable_assignment(list->command)
+		|| ft_strnstr(list->command, "export", 7))
 		return (export_function(list, vars), 1);
 	else if (ft_strnstr(list->command, "unset", 6))
 		return (unset_function(list, vars), 1);
@@ -97,9 +97,6 @@ int	redirections_control(t_com *list, int j, int q, int k)
 	i = -1;
 	if (list->redirects == NULL)
 		return (0);
-	if (list->redirects->redirected == 1)
-		return (1);
-	list->redirects->redirected = 1;
 	if (list->redirects->redirect_heredoc)
 	{
 		heredoc_execution(list);

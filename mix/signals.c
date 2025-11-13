@@ -6,13 +6,12 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:39:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 17:54:23 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/11 18:42:17 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// Handler para SIGINT en modo interactivo (main shell)
 void	handle_sigint_interactive(int sig)
 {
 	(void)sig;
@@ -23,7 +22,6 @@ void	handle_sigint_interactive(int sig)
 	rl_redisplay();
 }
 
-// Variables estáticas para guardar configuración del terminal
 struct termios	*get_original_termios(void)
 {
 	static struct termios	original_termios;
@@ -38,7 +36,6 @@ int	*get_termios_saved(void)
 	return (&termios_saved);
 }
 
-// Restaurar configuración original del terminal
 void	rest_termi_hrdc(void)
 {
 	if (*get_termios_saved())
@@ -46,21 +43,17 @@ void	rest_termi_hrdc(void)
 		tcsetattr(STDIN_FILENO, TCSANOW, get_original_termios());
 		*get_termios_saved() = 0;
 	}
-} 
+}
 
-// Configurar señales para modo interactivo (main shell)
 void	setup_signals_interactive(void)
 {
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
 
-	// Configurar SIGINT con sigaction
 	sa_int.sa_handler = handle_sigint_interactive;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = 0;
-		// Sin SA_RESTART para que readline maneje correctamente la señal
 	sigaction(SIGINT, &sa_int, NULL);
-	// Ignorar SIGQUIT
 	sa_quit.sa_handler = SIG_IGN;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
