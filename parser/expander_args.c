@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:30 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 07:01:28 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 02:34:30 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,6 @@ char	*handle_plain_text_args(char *line, int *i, t_vars *vars)
 	return (token);
 }
 
-static int	has_quotes(char *arg)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		if (arg[i] == '\'' || arg[i] == '"')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 char	*process_single_arg(char *arg, t_vars *vars)
 {
 	char	*token;
@@ -57,6 +43,8 @@ char	*process_single_arg(char *arg, t_vars *vars)
 			token = handle_double_quotes(arg, &k, vars);
 		else if (arg[k] == '$')
 			token = handle_dollar(arg, &k, vars);
+		else if (arg[k] == '~') //agregar funcionamiento de virgulilla
+			token = handle_tilde(arg, &k, vars);
 		else
 			token = handle_plain_text_args(arg, &k, vars);
 		if (token)
@@ -68,27 +56,39 @@ char	*process_single_arg(char *arg, t_vars *vars)
 	return (accumulated);
 }
 
+static void	process_and_add_arg(char *arg, char **token_args, int *j,
+		t_vars *vars)
+{
+	char	*accumulated;
+	int		had_quotes;
+
+	had_quotes = (ft_strchr(arg, '\'') || ft_strchr(arg, '"'));
+	accumulated = process_single_arg(arg, vars);
+	if (accumulated && ft_strlen(accumulated) > 0)
+	{
+		if (!had_quotes && ft_strchr(arg, '$'))
+		{
+			add_split_args(token_args, j, accumulated);
+			free(accumulated);
+		}
+		else
+			token_args[(*j)++] = accumulated;
+	}
+	else if (accumulated && had_quotes)
+		token_args[(*j)++] = accumulated;
+	else if (accumulated)
+		free(accumulated);
+}
+
 char	**process_aux_args(char **args, char **token_args, t_vars *vars)
 {
 	int		i;
 	int		j;
-	char	*accumulated;
-	int		had_quotes;
 
-	i = -1;
 	j = 0;
+	i = -1;
 	while (args[++i])
-	{
-		accumulated = NULL;
-		had_quotes = has_quotes(args[i]);
-		accumulated = process_single_arg(args[i], vars);
-		if (accumulated && ft_strlen(accumulated) > 0)
-			token_args[j++] = accumulated;
-		else if (accumulated && had_quotes)
-			token_args[j++] = accumulated;
-		else if (accumulated)
-			free(accumulated);
-	}
+		process_and_add_arg(args[i], token_args, &j, vars);
 	token_args[j] = NULL;
 	return (token_args);
 }

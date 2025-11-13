@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 17:11:00 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 16:48:40 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:34:35 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*find_redirect_position(char *arg, char *redirect)
 
 	i = 0;
 	quote = 0;
-	while (arg[i])
+	while (arg && arg[i]) //comprobar existencia de arg
 	{
 		if (arg[i] == '\'' || arg[i] == '"')
 		{
@@ -48,7 +48,7 @@ int	is_redirect_token(char *arg, char *redirect)
 
 	i = 0;
 	quote = 0;
-	while (arg[i])
+	while (arg && arg[i]) //comprobar existencia de arg
 	{
 		if (arg[i] == '\'' || arg[i] == '"')
 		{

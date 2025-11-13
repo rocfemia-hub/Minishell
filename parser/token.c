@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/08 22:01:09 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 03:45:06 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ char	*only_cmd(char *line, t_clean_cmd *data)
 	{
 		if (line[data->only_cmd_i] == '\'' || line[data->only_cmd_i] == '"')
 			aux_only_cmd(line, data);
-		if (data->quote == 0 && line[data->only_cmd_i] == ' ')
+		if (data->quote == 0 && (line[data->only_cmd_i] == ' '
+				|| line[data->only_cmd_i] == '\t'))
 		{
 			data->end = data->only_cmd_i;
 			break ;
@@ -63,11 +64,10 @@ void	type_command(char *line, t_com *commands)
 	if (!data.cmd)
 		return ;
 	saved_index = data.only_cmd_i;
-	if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)))
+	if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))
+		|| ft_strchr(data.cmd, '~')) //añadiendo virgulilla
 	{
-		if (expand_cmd(&data, commands->vars))
-			init_struct(line, data.cmd, saved_index, commands);
-		else
+		if (!expand_cmd(&data, commands->vars, commands) || !data.cmd)
 			handle_no_expansion(line, &data, commands);
 	}
 	else
@@ -130,6 +130,5 @@ t_com	*token(char *line, t_vars *vars)
 		error(commands);
 		return (NULL);
 	}
-	//print_list(commands);
 	return (commands);
 }

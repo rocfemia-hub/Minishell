@@ -6,13 +6,13 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:36:46 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 06:54:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:12:53 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	**realloc_redirect_flags(char **flag)
+//se cambian a estaticas
+static char	**realloc_redirect_flags(char **flag)
 {
 	int		j;
 	char	**realloc_matrix;
@@ -57,7 +57,7 @@ char	**copy_redirect_matrix(char **args, int start, int end)
 	return (new_arg);
 }
 
-char	*expand_redirect_filename(char *file, t_vars *vars)
+static char	*expand_redirect_filename(char *file, t_vars *vars)
 {
 	int		i;
 	char	*token;

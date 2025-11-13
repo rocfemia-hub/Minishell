@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/18 22:44:29 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 19:40:30 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/12 01:50:47 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,13 @@ int	cd_aux_funcion(t_com *list, t_vars *vars)
 	if (!current_dir)
 		return (write(2, "minishell: ", 11), perror("cd"), 0);
 	old_pwd = ft_strjoin("OLDPWD=", vars->pwd);
-	add_update_env_var(vars, old_pwd);
+	add_update_env_var(vars, old_pwd, 0);
 	free(old_pwd);
 	if (vars->pwd)
 		free(vars->pwd);
 	vars->pwd = current_dir;
 	new_pwd = ft_strjoin("PWD=", vars->pwd);
-	add_update_env_var(vars, new_pwd);
+	add_update_env_var(vars, new_pwd, 0);
 	free(new_pwd);
 	if (list->args)
 	{
@@ -110,11 +110,14 @@ void	print_export_vars(t_com *list, t_vars *vars)
 	env_list = vars->env_list;
 	while (env_list)
 	{
-		if (ft_strlen(env_list->env_inf) != 0)
-			ft_printf(list->fd_out, "declare -x %s=\"%s\"\n",
-				env_list->env_name, env_list->env_inf);
-		else
-			ft_printf(list->fd_out, "declare -x %s\n", env_list->env_name);
+		if (!env_list->hidden)
+		{
+			if (!env_list->env_inf)
+				ft_printf(list->fd_out, "declare -x %s\n", env_list->env_name);
+			else
+				ft_printf(list->fd_out, "declare -x %s=\"%s\"\n",
+					env_list->env_name, env_list->env_inf);
+		}
 		env_list = env_list->next;
 	}
 	vars->exit_status = 0;

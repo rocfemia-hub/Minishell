@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   aux_quotes.c                                       :+:      :+:    :+:   */
+/*   utils_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 14:48:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:12:07 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
+//se cambian a estaticas
 int	look_for_char(char *line, char c)
 {
 	int		i;
@@ -39,7 +39,7 @@ int	look_for_char(char *line, char c)
 	return (count);
 }
 
-int	check_redir_in_quotes(char *arg, int start, int end)
+static int	check_redir_in_quotes(char *arg, int start, int end)
 {
 	int	t;
 
@@ -108,10 +108,8 @@ char	**ft_strjoin_cmd_arg(t_com *commands)
 			len++;
 	aux = ft_calloc(len + 1, sizeof(char *));
 	if (commands->command)
-	{
 		aux[i++] = ft_strdup(commands->command);
-		j = -1;
-	}
+	j = -1; //esto se hace siempreporque si no igual ya se ha modificado
 	if (commands->args)
 		while (commands->args[++j])
 			aux[i++] = ft_strdup(commands->args[j]);

@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   matrix_len.c                                       :+:      :+:    :+:   */
+/*   builtins_utils5.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/03 20:42:40 by roo               #+#    #+#             */
-/*   Updated: 2025/11/11 18:39:28 by roo              ###   ########.fr       */
+/*   Created: 2025/11/12 22:49:46 by roo               #+#    #+#             */
+/*   Updated: 2025/11/12 22:51:08 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-int	matrix_len(char **matrix)
+void	print_env_var(t_com *list, t_env *env)
 {
-	int	i;
+	char	*line;
 
-	i = 0;
-	while (matrix && matrix[i])
-	{
-		i++;
-	}
-	return (i);
+	line = ft_strjoin(env->env_name, "=");
+	if (env->env_inf)
+		line = ft_strjoin_gnl(line, env->env_inf);
+	write(list->fd_out, line, ft_strlen(line));
+	write(list->fd_out, "\n", 1);
+	free(line);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   aux_expander_cmd.c                                 :+:      :+:    :+:   */
+/*   aux_redirects_cmd.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:52 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 06:59:31 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:25:45 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
 		tmp_file = ft_strdup(commands->args[0]);
 		fill_cmd(commands, redirect, tmp_file);
 		free(commands->command);
-		commands->command = ft_strdup("");
+		commands->command = NULL; //para arreglar comand not found de ayer
 		commands->args = realloc_redirect_args(commands->args);
 		fill_type_redirect(commands, type);
 	}

@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:55 by roo               #+#    #+#             */
-/*   Updated: 2025/11/08 22:07:41 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/12 00:39:59 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,16 @@ static void	init_env(t_vars *vars)
 
 	getcwd(cwd, sizeof(cwd));
 	temp = ft_strjoin("PWD=", cwd);
-	add_update_env_var(vars, temp);
+	add_update_env_var(vars, temp, 0);
 	free(temp);
 	temp = ft_strdup("SHLVL=1");
-	add_update_env_var(vars, temp);
+	add_update_env_var(vars, temp, 0);
 	free(temp);
 	temp = ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin");
-	add_update_env_var(vars, temp);
+	add_update_env_var(vars, temp, 0);
 	free(temp);
 	temp = ft_strdup("_=/usr/bin/env");
-	add_update_env_var(vars, temp);
+	add_update_env_var(vars, temp, 0);
 	free(temp);
 }
 
@@ -52,10 +52,10 @@ static void	init_vars(t_vars *vars, char **env)
 		else
 		{
 			temp = ft_strdup("SHLVL=1");
-			add_update_env_var(vars, temp);
+			add_update_env_var(vars, temp, 0);
 			free(temp);
 			temp = ft_strdup("MINISHELL_ACTIVE=1");
-			add_update_env_var(vars, temp);
+			add_update_env_var(vars, temp, 1);
 			free(temp);
 		}
 	}

@@ -6,13 +6,13 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:22:19 by roo               #+#    #+#             */
-/*   Updated: 2025/10/15 14:48:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:00:41 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	process_arg_quotes(char *arg, char *new_arg)
+//en este archivo se han añadido static porque no se usan en otros archivos
+static void	process_arg_quotes(char *arg, char *new_arg)
 {
 	int	j;
 	int	k;
@@ -51,7 +51,7 @@ void	clean_reinserted_quotes_in_args(t_com *commands)
 	}
 }
 
-void	process_quote_char_clean(char *temp, char *result, int *j, int *k)
+static void	process_quote_char_clean(char *temp, char *result, int *j, int *k)
 {
 	static char	quote;
 
@@ -71,7 +71,7 @@ void	process_quote_char_clean(char *temp, char *result, int *j, int *k)
 		result[(*k)++] = temp[(*j)++];
 }
 
-char	*remove_quotes_from_cmd(char *temp)
+static char	*remove_quotes_from_cmd(char *temp)
 {
 	char	*result;
 	int		j;

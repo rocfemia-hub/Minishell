@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:18 by roo               #+#    #+#             */
-/*   Updated: 2025/11/05 07:04:18 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 01:46:06 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	skip_space(char *s, int i)
 {
-	while (s[i] == ' ')
+	while (s[i] == ' ' || s[i] == '\t')
 		i++;
 	return (i);
 }
@@ -44,7 +44,7 @@ int	count_words_with_quotes(char *s)
 		if (!s[i])
 			break ;
 		words++;
-		while (s[i] && s[i] != ' ')
+		while (s[i] && s[i] != ' ' && s[i] != '\t')
 		{
 			if (s[i] == '\'' || s[i] == '"')
 				i = skip_quoted_section(s, i);
@@ -64,7 +64,7 @@ char	*extract_token(char *s, int *i)
 	if (!s[*i])
 		return (NULL);
 	start = *i;
-	while (s[*i] && s[*i] != ' ')
+	while (s[*i] && s[*i] != ' ' && s[*i] != '\t')
 	{
 		if (s[*i] == '\'' || s[*i] == '"')
 		{

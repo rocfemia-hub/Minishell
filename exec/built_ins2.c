@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 01:18:22 by roo               #+#    #+#             */
-/*   Updated: 2025/11/06 18:06:33 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/12 22:50:55 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	env_function(t_com *list, t_vars *vars)
 {
 	t_env	*env_list;
-	char	*line;
 
 	if (list->args && list->args[0])
 	{
@@ -29,11 +28,8 @@ void	env_function(t_com *list, t_vars *vars)
 	env_list = vars->env_list;
 	while (env_list)
 	{
-		line = ft_strjoin(env_list->env_name, "=");
-		line = ft_strjoin_gnl(line, env_list->env_inf);
-		write(list->fd_out, line, ft_strlen(line));
-		write(list->fd_out, "\n", 1);
-		free(line);
+		if (!env_list->hidden && env_list->env_inf)
+			print_env_var(list, env_list);
 		env_list = env_list->next;
 	}
 	vars->exit_status = 0;
@@ -42,57 +38,39 @@ void	env_function(t_com *list, t_vars *vars)
 void	export_function(t_com *list, t_vars *vars)
 {
 	int	i;
-	int	has_error;
 
 	i = -1;
-	has_error = 0;
+	if (list->command && is_variable_assignment(list->command))
+	{
+		if (!export_var(vars, list->command, 1))
+			vars->exit_status = 1;
+		return ;
+	}
 	if (!list->args || !*list->args)
 		return (free(list->args), (list->args = NULL),
 			print_export_vars(list, vars));
 	while (list->args && list->args[++i])
 	{
-		if (!valid_var_name(list->args[i]))
-		{
-			ft_printf(2, "export: '%s': not a valid identifier\n",
-				list->args[i]);
-			has_error = 1;
-		}
-		else
-			add_update_env_var(vars, list->args[i]);
+		if (!export_var(vars, list->args[i], 0))
+			vars->exit_status = 1;
 	}
 	ft_free_free(list->args);
 	list->args = NULL;
-	if (has_error)
-		vars->exit_status = 1;
-	else
-		vars->exit_status = 0;
 }
 
 void	unset_function(t_com *list, t_vars *vars)
 {
 	int	i;
-	int	has_error;
 
 	i = 0;
-	has_error = 0;
 	if (!list->args || !*list->args)
 		return (vars->exit_status = 0, (void)0);
 	while (list->args[i])
 	{
 		if (valid_var_name(list->args[i]))
 			remove_env_var(vars, list->args[i]);
-		else
-		{
-			ft_printf(2, "unset: '%s': not a valid identifier\n",
-				list->args[i]);
-			has_error = 1;
-		}
 		i++;
 	}
 	ft_free_free(list->args);
 	list->args = NULL;
-	if (has_error)
-		vars->exit_status = 1;
-	else
-		vars->exit_status = 0;
 }
