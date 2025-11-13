@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:52 by roo               #+#    #+#             */
-/*   Updated: 2025/11/13 01:25:45 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 19:53:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ static void	handle_command_redirect(t_com *commands, char *redirect, int type)
 	fill_type_redirect(commands, type);
 	tmp_cmd = commands->command;
 	commands->command = ft_substr(tmp_cmd, 0, i);
+	if (ft_strlen(commands->command) == 0)
+	{
+		free(commands->command);
+		commands->command = NULL;
+	}
 	free(tmp_cmd);
 }
 

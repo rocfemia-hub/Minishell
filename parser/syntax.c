@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 00:00:00 by roo               #+#    #+#             */
-/*   Updated: 2025/11/13 03:46:39 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/13 19:22:40 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,21 @@
 int	check_pipe_syntax(char *line, int i, char quote)
 {
 	int	j;
+	int count;
 
 	if (quote)
 		return (0);
 	if (i == 0)
 		return (1);
 	j = i + 1;
-	if (line[j] == '|')
+	count = 1;
+	while (line[i] == line[j] || line[j] == ' ')
 	{
-		j++;
-		if (line[j] == '|')
-			return (1);
+		if (line[j++] == ' ')
+			continue ;
+		count++;
 	}
-	j += skip_spaces(line + j);
-	if (!line[j] || line[j] == '|')
+	if (count > 1)
 		return (1);
 	return (0);
 }
