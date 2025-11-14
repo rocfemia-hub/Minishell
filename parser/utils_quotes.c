@@ -87,27 +87,3 @@ void	quotes_for_redir(char **arg, int *k, int start, char q)
 	(*arg)[*k + 1] = q;
 	*k += 2;
 }
-
-char *find_redirect_position(char *arg, char *redirect)
-{
-	int i;
-	int quote;
-
-	i = 0;
-	quote = 0;
-	while (arg && arg[i])
-	{
-		if (arg[i] == '\'' || arg[i] == '"')
-		{
-			if (quote == 0)
-				quote = arg[i];
-			else if (quote == arg[i])
-				quote = 0;
-		}
-		else if (!quote && ft_strncmp(arg + i, redirect,
-									  ft_strlen(redirect)) == 0)
-			return (arg + i);
-		i++;
-	}
-	return (NULL);
-}

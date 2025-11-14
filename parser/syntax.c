@@ -15,7 +15,7 @@
 int	check_pipe_syntax(char *line, int i, char quote)
 {
 	int	j;
-	int count;
+	int	count;
 
 	if (quote)
 		return (0);

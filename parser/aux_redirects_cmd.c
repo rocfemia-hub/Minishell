@@ -14,28 +14,26 @@
 
 static void	handle_command_redirect(t_com *commands, char *redirect, int type)
 {
-	char	*tmp_file;
-	int		i;
-	char	*tmp_cmd;
+	char	*file;
+	char	*rest;
+	int		skip;
 
-	i = 0;
-	while (commands->command[i] && ft_strncmp(commands->command + i,
-			redirect, ft_strlen(redirect)) != 0)
-		i++;
-	tmp_file = ft_strdup(commands->command + i + ft_strlen(redirect));
-	fill_red(commands, redirect, tmp_file);
+	rest = NULL;
+	skip = ft_strlen(redirect);
+	file = extract_until_redirect(commands->command + skip, &rest);
+	fill_red(commands, redirect, file);
 	fill_type_redirect(commands, type);
-	tmp_cmd = commands->command;
-	commands->command = ft_substr(tmp_cmd, 0, i);
-	if (ft_strlen(commands->command) == 0)
+	free(commands->command);
+	commands->command = rest;
+	if (!commands->command || ft_strlen(commands->command) == 0)
 	{
-		free(commands->command);
+		if (commands->command)
+			free(commands->command);
 		commands->command = NULL;
 	}
-	free(tmp_cmd);
 }
 
-void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
+int	clean_redirects_cmd(t_com *commands, char *redirect, int type)
 {
 	char	*tmp_file;
 
@@ -50,24 +48,25 @@ void	aux_clean_redirects_cmd(t_com *commands, char *redirect, int type)
 		commands->args = realloc_redirect_args(commands->args);
 		fill_type_redirect(commands, type);
 	}
+	return (1);
 }
 
 void	fill_red(t_com *commands, char *redirect, char *file)
 {
-	if (ft_strncmp(redirect, "<", 2) == 0)
+	if (ft_strncmp(redirect, "<<", 3) == 0)
+	{
+		commands->redirects->delimiter = clean_quotes_in_line(ft_strdup(file));
+		commands->redirects->redirect_heredoc = 1;
+	}
+	else if (ft_strncmp(redirect, ">>", 3) == 0)
+		handle_redirect_array(&commands->redirects->append_file,
+			&commands->redirects->redirect_append, file, commands);
+	else if (ft_strncmp(redirect, "<", 2) == 0)
 		handle_redirect_array(&commands->redirects->input_file,
 			&commands->redirects->redirect_in, file, commands);
 	else if (ft_strncmp(redirect, ">", 2) == 0)
 		handle_redirect_array(&commands->redirects->output_file,
 			&commands->redirects->redirect_out, file, commands);
-	else if (ft_strncmp(redirect, ">>", 3) == 0)
-		handle_redirect_array(&commands->redirects->append_file,
-			&commands->redirects->redirect_append, file, commands);
-	else if (ft_strncmp(redirect, "<<", 3) == 0)
-	{
-		commands->redirects->delimiter = clean_quotes_in_line(ft_strdup(file));
-		commands->redirects->redirect_heredoc = 1;
-	}
 	free(file);
 }
 

@@ -19,13 +19,15 @@ void	error(t_com *commands)
 	return ;
 }
 
-/*void printf_matrix(char **split)
-{
-    int i = 0;
+// void printf_matrix(char **split)
+// {
+//     int i = 0;
 
-    while (split[i])
-    {
-        printf("->%s\n", split[i]);
-        i++;
-    }
-}*/
+//     if (!split)
+//         return;
+//     while (split[i])
+//     {
+//         printf("->%s\n", split[i]);
+//         i++;
+//     }
+// }

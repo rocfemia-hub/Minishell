@@ -71,7 +71,7 @@ void	lstadd_back(t_com **lst, t_com *new)
 		}
 		else
 			printf("command_arg: (null)\n");
-		printf("flag_built: %d, ", list->flag_built);
+		printf("flag_built: %d\n, ", list->flag_built);
 		// Verificar si redirects existe antes de acceder
 		if (list->redirects)
 		{
