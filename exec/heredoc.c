@@ -53,7 +53,8 @@ static void	found_delimiter(t_com *list, int fd)
 		else if (g_signal == SIGINT)
 			return (setup_signals_interactive(), rest_termi_hrdc(), (void)0);
 		else if (!line)
-			return (ft_printf(2, "minishell: warning: here-document delimited by \
+			return (write(STDOUT_FILENO, "\n", 1),
+				ft_printf(2, "minishell: warning: here-document delimited by \
 					end-of-file (wanted `%s')\n", list->redirects->delimiter),
 				list->vars->exit_status = 0, setup_signals_interactive(),
 				rest_termi_hrdc(), (void)0);

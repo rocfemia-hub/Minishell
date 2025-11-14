@@ -12,33 +12,6 @@
 
 #include "../minishell.h"
 
-static void	pipelines_signals(t_com *list, pid_t *pids, int num_cmds, int i)
-{
-	int		status;
-	int		sig;
-
-	while (i < num_cmds)
-	{
-		waitpid(pids[i], &status, 0);
-		if (WIFSIGNALED(status))
-		{
-			sig = WTERMSIG(status);
-			if (sig == SIGINT)
-				list->vars->exit_status = 130;
-			else if (sig == SIGQUIT)
-			{
-				write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
-				list->vars->exit_status = 131;
-			}
-			else
-				list->vars->exit_status = 128 + sig;
-		}
-		else if (i == num_cmds - 1 && WIFEXITED(status))
-			list->vars->exit_status = WEXITSTATUS(status);
-		i++;
-	}
-}
-
 static void	execute_pipelines2(t_com *list, pid_t *pids)
 {
 	t_com	*tmp_list;

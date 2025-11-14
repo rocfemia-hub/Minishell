@@ -119,7 +119,10 @@ void	execute_signals(t_com *list, int status)
 	{
 		sig = WTERMSIG(status);
 		if (sig == SIGINT)
+		{
+			write(STDOUT_FILENO, "\n", 1);
 			list->vars->exit_status = 130;
+		}
 		else if (sig == SIGQUIT)
 		{
 			write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
