@@ -90,6 +90,7 @@ typedef struct s_com
 	struct s_com	*next;
 	t_red			*redirects;
 	t_vars			*vars;
+	int				quoted;
 }					t_com;
 
 /*MIX*/
@@ -99,10 +100,8 @@ typedef struct s_com
 // LISTAS
 t_com				*lstnew(int index);
 void				lstadd_back(t_com **lst, t_com *new);
-void				print_list(t_com *list);
 
 // ERROR
-void				printf_matrix(char **split);
 void				error(t_com *commands);
 
 // FREE
@@ -207,13 +206,6 @@ char				*extract_and_expand_var(char *line, int vstart, int *vlen,
 void				add_split_args(char **token_args, int *j,
 						char *accumulated);
 
-// AUX_REDIRECTS_CMD.C
-int					clean_redirects_cmd(t_com *commands, char *redirect,
-						int type);
-void				fill_red(t_com *commands, char *redirect, char *file);
-char				**realloc_redirect_args(char **flag);
-void				look_for_cmd(t_com *commands);
-
 // AUX_REDIRECTS.C
 int					aux_parser_redirects(t_com *commands, char *redirect,
 						int type);
@@ -225,11 +217,11 @@ void				aux_redirects(t_com *commands, char *redirect_pos, int type,
 
 // AUX_TOKEN.C
 int					skip_spaces(char *line);
-void				aux_only_cmd(char *line, t_clean_cmd *data);
+void				aux_only_cmd(char *line, t_clean_cmd *data, int *quoted);
 void				handle_quote(char c, char *quote);
 void				process_quote_char(char current_char, char *new_arg, int *k,
 						char *quote);
-char				*clean_quotes_in_line(char *arg);
+char				*clean_quotes_in_line(char *arg, int *quoted);
 
 // EXPANDER_ARGS.C
 char				*handle_plain_text_args(char *line, int *i, t_vars *vars);
@@ -273,8 +265,11 @@ void				clean_reinserted_quotes_in_args(t_com *commands);
 char				*clean_cmd(char *line);
 
 // REDIRECTS_CMD.C
+int					is_char_protect(char c);
+void				fill_red(t_com *commands, char *redirect, char *file);
+char				**realloc_redirect_args(char **flag);
+char				**redirect_args(t_com *commands);
 int					is_redirect(char c);
-int					redirects_cmd(t_com *commands, char *cmd);
 
 // REDIRECTS.C
 int					parser_redirects(t_com *commands, char *redirect, int type);
@@ -294,7 +289,7 @@ int					check_pipe_syntax(char *line, int i, char quote);
 int					validate_syntax(char *line);
 
 // TOKEN.C
-char				*only_cmd(char *line, t_clean_cmd *data);
+char				*only_cmd(char *line, t_clean_cmd *data, int *quoted);
 void				type_command(char *line, t_com *commands);
 void				init_commands(char *line, t_com *commands);
 t_com				*token(char *line, t_vars *vars);
@@ -309,7 +304,6 @@ char				*handle_double_quotes(char *line, int *i, t_vars *vars);
 
 // UTILS_QUOTES.C
 int					look_for_char(char *line, char c);
-int					has_redirects(char *line);
 char				**ft_strjoin_cmd_arg(t_com *commands);
 void				quotes_for_redir(char **arg, int *k, int start, char q);
 

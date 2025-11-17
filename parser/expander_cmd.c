@@ -104,7 +104,7 @@ int	expand_cmd(t_clean_cmd *data, t_vars *vars, t_com *commands)
 	if (!ft_strlen(expanded))
 		temp_data.cmd = ft_strdup(expanded);
 	else
-		temp_data.cmd = only_cmd(expanded, &temp_data);
+		temp_data.cmd = only_cmd(expanded, &temp_data, &commands->quoted);
 	init_struct(expanded, temp_data.cmd, temp_data.only_cmd_i, commands);
 	free(temp_data.cmd);
 	return (1);

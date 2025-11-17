@@ -62,24 +62,8 @@ int	aux_find(t_com *commands, char **pos, char *first)
 
 void	redirects(t_com *commands)
 {
-	char	*temp;
-
 	commands->redirects = ft_calloc(1, sizeof(t_red));
 	if (!commands->redirects)
 		return ;
-	if (is_redirect_token(commands->command, "<")
-		|| is_redirect_token(commands->command, "<<")
-		|| is_redirect_token(commands->command, ">")
-		|| is_redirect_token(commands->command, ">>"))
-	{
-		if (!redirects_cmd(commands, commands->command))
-			return ;
-	}
-	else
-	{
-		temp = clean_quotes_in_line(commands->command);
-		commands->command = ft_strdup(temp);
-		free(temp);
-	}
 	find(commands);
 }

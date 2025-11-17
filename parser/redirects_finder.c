@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 00:00:00 by roo               #+#    #+#             */
-/*   Updated: 2025/11/14 00:00:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/17 18:17:31 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,32 @@ void	init_redirect_positions(t_com *commands, char **pos)
 	pos[3] = find_redirect_position(arg, ">>");
 }
 
-void	find(t_com *commands)
+void	find(t_com *cmds)
 {
 	char	*pos[4];
 	char	*first;
+	char	**temp;
 
 	first = NULL;
-	if (!commands->args || !commands->redirects)
+	if (!cmds->args || !cmds->redirects)
 		return ;
-	commands->redirects->j = 0;
-	while (commands->args[commands->redirects->j])
+	while (cmds->args[cmds->redirects->j])
 	{
-		init_redirect_positions(commands, pos);
-		if (!aux_find(commands, pos, first))
+		init_redirect_positions(cmds, pos);
+		if (!aux_find(cmds, pos, first))
 			return ;
-		commands->redirects->j++;
+		cmds->redirects->j++;
+	}
+	if (ft_strlen(cmds->command) == 0 && cmds->args && cmds->args[0])
+	{
+		if (cmds->command)
+			free(cmds->command);
+		cmds->command = clean_quotes_in_line(ft_strdup(cmds->args[0]),
+				&cmds->quoted);
+		temp = redirect_args(cmds);
+		free(cmds->args[0]);
+		free(cmds->args);
+		cmds->args = temp;
 	}
 }
 

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char	*only_cmd(char *line, t_clean_cmd *data)
+char	*only_cmd(char *line, t_clean_cmd *data, int *quoted)
 {
 	data->only_cmd_i += skip_spaces(&line[data->only_cmd_i]);
 	while (line[data->only_cmd_i] == '\n')
@@ -24,9 +24,8 @@ char	*only_cmd(char *line, t_clean_cmd *data)
 	while (line[data->only_cmd_i])
 	{
 		if (line[data->only_cmd_i] == '\'' || line[data->only_cmd_i] == '"')
-			aux_only_cmd(line, data);
-		if (data->quote == 0 && (line[data->only_cmd_i] == ' '
-				|| line[data->only_cmd_i] == '\t'))
+			aux_only_cmd(line, data, quoted);
+		if (data->quote == 0 && is_char_protect(line[data->only_cmd_i]))
 		{
 			data->end = data->only_cmd_i;
 			break ;
@@ -43,7 +42,7 @@ static void	handle_no_expansion(char *line, t_clean_cmd *data, t_com *commands)
 	char	*temp;
 
 	free(data->cmd);
-	data->cmd = only_cmd(line, data);
+	data->cmd = only_cmd(line, data, &commands->quoted);
 	if (data->cmd)
 	{
 		temp = data->cmd;
@@ -60,12 +59,12 @@ void	type_command(char *line, t_com *commands)
 	int			saved_index;
 
 	ft_bzero(&data, sizeof(t_clean_cmd));
-	data.cmd = only_cmd(line, &data);
+	data.cmd = only_cmd(line, &data, &commands->quoted);
 	if (!data.cmd)
 		return ;
 	saved_index = data.only_cmd_i;
-	if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd))
-		|| ft_strchr(data.cmd, '~'))
+	if (ft_strnstr(data.cmd, "$", ft_strlen(data.cmd)) || ft_strchr(data.cmd,
+			'~'))
 	{
 		if (!expand_cmd(&data, commands->vars, commands) || !data.cmd)
 			handle_no_expansion(line, &data, commands);

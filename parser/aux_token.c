@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 01:23:04 by roo               #+#    #+#             */
-/*   Updated: 2025/11/13 01:46:46 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/17 18:13:21 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,13 @@ int	skip_spaces(char *line)
 	return (i);
 }
 
-void	aux_only_cmd(char *line, t_clean_cmd *data)
+void	aux_only_cmd(char *line, t_clean_cmd *data, int *quoted)
 {
 	if (!data->quote)
+	{
 		data->quote = line[data->only_cmd_i];
+		*quoted = 1;
+	}
 	else if (data->quote == line[data->only_cmd_i])
 		data->quote = 0;
 }
@@ -49,7 +52,7 @@ void	process_quote_char(char current_char, char *new_arg, int *k,
 		new_arg[(*k)++] = current_char;
 }
 
-char	*clean_quotes_in_line(char *arg)
+char	*clean_quotes_in_line(char *arg, int *quoted)
 {
 	int		j;
 	int		k;
@@ -67,12 +70,13 @@ char	*clean_quotes_in_line(char *arg)
 	while (arg[j])
 	{
 		if (arg[j] == '\'' || arg[j] == '"')
+		{
+			*quoted = 1;
 			process_quote_char(arg[j], new_arg, &k, &quote);
+		}
 		else
 			new_arg[k++] = arg[j];
 		j++;
 	}
-	new_arg[k] = '\0';
-	free(arg);
-	return (new_arg);
+	return (new_arg[k] = '\0', free(arg), new_arg);
 }

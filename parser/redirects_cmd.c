@@ -6,49 +6,87 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 17:37:52 by roo               #+#    #+#             */
-/*   Updated: 2025/11/14 00:00:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/17 18:13:39 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	is_char_protect(char c)
+{
+	if (c == 32 || c == '\t' || c == '<' || c == '>')
+		return (1);
+	return (0);
+}
 
 int	is_redirect(char c)
 {
 	return (c == '<' || c == '>');
 }
 
-static int	handle_single_redirects(t_com *commands)
+void	fill_red(t_com *commands, char *redirect, char *file)
 {
-	if (commands->args[0] || ft_strlen(commands->command) > 1)
+	if (ft_strncmp(redirect, "<<", 3) == 0)
 	{
-		while (commands->command && is_redirect(commands->command[0]))
-		{
-			if (commands->command[0] == '<' && commands->command[1] == '<')
-				clean_redirects_cmd(commands, "<<", 4);
-			else if (commands->command[0] == '>' && commands->command[1] == '>')
-				clean_redirects_cmd(commands, ">>", 3);
-			else if (commands->command[0] == '<')
-				clean_redirects_cmd(commands, "<", 1);
-			else if (commands->command[0] == '>')
-				clean_redirects_cmd(commands, ">", 2);
-			if (!commands->command)
-				break ;
-		}
-		look_for_cmd(commands);
-		return (1);
+		commands->redirects->delimiter = clean_quotes_in_line(ft_strdup(file),
+				&commands->quoted);
+		commands->redirects->redirect_heredoc = 1;
 	}
-	else
-	{
-		commands->error = ft_strdup("near unexpected token `newline'");
-		commands->vars->exit_status = 2;
-		return (0);
-	}
+	else if (ft_strncmp(redirect, ">>", 3) == 0)
+		handle_redirect_array(&commands->redirects->append_file,
+			&commands->redirects->redirect_append, file, commands);
+	else if (ft_strncmp(redirect, "<", 2) == 0)
+		handle_redirect_array(&commands->redirects->input_file,
+			&commands->redirects->redirect_in, file, commands);
+	else if (ft_strncmp(redirect, ">", 2) == 0)
+		handle_redirect_array(&commands->redirects->output_file,
+			&commands->redirects->redirect_out, file, commands);
+	free(file);
 }
 
-int	redirects_cmd(t_com *commands, char *cmd)
+char	**realloc_redirect_args(char **flag)
 {
-	if (is_redirect_token(cmd, "<<") || is_redirect_token(cmd, ">>")
-		|| is_redirect_token(cmd, "<") || is_redirect_token(cmd, ">"))
-		return (handle_single_redirects(commands));
-	return (0);
+	int		i;
+	int		j;
+	char	**realloc_matrix;
+
+	j = 0;
+	while (flag[j])
+		j++;
+	realloc_matrix = ft_calloc(j, sizeof(char *));
+	if (!realloc_matrix)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (flag[++i])
+	{
+		realloc_matrix[j] = ft_strdup(flag[i]);
+		j++;
+	}
+	ft_free_free(flag);
+	return (realloc_matrix);
+}
+
+char	**redirect_args(t_com *commands)
+{
+	char	**new_args;
+	int		i;
+	int		j;
+
+	i = 0;
+	while (commands->args && commands->args[i])
+		i++;
+	new_args = ft_calloc(sizeof(char *), i);
+	if (!new_args)
+		return (NULL);
+	i = 1;
+	j = 0;
+	while (commands->args && commands->args[i])
+	{
+		new_args[j] = commands->args[i];
+		i++;
+		j++;
+	}
+	new_args[j] = NULL;
+	return (new_args);
 }

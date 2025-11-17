@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:51:09 by roo               #+#    #+#             */
-/*   Updated: 2025/11/13 01:37:00 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/17 18:22:10 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ void	execute_control(t_com *list, t_vars *vars)
 				return (vars->exit_status = 0, (void)0);
 			if (!redirections_control(list, 0, 0, 0))
 				return (vars->exit_status = 1, clean_fds(list));
-			if (list->command && ft_strlen(list->command) == 0)
+			if (ft_strlen(list->command) == 0 && !list->quoted)
+				return (vars->exit_status = 0, (void)0);
+			if (list->command && ft_strlen(list->command) == 0
+				&& list->quoted == 1)
 				return (ft_printf(2, "minishell: : command not found\n"),
 					vars->exit_status = 127, clean_fds(list));
 			if (list->flag_built == 1)

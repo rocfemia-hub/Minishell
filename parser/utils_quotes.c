@@ -39,15 +39,6 @@ int	look_for_char(char *line, char c)
 	return (count);
 }
 
-int	has_redirects(char *line)
-{
-	if (ft_strnstr(line, "<", ft_strlen(line)) || ft_strnstr(line, "<<",
-			ft_strlen(line)) || ft_strnstr(line, ">", ft_strlen(line))
-		|| ft_strnstr(line, ">>", ft_strlen(line)))
-		return (1);
-	return (0);
-}
-
 char	**ft_strjoin_cmd_arg(t_com *commands)
 {
 	int		j;

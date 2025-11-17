@@ -18,16 +18,3 @@ void	error(t_com *commands)
 	free_t_com_list(commands);
 	return ;
 }
-
-// void printf_matrix(char **split)
-// {
-//     int i = 0;
-
-//     if (!split)
-//         return;
-//     while (split[i])
-//     {
-//         printf("->%s\n", split[i]);
-//         i++;
-//     }
-// }

@@ -100,8 +100,6 @@ char	*clean_cmd(char *line)
 {
 	char	*temp;
 
-	if (has_redirects(line))
-		return (ft_strdup(line));
 	if (!line)
 		return (NULL);
 	temp = ft_strdup(line);
