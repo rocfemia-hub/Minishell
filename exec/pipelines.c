@@ -54,14 +54,18 @@ void	execute_pipeline(t_com *list)
 	pids = malloc(sizeof(pid_t) * num_cmds);
 	if (!pids)
 		return ;
+	ft_bzero(pids, sizeof(pid_t) * num_cmds);
 	execute_pipelines2(list, pids);
+	if (num_cmds > 0 && pids[0] > 0)
+		tcsetpgrp(STDIN_FILENO, pids[0]);
 	pipelines_signals(list, pids, num_cmds, 0);
+	tcsetpgrp(STDIN_FILENO, getpid());
 	free(pids);
 }
 
 void	setup_pipeline(t_com *list)
 {
-	int		pipe_fd[2];
+	int	pipe_fd[2];
 
 	while (list && list->next)
 	{

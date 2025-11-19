@@ -33,7 +33,13 @@ int	pids_funcion(t_com *list, int status)
 			exit(127);
 		}
 	}
+	if (pid > 0)
+	{
+		(void)setpgid(pid, pid);
+		tcsetpgrp(STDIN_FILENO, pid);
+	}
 	waitpid(pid, &status, 0);
+	tcsetpgrp(STDIN_FILENO, getpid());
 	execute_signals(list, status);
 	ft_free_free(env);
 	return (1);
@@ -41,6 +47,7 @@ int	pids_funcion(t_com *list, int status)
 
 static void	pids2_pipelines(t_com *list, t_com *tmp_list)
 {
+	(void)setpgid(0, 0);
 	setup_signals_default();
 	apply_redirections(tmp_list);
 	close_pipes(list, tmp_list);
@@ -51,8 +58,7 @@ static void	pids2_pipelines(t_com *list, t_com *tmp_list)
 	}
 	else
 	{
-		tmp_list->path_command = get_path(tmp_list->command,
-				tmp_list->vars);
+		tmp_list->path_command = get_path(tmp_list->command, tmp_list->vars);
 		if (!tmp_list->path_command)
 		{
 			ft_printf(2, "minishell: %s: command not found\n",
@@ -83,6 +89,17 @@ void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i)
 			close(tmp_list->fd_in);
 		if (tmp_list->fd_out != STDOUT_FILENO)
 			close(tmp_list->fd_out);
-		pids[i] = pid;
+		if (i == 0)
+		{
+			(void)setpgid(pid, pid);
+			pids[0] = pid;
+			pids[i] = pid;
+		}
+		else
+		{
+			if (pids[0] != 0)
+				(void)setpgid(pid, pids[0]);
+			pids[i] = pid;
+		}
 	}
 }
