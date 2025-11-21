@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:53:54 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 20:03:58 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/21 14:26:57 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,8 @@ int	pids_funcion(t_com *list, int status)
 		setup_signals_default();
 		apply_redirections(list);
 		if (execve(list->path_command, list->command_arg, env) == 0)
-		{
-			write(2, "minishell: ", 11);
-			perror("execve");
-			list->vars->exit_status = 127;
-			exit(127);
-		}
+			return (write(2, "minishell: ", 11), perror("execve"),
+				list->vars->exit_status = 127, exit(127), 0);
 	}
 	if (pid > 0)
 	{
@@ -40,9 +36,7 @@ int	pids_funcion(t_com *list, int status)
 	}
 	waitpid(pid, &status, 0);
 	tcsetpgrp(STDIN_FILENO, getpid());
-	execute_signals(list, status);
-	ft_free_free(env);
-	return (1);
+	return (execute_signals(list, status), ft_free_free(env), 1);
 }
 
 static void	pids2_pipelines(t_com *list, t_com *tmp_list)
@@ -90,11 +84,8 @@ void	pids_pipelines(t_com *list, t_com *tmp_list, pid_t *pids, int i)
 		if (tmp_list->fd_out != STDOUT_FILENO)
 			close(tmp_list->fd_out);
 		if (i == 0)
-		{
-			(void)setpgid(pid, pid);
-			pids[0] = pid;
-			pids[i] = pid;
-		}
+			return ((void)setpgid(pid, pid), pids[0] = pid,
+				pids[i] = pid, (void)0);
 		else
 		{
 			if (pids[0] != 0)

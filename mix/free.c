@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 20:17:12 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 20:30:38 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/21 14:17:50 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ static void	free_t_red_list(t_red *list)
 		ft_free_free(list->output_file);
 	if (list->append_file)
 		ft_free_free(list->append_file);
+	if (list->heredoc_file)
+		free(list->heredoc_file);
 	if (list->delimiter)
 		free(list->delimiter);
 	if (list->t_red)

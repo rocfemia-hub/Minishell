@@ -6,7 +6,7 @@
 /*   By: roo <roo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 14:56:54 by roo               #+#    #+#             */
-/*   Updated: 2025/11/07 19:56:39 by roo              ###   ########.fr       */
+/*   Updated: 2025/11/21 14:21:32 by roo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ void	heredoc_execution(t_com *list)
 	if (g_signal == SIGINT)
 		return (unlink(temp_file), free(temp_file),
 			list->vars->exit_status = 130, (void) 0);
+	if (list->redirects->heredoc_file)
+		free(list->redirects->heredoc_file);
 	list->redirects->heredoc_file = temp_file;
 	list->fd_in = open(temp_file, O_RDONLY, 0777);
 }
