@@ -28,6 +28,8 @@ void	fill_red(t_com *commands, char *redirect, char *file)
 {
 	if (ft_strncmp(redirect, "<<", 3) == 0)
 	{
+		if (commands->redirects->delimiter)
+			free(commands->redirects->delimiter);
 		commands->redirects->delimiter = clean_quotes_in_line(ft_strdup(file),
 				&commands->quoted);
 		commands->redirects->redirect_heredoc = 1;

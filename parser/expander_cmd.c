@@ -41,7 +41,7 @@ char	*str_append(char *dest, const char *src)
 		tmp = malloc(ft_strlen(dest) + ft_strlen(src) + 1);
 		if (!tmp)
 			return (NULL);
-		ft_strlcpy(tmp, dest, ft_strlen(tmp) + ft_strlen(dest) + 1);
+		ft_strlcpy(tmp, dest, ft_strlen(dest) + 1);
 		ft_strlcat(tmp, src, ft_strlen(tmp) + ft_strlen(src) + 1);
 		free(dest);
 		dest = tmp;
