@@ -37,7 +37,8 @@ char	*get_path(char *cmd, t_vars *vars)
 	int		i;
 	t_env	*node;
 
-	if (!cmd || !*cmd || strcmp(cmd, ".") == 0 || strcmp(cmd, "..") == 0)
+	if (!cmd || !*cmd || ft_strncmp(cmd, ".", ft_strlen(cmd)) == 0
+		|| ft_strncmp(cmd, "..", ft_strlen(cmd)) == 0)
 		return (NULL);
 	if (access(cmd, X_OK) == 0 && !is_directory(cmd))
 		return (ft_strdup(cmd));
@@ -55,8 +56,7 @@ char	*get_path(char *cmd, t_vars *vars)
 		free(result);
 		result = NULL;
 	}
-	ft_free_free(paths);
-	return (result);
+	return (ft_free_free(paths), result);
 }
 
 static int	execute_error_control(t_com *list)
