@@ -37,6 +37,20 @@ static char	*read_line_heredoc(void)
 	return (buffer[i] = '\0', line = ft_strdup(buffer), line);
 }
 
+static void	aux_found_delimiter(t_com *list)
+{
+	write(STDOUT_FILENO, "\n", 1);
+	ft_printf(2,
+		"minishell: warning: here-document at line 1 delimited by "
+		"end-of-file (wanted `%s')\n",
+		list->redirects->delimiter);
+	list->vars->exit_status = 0;
+	setup_signals_interactive();
+	rest_termi_hrdc();
+	(void)0;
+	return ;
+}
+
 static void	found_delimiter(t_com *list, int fd)
 {
 	char	*line;
@@ -53,15 +67,11 @@ static void	found_delimiter(t_com *list, int fd)
 		else if (g_signal == SIGINT)
 			return (setup_signals_interactive(), rest_termi_hrdc(), (void)0);
 		else if (!line)
-			return (write(STDOUT_FILENO, "\n", 1),
-				ft_printf(2, "minishell: warning: here-document delimited by \
-					end-of-file (wanted `%s')\n", list->redirects->delimiter),
-				list->vars->exit_status = 0, setup_signals_interactive(),
-				rest_termi_hrdc(), (void)0);
+			return (aux_found_delimiter(list));
 		if (ft_strncmp(line, list->redirects->delimiter,
 				ft_strlen(list->redirects->delimiter) + 1) == 0)
-			return (free(line), setup_signals_interactive(),
-				rest_termi_hrdc(), (void)0);
+			return (free(line), setup_signals_interactive(), rest_termi_hrdc(),
+				(void)0);
 		ft_printf(fd, "%s\n", line);
 		free(line);
 	}
